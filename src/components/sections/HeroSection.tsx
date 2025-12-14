@@ -24,12 +24,13 @@ export function HeroPromo() {
           loop
           playsInline
           preload="auto"
+          poster="/hero-fallback.jpg"
         >
           <source src="/hero-background.mp4" type="video/mp4" />
         </video>
 
         <div
-          className="md:hidden absolute inset-0 bg-cover bg-center"
+          className=" absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: "url('/hero-fallback.jpg')" }}
         />
       </div>
