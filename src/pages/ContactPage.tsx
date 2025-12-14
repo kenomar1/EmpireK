@@ -1,44 +1,80 @@
 // src/pages/ContactPage.tsx
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion } from "framer-motion";
-import { Mail, Phone, MapPin, Calendar, Send, ArrowRight } from "lucide-react";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
+  Send,
+  ArrowRight,
+  X,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
-import emailjs from "@emailjs/browser"; // ← EmailJS SDK
+import emailjs from "@emailjs/browser";
 
-const formSchema = z.object({
+// Schema for Contact Form
+const contactSchema = z.object({
   name: z.string().min(2, "الاسم يجب أن يكون حرفين على الأقل"),
   email: z.string().email("البريد الإلكتروني غير صحيح"),
   phone: z.string().min(8, "رقم الجوال قصير جدًا"),
   message: z.string().min(10, "الرسالة يجب أن تكون 10 أحرف على الأقل"),
 });
 
-type FormData = z.infer<typeof formSchema>;
+// Schema for Book a Call Modal
+const bookCallSchema = z.object({
+  bookName: z.string().min(2, "Name is required"),
+  bookEmail: z.string().email("Valid email required"),
+  bookPhone: z.string().min(8, "Phone number too short"),
+  bookDate: z.string().min(1, "Please select a date"),
+  bookTime: z.string().min(1, "Please select a time"),
+});
+
+type ContactData = z.infer<typeof contactSchema>;
+type BookCallData = z.infer<typeof bookCallSchema>;
 
 export default function ContactPage() {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
 
+  // Modal state
+  const [isBookCallOpen, setIsBookCallOpen] = useState(false);
+
+  // EmailJS Config
+  const SERVICE_ID = "service_m39usn4";
+  const PUBLIC_KEY = "ofqwp3aOWL95jfQDh";
+
+  const TEMPLATE_CONTACT = "template_5q89g6c"; // 1. Send us a message
+  const TEMPLATE_BOOK_CALL = "template_156uuxo"; // 3. Book call notification to you
+
+  // Contact Form
   const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    reset,
-  } = useForm<FormData>({
-    resolver: zodResolver(formSchema),
+    register: registerContact,
+    handleSubmit: handleContactSubmit,
+    formState: { errors: contactErrors, isSubmitting: contactSubmitting },
+    reset: resetContact,
+  } = useForm<ContactData>({
+    resolver: zodResolver(contactSchema),
   });
 
-  const onSubmit = async (data: FormData) => {
-    // ← REPLACE THESE WITH YOUR ACTUAL EMAILJS VALUES
-    const SERVICE_ID = "service_m39usn4"; // e.g., service_abc123
-    const TEMPLATE_ID = "template_5q89g6c"; // e.g., template_xyz789
-    const PUBLIC_KEY = "ofqwp3aOWL95jfQDh"; // Your EmailJS User ID
+  // Book Call Form
+  const {
+    register: registerBook,
+    handleSubmit: handleBookSubmit,
+    formState: { errors: bookErrors, isSubmitting: bookSubmitting },
+    reset: resetBook,
+  } = useForm<BookCallData>({
+    resolver: zodResolver(bookCallSchema),
+  });
 
-    // Generate current timestamp in a nice format
+  // Send Contact Message
+  const onContactSubmit = async (data: ContactData) => {
     const currentTime = new Date().toLocaleString("en-US", {
       weekday: "long",
       year: "numeric",
@@ -52,244 +88,395 @@ export default function ContactPage() {
     try {
       await emailjs.send(
         SERVICE_ID,
-        TEMPLATE_ID,
+        TEMPLATE_CONTACT,
         {
           name: data.name,
           email: data.email,
           phone: data.phone,
           message: data.message,
-          time: currentTime, // ← For {{time}} in template
+          time: currentTime,
         },
         PUBLIC_KEY
       );
 
       toast.success(t("contact.success") || "تم إرسال الرسالة بنجاح!");
-      reset();
-    } catch (error: any) {
+      resetContact();
+    } catch (error) {
       console.error("EmailJS Error:", error);
-      toast.error("فشل إرسال الرسالة، حاول مرة أخرى.");
+      toast.error("فشل الإرسال، حاول مرة أخرى.");
+    }
+  };
+
+  // Book a Call Submission (Only notifies you — no auto-reply)
+  const onBookCallSubmit = async (data: BookCallData) => {
+    const preferredDateTime = `${data.bookDate} at ${data.bookTime}`;
+
+    try {
+      await emailjs.send(
+        SERVICE_ID,
+        TEMPLATE_BOOK_CALL,
+        {
+          name: data.bookName,
+          email: data.bookEmail,
+          phone: data.bookPhone,
+          preferred_time: preferredDateTime,
+        },
+        PUBLIC_KEY
+      );
+
+      toast.success("Call booked successfully! We'll contact you soon.");
+      resetBook();
+      setIsBookCallOpen(false);
+    } catch (error) {
+      console.error("Book Call Error:", error);
+      toast.error("Failed to book call. Please try again.");
     }
   };
 
   return (
-    <div
-      className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background py-20 px-6"
-      dir={isRTL ? "rtl" : "ltr"}
-    >
-      <div className="max-w-7xl mx-auto">
-        {/* Hero */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-20"
-        >
-          <h1 className="text-5xl md:text-7xl font-black tracking-tighter bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text py-4 text-transparent">
-            {t("contact.heroTitle")}
-          </h1>
-          <p className="mt-6 text-xl text-muted-foreground max-w-3xl mx-auto">
-            {t("contact.heroSubtitle")}
-          </p>
-        </motion.div>
-
-        <div className="grid lg:grid-cols-2 gap-12">
-          {/* Contact Form */}
+    <>
+      <div
+        className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background py-20 px-6"
+        dir={isRTL ? "rtl" : "ltr"}
+      >
+        <div className="max-w-7xl mx-auto">
+          {/* Hero */}
           <motion.div
-            initial={{ opacity: 0, x: isRTL ? 50 : -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="bg-card/80 backdrop-blur-xl rounded-3xl p-8 lg:p-12 shadow-2xl border border-border/50"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center mb-20"
           >
-            <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
-              <Send className="w-8 h-8 text-primary" />
-              {t("contact.formTitle")}
+            <h1 className="text-5xl md:text-7xl font-black tracking-tighter bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text py-4 text-transparent">
+              {t("contact.heroTitle")}
+            </h1>
+            <p className="mt-6 text-xl text-muted-foreground max-w-3xl mx-auto">
+              {t("contact.heroSubtitle")}
+            </p>
+          </motion.div>
+
+          <div className="grid lg:grid-cols-2 gap-12">
+            {/* Contact Form */}
+            <motion.div
+              initial={{ opacity: 0, x: isRTL ? 50 : -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="bg-card/80 backdrop-blur-xl rounded-3xl p-8 lg:p-12 shadow-2xl border border-border/50"
+            >
+              <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
+                <Send className="w-8 h-8 text-primary" />
+                {t("contact.formTitle")}
+              </h2>
+
+              <form
+                onSubmit={handleContactSubmit(onContactSubmit)}
+                className="space-y-6"
+              >
+                {/* Form fields unchanged */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    {t("contact.name")}
+                  </label>
+                  <input
+                    {...registerContact("name")}
+                    className="w-full px-5 py-4 rounded-xl bg-background/50 border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+                    placeholder={t("contact.namePlaceholder")}
+                  />
+                  {contactErrors.name && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {contactErrors.name.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      {t("contact.email")}
+                    </label>
+                    <input
+                      {...registerContact("email")}
+                      type="email"
+                      className="w-full px-5 py-4 rounded-xl bg-background/50 border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+                      placeholder="name@company.com"
+                    />
+                    {contactErrors.email && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {contactErrors.email.message}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      {t("contact.phone")}
+                    </label>
+                    <input
+                      {...registerContact("phone")}
+                      type="tel"
+                      className="w-full px-5 py-4 rounded-xl bg-background/50 border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+                      placeholder="+971 50 123 4567"
+                    />
+                    {contactErrors.phone && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {contactErrors.phone.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    {t("contact.message")}
+                  </label>
+                  <textarea
+                    {...registerContact("message")}
+                    rows={6}
+                    className="w-full px-5 py-4 rounded-xl bg-background/50 border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all resize-none"
+                    placeholder={t("contact.messagePlaceholder")}
+                  />
+                  {contactErrors.message && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {contactErrors.message.message}
+                    </p>
+                  )}
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={contactSubmitting}
+                  className="w-full py-5 bg-primary text-primary-foreground rounded-xl font-bold text-lg shadow-xl hover:shadow-primary/30 hover:scale-105 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                >
+                  {contactSubmitting ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                      {t("contact.sending") || "جاري الإرسال..."}
+                    </>
+                  ) : (
+                    <>
+                      {t("contact.sendButton") || "إرسال الرسالة"}
+                      <Send className="w-5 h-5" />
+                    </>
+                  )}
+                </button>
+              </form>
+            </motion.div>
+
+            {/* Right Column */}
+            <div className="space-y-12">
+              {/* Book a Call */}
+              <motion.div
+                initial={{ opacity: 0, x: isRTL ? -50 : 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="bg-gradient-to-br from-primary/10 via-primary/5 to-background rounded-3xl p-8 lg:p-12 shadow-2xl border border-primary/20"
+              >
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="p-4 bg-primary/20 rounded-2xl">
+                    <Calendar className="w-10 h-10 text-primary" />
+                  </div>
+                  <h2 className="text-3xl font-bold">
+                    {t("contact.scheduleTitle")}
+                  </h2>
+                </div>
+                <p className="text-lg text-muted-foreground mb-8">
+                  {t("contact.scheduleDesc")}
+                </p>
+
+                <button
+                  onClick={() => setIsBookCallOpen(true)}
+                  className="inline-flex items-center gap-3 px-8 py-5 bg-primary text-primary-foreground rounded-full font-bold text-lg shadow-xl hover:shadow-primary/30 hover:scale-105 transition-all duration-300"
+                >
+                  {t("contact.bookCall")}
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+
+                <div className="mt-8 p-6 bg-background/50 rounded-2xl text-sm text-muted-foreground">
+                  {t("contact.noObligation")}
+                </div>
+              </motion.div>
+
+              {/* Contact Details */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="bg-card/80 backdrop-blur-xl rounded-3xl p-8 shadow-xl border border-border/50"
+              >
+                <h3 className="text-2xl font-bold mb-8">
+                  {t("contact.detailsTitle")}
+                </h3>
+                <div className="space-y-6">
+                  <div className="flex items-start gap-5">
+                    <div className="p-3 bg-primary/10 rounded-xl">
+                      <Mail className="w-6 h-6 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-semibold">{t("contact.email")}</p>
+                      <a
+                        href="mailto:dev.empirek@hotmail.com"
+                        className="text-primary hover:underline"
+                      >
+                        dev.empirek@hotmail.com
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-5">
+                    <div className="p-3 bg-primary/10 rounded-xl">
+                      <Phone className="w-6 h-6 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-semibold">{t("contact.phone")}</p>
+                      <a
+                        href="tel:+971501234567"
+                        className="inline-flex items-center gap-3 px-6 py-3 bg-primary text-primary-foreground rounded-full font-bold text-lg shadow-lg hover:shadow-primary/30 hover:scale-105 transition-all duration-300"
+                      >
+                        {t("contact.callNow") || "Call Us Now"}
+                        <Phone className="w-5 h-5" />
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-5">
+                    <div className="p-3 bg-primary/10 rounded-xl">
+                      <MapPin className="w-6 h-6 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-semibold">{t("contact.location")}</p>
+                      <p className="text-muted-foreground">
+                        {t("contact.ourlocation")}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-10 pt-8 border-t border-border/50 text-sm text-muted-foreground">
+                  {t("contact.responseTime")}
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Book a Call Modal with Calendar */}
+      {isBookCallOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="relative w-full max-w-2xl bg-card rounded-3xl shadow-2xl p-8"
+          >
+            <button
+              onClick={() => setIsBookCallOpen(false)}
+              className="absolute top-4 right-4 p-2 hover:bg-muted rounded-full transition"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
+              <Calendar className="w-8 h-8 text-primary" />
+              Book a Call
             </h2>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              {/* Name */}
+            <form
+              onSubmit={handleBookSubmit(onBookCallSubmit)}
+              className="space-y-6"
+            >
               <div>
-                <label className="block text-sm font-medium mb-2">
-                  {t("contact.name")}
-                </label>
+                <label className="block text-sm font-medium mb-2">Name</label>
                 <input
-                  {...register("name")}
+                  {...registerBook("bookName")}
                   className="w-full px-5 py-4 rounded-xl bg-background/50 border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
-                  placeholder={t("contact.namePlaceholder")}
+                  placeholder="Your Name"
                 />
-                {errors.name && (
+                {bookErrors.bookName && (
                   <p className="text-red-500 text-sm mt-1">
-                    {errors.name.message}
+                    {bookErrors.bookName.message}
                   </p>
                 )}
               </div>
 
-              {/* Email & Phone */}
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    {t("contact.email")}
+                    Email
                   </label>
                   <input
-                    {...register("email")}
+                    {...registerBook("bookEmail")}
                     type="email"
                     className="w-full px-5 py-4 rounded-xl bg-background/50 border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
-                    placeholder="name@company.com"
+                    placeholder="your@email.com"
                   />
-                  {errors.email && (
+                  {bookErrors.bookEmail && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errors.email.message}
+                      {bookErrors.bookEmail.message}
                     </p>
                   )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    {t("contact.phone")}
+                    Phone
                   </label>
                   <input
-                    {...register("phone")}
+                    {...registerBook("bookPhone")}
                     type="tel"
                     className="w-full px-5 py-4 rounded-xl bg-background/50 border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
                     placeholder="+971 50 123 4567"
                   />
-                  {errors.phone && (
+                  {bookErrors.bookPhone && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errors.phone.message}
+                      {bookErrors.bookPhone.message}
                     </p>
                   )}
                 </div>
               </div>
 
-              {/* Message */}
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  {t("contact.message")}
-                </label>
-                <textarea
-                  {...register("message")}
-                  rows={6}
-                  className="w-full px-5 py-4 rounded-xl bg-background/50 border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all resize-none"
-                  placeholder={t("contact.messagePlaceholder")}
-                />
-                {errors.message && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.message.message}
-                  </p>
-                )}
+              {/* Calendar: Date + Time */}
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Preferred Date
+                  </label>
+                  <input
+                    {...registerBook("bookDate")}
+                    type="date"
+                    min={new Date().toISOString().split("T")[0]} // Prevents past dates
+                    className="w-full px-5 py-4 rounded-xl bg-background/50 border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+                  />
+                  {bookErrors.bookDate && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {bookErrors.bookDate.message}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Preferred Time
+                  </label>
+                  <input
+                    {...registerBook("bookTime")}
+                    type="time"
+                    className="w-full px-5 py-4 rounded-xl bg-background/50 border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+                  />
+                  {bookErrors.bookTime && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {bookErrors.bookTime.message}
+                    </p>
+                  )}
+                </div>
               </div>
 
-              {/* Submit Button */}
               <button
                 type="submit"
-                disabled={isSubmitting}
-                className="w-full py-5 bg-primary text-primary-foreground rounded-xl font-bold text-lg shadow-xl hover:shadow-primary/30 hover:scale-105 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-3"
+                disabled={bookSubmitting}
+                className="w-full py-5 bg-primary text-primary-foreground rounded-xl font-bold text-lg shadow-xl hover:shadow-primary/30 hover:scale-105 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-3"
               >
-                {isSubmitting ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                    {t("contact.sending") || "جاري الإرسال..."}
-                  </>
-                ) : (
-                  <>
-                    {t("contact.sendButton") || "إرسال الرسالة"}
-                    <Send className="w-5 h-5" />
-                  </>
-                )}
+                {bookSubmitting ? "Submitting..." : "Book My Call"}
+                <Send className="w-5 h-5" />
               </button>
             </form>
           </motion.div>
-
-          {/* Right Column - Unchanged */}
-          <div className="space-y-12">
-            {/* Schedule Call */}
-            <motion.div
-              initial={{ opacity: 0, x: isRTL ? -50 : 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="bg-gradient-to-br from-primary/10 via-primary/5 to-background rounded-3xl p-8 lg:p-12 shadow-2xl border border-primary/20"
-            >
-              <div className="flex items-center gap-4 mb-6">
-                <div className="p-4 bg-primary/20 rounded-2xl">
-                  <Calendar className="w-10 h-10 text-primary" />
-                </div>
-                <h2 className="text-3xl font-bold">
-                  {t("contact.scheduleTitle")}
-                </h2>
-              </div>
-              <p className="text-lg text-muted-foreground mb-8">
-                {t("contact.scheduleDesc")}
-              </p>
-              <a
-                href="https://calendly.com/yourname/30min"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 px-8 py-5 bg-primary text-primary-foreground rounded-full font-bold text-lg shadow-xl hover:shadow-primary/30 hover:scale-105 transition-all duration-300"
-              >
-                {t("contact.bookCall")}
-                <ArrowRight className="w-5 h-5" />
-              </a>
-              <div className="mt-8 p-6 bg-background/50 rounded-2xl text-sm text-muted-foreground">
-                {t("contact.noObligation")}
-              </div>
-            </motion.div>
-
-            {/* Contact Details */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="bg-card/80 backdrop-blur-xl rounded-3xl p-8 shadow-xl border border-border/50"
-            >
-              <h3 className="text-2xl font-bold mb-8">
-                {t("contact.detailsTitle")}
-              </h3>
-              <div className="space-y-6">
-                <div className="flex items-start gap-5">
-                  <div className="p-3 bg-primary/10 rounded-xl">
-                    <Mail className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-semibold">{t("contact.email")}</p>
-                    <a
-                      href="mailto:dev.empirek@hotmail.com"
-                      className="text-primary hover:underline"
-                    >
-                      dev.empirek@hotmail.com
-                    </a>
-                  </div>
-                </div>
-                <div className="flex items-start gap-5">
-                  <div className="p-3 bg-primary/10 rounded-xl">
-                    <Phone className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-semibold">{t("contact.phone")}</p>
-                    <a
-                      dir="ltr"
-                      href="tel:+971501234567"
-                      className="text-primary hover:underline"
-                    >
-                      +971 50 123 4567
-                    </a>
-                  </div>
-                </div>
-                <div className="flex items-start gap-5">
-                  <div className="p-3 bg-primary/10 rounded-xl">
-                    <MapPin className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-semibold">{t("contact.location")}</p>
-                    <p className="text-muted-foreground">
-                      {t("contact.ourlocation")}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-10 pt-8 border-t border-border/50 text-sm text-muted-foreground">
-                {t("contact.responseTime")}
-              </div>
-            </motion.div>
-          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 }
