@@ -18,7 +18,7 @@ export function HeroPromo() {
       {/* Fixed Full-Screen Video Background */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
         <video
-          className="md:block absolute inset-0 h-full w-full object-cover"
+          className=" absolute inset-0 h-full w-full object-cover"
           autoPlay
           muted
           loop
@@ -26,7 +26,7 @@ export function HeroPromo() {
           preload="auto"
           poster="/hero-fallback.jpg"
         >
-          <source src="/hero-background.mp4" type="video/mp4" />
+          <source src="/hero-background.webm" type="video/webm" />
         </video>
 
         <div
