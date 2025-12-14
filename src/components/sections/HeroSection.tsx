@@ -78,19 +78,22 @@ export function HeroPromo() {
                 dangerouslySetInnerHTML={{ __html: heroCopy("subheading") }}
               />
 
-              {/* CTA Button */}
-              <div className="mt-10  md:mt-12">
+              {/* CTA Buttons - Responsive */}
+              <div className="mt-10 md:mt-12 flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center">
                 <Button
                   size="lg"
                   variant="default"
-                  className="px-10  mx-2 py-6 md:px-14 md:py-8 text-base md:text-lg font-bold shadow-2xl hover:shadow-3xl transition-all duration-300 rounded-2xl"
+                  className="w-full sm:w-auto px-10 py-6 text-base md:text-lg font-bold shadow-2xl hover:shadow-3xl transition-all duration-300 rounded-2xl"
+                  asChild
                 >
                   <a href="/contact">{heroCopy("herocta2")}</a>
                 </Button>
+
                 <Button
                   size="lg"
-                  variant="default"
-                  className="px-10 bg-white text-black mx-2 py-6 md:px-14 md:py-8 text-base md:text-lg font-bold shadow-2xl hover:shadow-3xl transition-all duration-300 rounded-2xl"
+                  variant="outline" // Changed to outline for better contrast with white bg on light/dark themes
+                  className="w-full sm:w-auto px-10 py-6 text-base md:text-lg font-bold border-2 shadow-2xl hover:shadow-3xl transition-all duration-300 rounded-2xl"
+                  asChild
                 >
                   <a href="/services">{heroCopy("herocta1")}</a>
                 </Button>
