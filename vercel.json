@@ -10,7 +10,7 @@
     }
   ],
   "functions": {
-    "api/send-email.js": {
+    "api/sendmail.js": {
       "memory": 1024,
       "maxDuration": 10
     }
