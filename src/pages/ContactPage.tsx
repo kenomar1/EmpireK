@@ -36,7 +36,7 @@ export default function ContactPage() {
     // ← REPLACE THESE WITH YOUR ACTUAL EMAILJS VALUES
     const SERVICE_ID = "service_m39usn4"; // e.g., service_abc123
     const TEMPLATE_ID = "template_5q89g6c"; // e.g., template_xyz789
-    const PUBLIC_KEY = "ofqwp3aOWL95jfQDhyour_public_key_here"; // Your EmailJS User ID
+    const PUBLIC_KEY = "ofqwp3aOWL95jfQDh"; // Your EmailJS User ID
 
     // Generate current timestamp in a nice format
     const currentTime = new Date().toLocaleString("en-US", {
