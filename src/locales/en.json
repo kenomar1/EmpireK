@@ -25,7 +25,7 @@
     },
 
     "posts": {
-      "future-of-web-development-202 5": {
+      "future-of-web-development-2025": {
         "title": "The Future of Web Development in 2025",
         "excerpt": "Explore emerging technologies like WebAssembly, AI-powered tooling, and edge computing that are reshaping how we build for the web."
       },
@@ -59,6 +59,7 @@
     "namePlaceholder": "John Doe",
     "email": "Email",
     "phone": "Phone",
+    "phonenum": "+201515912781",
     "message": "Your Message",
     "messagePlaceholder": "Tell us about your project...",
     "sendButton": "Send Message",
@@ -72,8 +73,28 @@
 
     "detailsTitle": "Get in Touch",
     "location": "Location",
-    "ourlocation": "Dubai, UAE",
-    "responseTime": "We reply within 2 hours during business days."
+    "ourlocation": "Cairo, Egypt",
+    "responseTime": "We reply within 2 hours during business days.",
+    "callNow": "Call Us Now",
+
+    "bookDateLabel": "Preferred Date",
+    "bookTimeLabel": "Preferred Time",
+    "bookButton": "Book My Call",
+    "bookSuccess": "Call booked successfully! We'll contact you soon.",
+    "bookError": "Failed to book call. Please try again.",
+
+    "nameError": "Name must be at least 2 characters",
+    "emailError": "Invalid email address",
+    "phoneError": "Phone number is too short",
+    "messageError": "Message must be at least 10 characters",
+
+    "bookNameError": "Name is required",
+    "bookEmailError": "Valid email required",
+    "bookPhoneError": "Phone number too short",
+    "bookDateError": "Please select a date",
+    "bookTimeError": "Please select a time",
+
+    "error": "Something went wrong. Please try again."
   },
 
   "nav": {

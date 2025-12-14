@@ -19,21 +19,20 @@ import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
 import emailjs from "@emailjs/browser";
 
-// Schema for Contact Form
+// Schemas with translation keys for errors
 const contactSchema = z.object({
-  name: z.string().min(2, "الاسم يجب أن يكون حرفين على الأقل"),
-  email: z.string().email("البريد الإلكتروني غير صحيح"),
-  phone: z.string().min(8, "رقم الجوال قصير جدًا"),
-  message: z.string().min(10, "الرسالة يجب أن تكون 10 أحرف على الأقل"),
+  name: z.string().min(2, "contact.nameError"),
+  email: z.string().email("contact.emailError"),
+  phone: z.string().min(8, "contact.phoneError"),
+  message: z.string().min(10, "contact.messageError"),
 });
 
-// Schema for Book a Call Modal
 const bookCallSchema = z.object({
-  bookName: z.string().min(2, "Name is required"),
-  bookEmail: z.string().email("Valid email required"),
-  bookPhone: z.string().min(8, "Phone number too short"),
-  bookDate: z.string().min(1, "Please select a date"),
-  bookTime: z.string().min(1, "Please select a time"),
+  bookName: z.string().min(2, "contact.bookNameError"),
+  bookEmail: z.string().email("contact.bookEmailError"),
+  bookPhone: z.string().min(8, "contact.bookPhoneError"),
+  bookDate: z.string().min(1, "contact.bookDateError"),
+  bookTime: z.string().min(1, "contact.bookTimeError"),
 });
 
 type ContactData = z.infer<typeof contactSchema>;
@@ -43,15 +42,13 @@ export default function ContactPage() {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
 
-  // Modal state
   const [isBookCallOpen, setIsBookCallOpen] = useState(false);
 
   // EmailJS Config
   const SERVICE_ID = "service_m39usn4";
   const PUBLIC_KEY = "ofqwp3aOWL95jfQDh";
-
-  const TEMPLATE_CONTACT = "template_5q89g6c"; // 1. Send us a message
-  const TEMPLATE_BOOK_CALL = "template_156uuxo"; // 3. Book call notification to you
+  const TEMPLATE_CONTACT = "template_5q89g6c";
+  const TEMPLATE_BOOK_CALL = "your_book_call_template_id"; // Replace with your actual ID
 
   // Contact Form
   const {
@@ -73,7 +70,6 @@ export default function ContactPage() {
     resolver: zodResolver(bookCallSchema),
   });
 
-  // Send Contact Message
   const onContactSubmit = async (data: ContactData) => {
     const currentTime = new Date().toLocaleString("en-US", {
       weekday: "long",
@@ -99,15 +95,14 @@ export default function ContactPage() {
         PUBLIC_KEY
       );
 
-      toast.success(t("contact.success") || "تم إرسال الرسالة بنجاح!");
+      toast.success(t("contact.success"));
       resetContact();
     } catch (error) {
       console.error("EmailJS Error:", error);
-      toast.error("فشل الإرسال، حاول مرة أخرى.");
+      toast.error(t("contact.error"));
     }
   };
 
-  // Book a Call Submission (Only notifies you — no auto-reply)
   const onBookCallSubmit = async (data: BookCallData) => {
     const preferredDateTime = `${data.bookDate} at ${data.bookTime}`;
 
@@ -124,12 +119,12 @@ export default function ContactPage() {
         PUBLIC_KEY
       );
 
-      toast.success("Call booked successfully! We'll contact you soon.");
+      toast.success(t("contact.bookSuccess"));
       resetBook();
       setIsBookCallOpen(false);
     } catch (error) {
       console.error("Book Call Error:", error);
-      toast.error("Failed to book call. Please try again.");
+      toast.error(t("contact.bookError"));
     }
   };
 
@@ -171,7 +166,6 @@ export default function ContactPage() {
                 onSubmit={handleContactSubmit(onContactSubmit)}
                 className="space-y-6"
               >
-                {/* Form fields unchanged */}
                 <div>
                   <label className="block text-sm font-medium mb-2">
                     {t("contact.name")}
@@ -183,7 +177,7 @@ export default function ContactPage() {
                   />
                   {contactErrors.name && (
                     <p className="text-red-500 text-sm mt-1">
-                      {contactErrors.name.message}
+                      {t(contactErrors.name.message!)}
                     </p>
                   )}
                 </div>
@@ -197,11 +191,11 @@ export default function ContactPage() {
                       {...registerContact("email")}
                       type="email"
                       className="w-full px-5 py-4 rounded-xl bg-background/50 border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
-                      placeholder="name@company.com"
+                      placeholder="name@provider.com"
                     />
                     {contactErrors.email && (
                       <p className="text-red-500 text-sm mt-1">
-                        {contactErrors.email.message}
+                        {t(contactErrors.email.message!)}
                       </p>
                     )}
                   </div>
@@ -213,11 +207,11 @@ export default function ContactPage() {
                       {...registerContact("phone")}
                       type="tel"
                       className="w-full px-5 py-4 rounded-xl bg-background/50 border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
-                      placeholder="+971 50 123 4567"
+                      placeholder="+201515912781"
                     />
                     {contactErrors.phone && (
                       <p className="text-red-500 text-sm mt-1">
-                        {contactErrors.phone.message}
+                        {t(contactErrors.phone.message!)}
                       </p>
                     )}
                   </div>
@@ -235,7 +229,7 @@ export default function ContactPage() {
                   />
                   {contactErrors.message && (
                     <p className="text-red-500 text-sm mt-1">
-                      {contactErrors.message.message}
+                      {t(contactErrors.message.message!)}
                     </p>
                   )}
                 </div>
@@ -248,11 +242,11 @@ export default function ContactPage() {
                   {contactSubmitting ? (
                     <>
                       <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                      {t("contact.sending") || "جاري الإرسال..."}
+                      {t("contact.sending")}
                     </>
                   ) : (
                     <>
-                      {t("contact.sendButton") || "إرسال الرسالة"}
+                      {t("contact.sendButton")}
                       <Send className="w-5 h-5" />
                     </>
                   )}
@@ -327,12 +321,12 @@ export default function ContactPage() {
                     <div>
                       <p className="font-semibold">{t("contact.phone")}</p>
                       <a
-                        href="tel:+971501234567"
-                        className="inline-flex items-center gap-3 px-6 py-3 bg-primary text-primary-foreground rounded-full font-bold text-lg shadow-lg hover:shadow-primary/30 hover:scale-105 transition-all duration-300"
-                      >
-                        {t("contact.callNow") || "Call Us Now"}
-                        <Phone className="w-5 h-5" />
-                      </a>
+  href="tel:+971501234567"
+  dir="ltr"
+  className="inline-flex items-center gap-2 text-primary hover:underline font-medium transition-colors"
+>
+  {t("contact.phonenum")}
+</a>
                     </div>
                   </div>
 
@@ -357,7 +351,7 @@ export default function ContactPage() {
         </div>
       </div>
 
-      {/* Book a Call Modal with Calendar */}
+      {/* Book a Call Modal */}
       {isBookCallOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
           <motion.div
@@ -374,7 +368,7 @@ export default function ContactPage() {
 
             <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
               <Calendar className="w-8 h-8 text-primary" />
-              Book a Call
+              {t("contact.bookCall")}
             </h2>
 
             <form
@@ -382,15 +376,17 @@ export default function ContactPage() {
               className="space-y-6"
             >
               <div>
-                <label className="block text-sm font-medium mb-2">Name</label>
+                <label className="block text-sm font-medium mb-2">
+                  {t("contact.name")}
+                </label>
                 <input
                   {...registerBook("bookName")}
                   className="w-full px-5 py-4 rounded-xl bg-background/50 border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
-                  placeholder="Your Name"
+                  placeholder={t("contact.namePlaceholder")}
                 />
                 {bookErrors.bookName && (
                   <p className="text-red-500 text-sm mt-1">
-                    {bookErrors.bookName.message}
+                    {t(bookErrors.bookName.message!)}
                   </p>
                 )}
               </div>
@@ -398,23 +394,23 @@ export default function ContactPage() {
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    Email
+                    {t("contact.email")}
                   </label>
                   <input
                     {...registerBook("bookEmail")}
                     type="email"
                     className="w-full px-5 py-4 rounded-xl bg-background/50 border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
-                    placeholder="your@email.com"
+                    placeholder="name@company.com"
                   />
                   {bookErrors.bookEmail && (
                     <p className="text-red-500 text-sm mt-1">
-                      {bookErrors.bookEmail.message}
+                      {t(bookErrors.bookEmail.message!)}
                     </p>
                   )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    Phone
+                    {t("contact.phone")}
                   </label>
                   <input
                     {...registerBook("bookPhone")}
@@ -424,33 +420,32 @@ export default function ContactPage() {
                   />
                   {bookErrors.bookPhone && (
                     <p className="text-red-500 text-sm mt-1">
-                      {bookErrors.bookPhone.message}
+                      {t(bookErrors.bookPhone.message!)}
                     </p>
                   )}
                 </div>
               </div>
 
-              {/* Calendar: Date + Time */}
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    Preferred Date
+                    {t("contact.bookDateLabel")}
                   </label>
                   <input
                     {...registerBook("bookDate")}
                     type="date"
-                    min={new Date().toISOString().split("T")[0]} // Prevents past dates
+                    min={new Date().toISOString().split("T")[0]}
                     className="w-full px-5 py-4 rounded-xl bg-background/50 border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
                   />
                   {bookErrors.bookDate && (
                     <p className="text-red-500 text-sm mt-1">
-                      {bookErrors.bookDate.message}
+                      {t(bookErrors.bookDate.message!)}
                     </p>
                   )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    Preferred Time
+                    {t("contact.bookTimeLabel")}
                   </label>
                   <input
                     {...registerBook("bookTime")}
@@ -459,7 +454,7 @@ export default function ContactPage() {
                   />
                   {bookErrors.bookTime && (
                     <p className="text-red-500 text-sm mt-1">
-                      {bookErrors.bookTime.message}
+                      {t(bookErrors.bookTime.message!)}
                     </p>
                   )}
                 </div>
@@ -470,8 +465,17 @@ export default function ContactPage() {
                 disabled={bookSubmitting}
                 className="w-full py-5 bg-primary text-primary-foreground rounded-xl font-bold text-lg shadow-xl hover:shadow-primary/30 hover:scale-105 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-3"
               >
-                {bookSubmitting ? "Submitting..." : "Book My Call"}
-                <Send className="w-5 h-5" />
+                {bookSubmitting ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                    {t("contact.sending")}
+                  </>
+                ) : (
+                  <>
+                    {t("contact.bookButton")}
+                    <Send className="w-5 h-5" />
+                  </>
+                )}
               </button>
             </form>
           </motion.div>
