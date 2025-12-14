@@ -24,7 +24,6 @@ export function HeroPromo() {
           loop
           playsInline
           preload="auto"
-          poster="/hero-fallback.jpg"
         >
           <source src="/hero-background.mp4" type="video/mp4" />
         </video>
