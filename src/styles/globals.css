@@ -205,3 +205,7 @@ body {
 .dark .border-border {
   @apply border-yellow-500;
 }
+video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none;
+}
