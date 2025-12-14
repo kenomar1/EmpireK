@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, Calendar, Send, ArrowRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
+import emailjs from "@emailjs/browser"; // ← EmailJS SDK
 
 const formSchema = z.object({
   name: z.string().min(2, "الاسم يجب أن يكون حرفين على الأقل"),
@@ -32,27 +33,41 @@ export default function ContactPage() {
   });
 
   const onSubmit = async (data: FormData) => {
+    // ← REPLACE THESE WITH YOUR ACTUAL EMAILJS VALUES
+    const SERVICE_ID = "service_m39usn4"; // e.g., service_abc123
+    const TEMPLATE_ID = "template_5q89g6c"; // e.g., template_xyz789
+    const PUBLIC_KEY = "ofqwp3aOWL95jfQDhyour_public_key_here"; // Your EmailJS User ID
+
+    // Generate current timestamp in a nice format
+    const currentTime = new Date().toLocaleString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+
     try {
-      const response = await fetch("/api/send-email", {
-        // ← Your URL
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      await emailjs.send(
+        SERVICE_ID,
+        TEMPLATE_ID,
+        {
           name: data.name,
           email: data.email,
           phone: data.phone,
           message: data.message,
-        }),
-      });
+          time: currentTime, // ← For {{time}} in template
+        },
+        PUBLIC_KEY
+      );
 
-      if (response.ok) {
-        toast.success(t("contact.success") || "تم إرسال الرسالة بنجاح!");
-        reset();
-      } else {
-        toast.error("فشل الإرسال، حاول مرة أخرى.");
-      }
-    } catch (error) {
-      toast.error("خطأ في الاتصال.");
+      toast.success(t("contact.success") || "تم إرسال الرسالة بنجاح!");
+      reset();
+    } catch (error: any) {
+      console.error("EmailJS Error:", error);
+      toast.error("فشل إرسال الرسالة، حاول مرة أخرى.");
     }
   };
 
@@ -77,7 +92,7 @@ export default function ContactPage() {
         </motion.div>
 
         <div className="grid lg:grid-cols-2 gap-12">
-          {/* نموذج التواصل */}
+          {/* Contact Form */}
           <motion.div
             initial={{ opacity: 0, x: isRTL ? 50 : -50 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -90,6 +105,7 @@ export default function ContactPage() {
             </h2>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              {/* Name */}
               <div>
                 <label className="block text-sm font-medium mb-2">
                   {t("contact.name")}
@@ -106,6 +122,7 @@ export default function ContactPage() {
                 )}
               </div>
 
+              {/* Email & Phone */}
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium mb-2">
@@ -123,7 +140,6 @@ export default function ContactPage() {
                     </p>
                   )}
                 </div>
-
                 <div>
                   <label className="block text-sm font-medium mb-2">
                     {t("contact.phone")}
@@ -142,6 +158,7 @@ export default function ContactPage() {
                 </div>
               </div>
 
+              {/* Message */}
               <div>
                 <label className="block text-sm font-medium mb-2">
                   {t("contact.message")}
@@ -159,6 +176,7 @@ export default function ContactPage() {
                 )}
               </div>
 
+              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={isSubmitting}
@@ -179,10 +197,9 @@ export default function ContactPage() {
             </form>
           </motion.div>
 
-          {/* Right side remains unchanged */}
+          {/* Right Column - Unchanged */}
           <div className="space-y-12">
-            {/* Your existing right column code (Calendly + contact details) */}
-            {/* ... unchanged ... */}
+            {/* Schedule Call */}
             <motion.div
               initial={{ opacity: 0, x: isRTL ? -50 : 50 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -197,11 +214,9 @@ export default function ContactPage() {
                   {t("contact.scheduleTitle")}
                 </h2>
               </div>
-
               <p className="text-lg text-muted-foreground mb-8">
                 {t("contact.scheduleDesc")}
               </p>
-
               <a
                 href="https://calendly.com/yourname/30min"
                 target="_blank"
@@ -211,12 +226,12 @@ export default function ContactPage() {
                 {t("contact.bookCall")}
                 <ArrowRight className="w-5 h-5" />
               </a>
-
               <div className="mt-8 p-6 bg-background/50 rounded-2xl text-sm text-muted-foreground">
                 {t("contact.noObligation")}
               </div>
             </motion.div>
 
+            {/* Contact Details */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -226,7 +241,6 @@ export default function ContactPage() {
               <h3 className="text-2xl font-bold mb-8">
                 {t("contact.detailsTitle")}
               </h3>
-
               <div className="space-y-6">
                 <div className="flex items-start gap-5">
                   <div className="p-3 bg-primary/10 rounded-xl">
@@ -242,7 +256,6 @@ export default function ContactPage() {
                     </a>
                   </div>
                 </div>
-
                 <div className="flex items-start gap-5">
                   <div className="p-3 bg-primary/10 rounded-xl">
                     <Phone className="w-6 h-6 text-primary" />
@@ -258,7 +271,6 @@ export default function ContactPage() {
                     </a>
                   </div>
                 </div>
-
                 <div className="flex items-start gap-5">
                   <div className="p-3 bg-primary/10 rounded-xl">
                     <MapPin className="w-6 h-6 text-primary" />
@@ -271,7 +283,6 @@ export default function ContactPage() {
                   </div>
                 </div>
               </div>
-
               <div className="mt-10 pt-8 border-t border-border/50 text-sm text-muted-foreground">
                 {t("contact.responseTime")}
               </div>
