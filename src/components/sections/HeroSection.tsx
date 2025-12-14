@@ -22,7 +22,6 @@ export function HeroPromo() {
           autoPlay
           muted
           loop
-          playsInline
           preload="auto"
           poster="/hero-fallback.jpg"
         >
