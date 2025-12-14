@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { Earth } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 export function HeroPromo() {
   const { i18n, t } = useTranslation();
@@ -12,22 +13,32 @@ export function HeroPromo() {
     t(`hero.${key}`);
 
   const isRTL = i18n.language === "ar";
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {
+        // Silent fallback
+      });
+    }
+  }, []);
 
   return (
     <>
-      {/* Full-Screen Video Background — Always visible */}
+      {/* Full-Screen Video Background */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
         <video
+          ref={videoRef}
           className="absolute inset-0 h-full w-full object-cover"
           autoPlay
           muted
           loop
-          playsInline // Critical for iOS
+          playsInline
           preload="auto"
-          poster="/hero-fallback.jpg" // Fallback if video fails to load
+          poster="/hero-fallback.jpg"
         >
           <source src="/hero-background.mp4" type="video/mp4" />
-          {/* Fallback content if video not supported */}
+          {/* Fallback image inside video */}
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: "url('/hero-fallback.jpg')" }}
