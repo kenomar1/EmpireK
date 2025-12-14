@@ -33,20 +33,17 @@ export default function ContactPage() {
 
   const onSubmit = async (data: FormData) => {
     try {
-      const response = await fetch(
-        "https://empire-k-zyz3.vercel.app//api/send-email",
-        {
-          // ← Your URL
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: data.name,
-            email: data.email,
-            phone: data.phone,
-            message: data.message,
-          }),
-        }
-      );
+      const response = await fetch("/api/send-email", {
+        // ← Your URL
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          message: data.message,
+        }),
+      });
 
       if (response.ok) {
         toast.success(t("contact.success") || "تم إرسال الرسالة بنجاح!");
