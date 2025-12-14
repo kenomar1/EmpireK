@@ -1,0 +1,392 @@
+{
+  "languageName": "English",
+
+  "hero": {
+    "heading": "Speed. Beauty. Control.",
+    "subheading": "We obsess over all three — so you <span class=\"font-bold text-primary\">DON'T</span> have to",
+    "herocta1": "Explore Our Services...",
+    "herocta2": "Book a Meeting"
+  },
+  "blog": {
+    "latest": "LATEST ARTICLES",
+    "allArticles": "All Articles",
+    "noPosts": "No articles found in this category yet.",
+    "minRead": "min read",
+    "heroTitle": "Insights & Inspiration",
+    "heroSubtitle": "Deep dives, tutorials, and industry trends from our expert team.",
+
+    "categories": {
+      "webDevelopment": "Web Development",
+      "uiUx": "UI/UX Design",
+      "cms": "Headless CMS",
+      "mobileApps": "Mobile Apps",
+      "seo": "SEO & Marketing",
+      "maintenance": "Maintenance"
+    },
+
+    "posts": {
+      "future-of-web-development-202 5": {
+        "title": "The Future of Web Development in 2025",
+        "excerpt": "Explore emerging technologies like WebAssembly, AI-powered tooling, and edge computing that are reshaping how we build for the web."
+      },
+      "ui-ux-trends-2025": {
+        "title": "Top UI/UX Trends That Will Dominate 2025",
+        "excerpt": "From glassmorphism to hyper-minimalism and 3D interactions – here are the design directions you need to know."
+      },
+      "why-headless-cms-is-the-future": {
+        "title": "Why Headless CMS is the Future of Content Management",
+        "excerpt": "Decouple your frontend from the backend and deliver content anywhere with speed and flexibility."
+      },
+      "building-native-mobile-apps-react-native": {
+        "title": "Building Truly Native Apps with React Native in 2025",
+        "excerpt": "New architecture, Hermes improvements, and better tooling make React Native the best choice for cross-platform apps."
+      },
+      "seo-strategies-that-actually-work": {
+        "title": "SEO Strategies That Actually Work in 2025",
+        "excerpt": "Core Web Vitals, E-E-A-T, helpful content – learn what really moves the needle today."
+      },
+      "maintenance-tips-for-long-living-projects": {
+        "title": "Maintenance Tips for Long-Living Projects",
+        "excerpt": "How to keep your codebase healthy, secure, and performant years after launch."
+      }
+    }
+  },
+  "contact": {
+    "heroTitle": "Let's Build Together",
+    "heroSubtitle": "Ready to turn your vision into reality? We're one message away.",
+    "formTitle": "Send Us a Message",
+    "name": "Full Name",
+    "namePlaceholder": "John Doe",
+    "email": "Email",
+    "phone": "Phone",
+    "message": "Your Message",
+    "messagePlaceholder": "Tell us about your project...",
+    "sendButton": "Send Message",
+    "sending": "Sending...",
+    "success": "Thank you! We'll get back to you soon.",
+
+    "scheduleTitle": "Schedule a Free Strategy Call",
+    "scheduleDesc": "Pick a time that works for you. No sales pitch — just honest advice.",
+    "bookCall": "Book a Call",
+    "noObligation": "No obligation • 30 minutes • 100% free",
+
+    "detailsTitle": "Get in Touch",
+    "location": "Location",
+    "ourlocation": "Dubai, UAE",
+    "responseTime": "We reply within 2 hours during business days."
+  },
+
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "contact": "Contact",
+    "gallery": "Gallery",
+    "blog": "Blog"
+  },
+  "gallery": {
+    "heroTitle": "Our Work in Action",
+    "heroSubtitle": "Real projects. Real results. See how we transform ideas into digital masterpieces.",
+    "testimonialsTitle": "What Our Clients Say",
+    "cta": "Start Your Project",
+
+    "services": {
+      "webDevelopment": { "name": "Web Development" },
+      "uiUx": { "name": "UI/UX Design" },
+      "cms": { "name": "CMS & Platforms" },
+      "mobileApps": { "name": "Mobile Apps" },
+      "seo": { "name": "SEO Optimization" },
+      "maintenance": { "name": "Maintenance & Support" }
+    },
+
+    "testimonials": [
+      {
+        "name": "Layla Ahmed",
+        "role": "Founder, Bloom Beauty",
+        "content": "The UI/UX redesign increased our bookings by 312%. Absolutely stunning work.",
+        "rating": 5
+      },
+      {
+        "name": "Omar Farooq",
+        "role": "CTO, FinPulse",
+        "content": "Our Next.js site loads in 0.8s now. Best technical team in the region.",
+        "rating": 5
+      },
+      {
+        "name": "Noor Al-Sayed",
+        "role": "Marketing Director, HealthHub",
+        "content": "SEO results exceeded our wildest expectations. Page 1 for 40+ keywords in 4 months.",
+        "rating": 5
+      }
+    ]
+  },
+
+  "bottomNav": {
+    "home": "Home",
+    "search": "Search",
+    "cart": "Cart",
+    "profile": "Profile"
+  },
+
+  "floatingBenefits": {
+    "heading": "Why Teams Trust Us",
+    "items": [
+      {
+        "icon": "zap",
+        "title": "Blazing Fast",
+        "desc": "100 Lighthouse & Core Web Vitals scores"
+      },
+      {
+        "icon": "rocket",
+        "title": "72-Hour Launch",
+        "desc": "Live prototype in 3 days or it’s free"
+      },
+      {
+        "icon": "dollar",
+        "title": "Fixed Price",
+        "desc": "No surprises. One flat rate."
+      },
+      {
+        "icon": "leaf",
+        "title": "Eco-Friendly",
+        "desc": "Lightweight code = greener planet"
+      },
+      {
+        "icon": "shield",
+        "title": "Lifetime Support",
+        "desc": "Free fixes & updates forever"
+      }
+    ]
+  },
+
+  "howWeWork": {
+    "heading": "How We Work",
+    "subheading": "Our proven 5-step process ensures transparency, results, and zero guesswork.",
+    "steps": [
+      {
+        "icon": "target",
+        "number": "01",
+        "title": "Discovery & Strategy",
+        "description": "We dive deep into your business goals, audience, and challenges to craft a winning strategy."
+      },
+      {
+        "icon": "search",
+        "number": "02",
+        "title": "Research & Planning",
+        "description": "Competitor analysis, keyword research, and detailed roadmap tailored to your brand."
+      },
+      {
+        "icon": "sparkles",
+        "number": "03",
+        "title": "Creative Execution",
+        "description": "Our team designs and develops stunning visuals and high-performing campaigns."
+      },
+      {
+        "icon": "rocket",
+        "number": "04",
+        "title": "Launch & Optimize",
+        "description": "We launch with precision and continuously optimize based on real-time data."
+      },
+      {
+        "icon": "chart",
+        "number": "05",
+        "title": "Scale & Grow",
+        "description": "Proven results → we double down on what works and scale your success."
+      }
+    ]
+  },
+
+  "shopPreview": {
+    "eyebrow": "Web Development Agency",
+    "subheading": "Strategy, design, engineering, and optimization — all in one partnership.",
+    "heroWord": "Our Work",
+    "heroSubtitle": "High-performance digital solutions",
+    "cta2": "Explore Gallery",
+    "cta1": "Explore Services",
+    "badge": "Featured",
+    "categories": [
+      {
+        "title": "Web Development",
+        "items": "Full-stack builds",
+        "bestseller": true
+      },
+      { "title": "Product Design", "items": "UX/UI systems" },
+      { "title": "CMS & Platforms", "items": "Headless or custom" },
+      { "title": "Mobile Apps", "items": "iOS & Android" },
+      { "title": "SEO Optimization", "items": "Rank #1 on Google" },
+      { "title": "Maintenance & Care", "items": "Always fast & secure" }
+    ]
+  },
+
+  "demoCard": {
+    "body": "This card automatically adapts to your selected theme."
+  },
+
+  "notFound": {
+    "title": "Page Not Found",
+    "subtitle": "Looks like this page took a wrong turn in the digital cosmos.",
+    "primaryCta": "Return Home",
+    "secondaryCta": "Go Back",
+    "helpText": "Still lost?",
+    "helpLink": "Let us help you",
+    "mailto": "primary1omar@gmail.com"
+  },
+
+  "servicesPage": {
+    "heroTitle": "Professional Digital Agency Services",
+    "heroSubtitle": "End-to-end solutions that grow your business — fast, beautiful, and fully managed.",
+    "orderCta": "Order This Service Now",
+    "orderMeta": "Starting from {{price}} • Delivered in {{timeline}}",
+    "price": "$25+",
+    "timeline": "2–14 days"
+  },
+
+  "textWithImage": {
+    "heading": "Obsessed With Growth, Not Just Good Looks",
+    "texthead": "We solve digital challenges",
+    "text": "We are a digital agency that builds stunning, high-performance online experiences...\nWe design pixel-perfect, clean, and user-friendly interfaces with the latest tools.\nWe write scalable, maintainable, and SEO-friendly code that actually works.\nEvery line of code and every pixel is crafted to grow your revenue and delight your customers.\nFrom idea to launch and ongoing support — delivered on time, on budget, and with zero compromises on quality.",
+    "buttonText": "Learn More About Us",
+    "imageUrl": "/images/about-us-en.jpg"
+  },
+
+  "cmsDemo": {
+    "badge": "LIVE DEMO",
+    "heading": "Discover Our Content Management System",
+    "subheading": "A modern, blazing-fast dashboard that gives your clients <span class='text-primary font-semibold'>total freedom</span> — no more revision emails, no waiting, no code.",
+    "ctaPrimary": "Launch Live Dashboard Demo",
+    "ctaSecondary": "View Demo Website",
+    "iframeUrl": "https://shadcnblocks-admin.vercel.app/",
+    "iframeTitle": "Live CMS Dashboard",
+    "liveBadge": "LIVE & INTERACTIVE",
+    "demoUrl": "https://kendrickStudios/admin",
+    "loginInfo": "Demo login: <code class='font-bold'>demo@client.com</code> • Password: <code class='font-bold'>tryitnow</code>",
+    "finalHeading": "Ready to Stop Doing Revisions Forever?",
+    "finalCta": "Book a Free Strategy Call"
+  },
+
+  "services": {
+    "web-development": {
+      "name": "Web Development",
+      "title": "Web Development",
+      "shortDesc": "WordPress & React Web Development: Lightning-Fast, Secure, Scalable Websites & Custom Solutions - We do all that here.",
+      "features": [
+        "React Architecture",
+        "100% Responsive Design",
+        "Blazing Fast Performance (95+ Lighthouse)",
+        "SEO-Optimized from Day One",
+        "Wordpress Experts",
+        "Custom APIs & Backend"
+      ],
+      "seoHeading": "Professional Web Development That Drives Real Business Growth",
+      "seoBody": "Your website is your #1Salesperson. We build high-converting, ultra-fast digital experiences using Next.js, React, TypeScript, and Tailwind CSS.\n\n**No templates. No bloat. Just pure performance.**\n\n# Why Top Brands Choose Us\nWe've helped startups and enterprises launch pixel-perfect websites that load in under 1 second, rank on Google, and convert visitors into customers — all with lifetime support included.",
+      "seoQuote": "They delivered a site 400% faster than our old one. Traffic and conversions exploded."
+    },
+
+    "ui-ux": {
+      "name": "UI/UX Design",
+      "title": "Conversion-Focused UI/UX Design",
+      "shortDesc": "Beautiful, intuitive interfaces that turn visitors into loyal customers.",
+      "features": [
+        "User Research & Testing",
+        "Figma Design Systems",
+        "Interactive Prototypes",
+        "Accessibility (WCAG)",
+        "A/B Testing Setup",
+        "Brand-Aligned Aesthetics"
+      ],
+      "seoHeading": "UI/UX Design That Doesn’t Just Look Good — It Converts",
+      "seoBody": "Great design isn't about trends. It's about understanding your users and guiding them to take action.\n\n**We design experiences people love to use.**\n\n# From Wireframes to Wow\nEvery click, scroll, and interaction is intentional. We combine stunning visuals with behavioral psychology to create interfaces that feel effortless — and drive measurable results.",
+      "seoQuote": "Our conversion rate jumped 187% after the redesign. Best investment we ever made."
+    },
+
+    "cms": {
+      "name": "CMS & Dashboards",
+      "title": "Powerful Yet Simple Content Management",
+      "shortDesc": "Update your website in seconds — no coding, no developers, no delays.",
+      "features": [
+        "Headless CMS (Sanity, Strapi, Contentful)",
+        "Custom Drag & Drop Builders",
+        "Multi-language Support",
+        "Automated Backups",
+        "Role-Based Access",
+        "Real-Time Preview"
+      ],
+      "seoHeading": "The Last CMS You’ll Ever Need",
+      "seoBody": "Stop paying developers $150/hour for simple text changes.\n\n**Give your team total freedom.**\n\n# Built for Humans, Powered by Code\nOur custom CMS solutions are intuitive enough for marketing teams, powerful enough for developers, and fast enough to make Google happy.",
+      "seoQuote": "Our clients now update their sites themselves. We finally stopped getting revision emails!"
+    },
+
+    "mobile-apps": {
+      "name": "Mobile Apps",
+      "title": "iOS & Android Apps Users Actually Love",
+      "shortDesc": "Native performance. Cross-platform speed. Built with React Native & Flutter.",
+      "features": [
+        "React Native & Flutter Development",
+        "App Store & Play Store Deployment",
+        "Push Notifications",
+        "Offline Functionality",
+        "In-App Analytics",
+        "Secure Authentication"
+      ],
+      "seoHeading": "Mobile App Development That Feels Native — at Half the Cost",
+      "seoBody": "One codebase. Two platforms. Zero compromise.\n\n**Launch faster. Update instantly. Scale globally.**\n\n# From MVP to Millions of Downloads\nWhether you need a customer-facing app or an internal tool, we build mobile experiences that feel buttery smooth — and don’t break the bank.",
+      "seoQuote": "We launched on both stores in 4 weeks. Users say it’s the smoothest app they’ve ever used."
+    },
+
+    "seo": {
+      "name": "SEO Optimization",
+      "title": "Rank #1 on Google — Guaranteed Growth",
+      "shortDesc": "Get found. Get traffic. Get customers. Data-driven SEO that delivers.",
+      "features": [
+        "Advanced Keyword Research",
+        "Technical SEO Audit & Fix",
+        "On-Page Optimization",
+        "Content Strategy",
+        "Backlink Building",
+        "Monthly Performance Reports"
+      ],
+      "seoHeading": "Skyrocket Your Rankings with Expert SEO That Actually Works",
+      "seoBody": "In today’s world, being invisible online is not an option.\n\n**SEO is the highest-ROI marketing channel** — when done right.\n\n# Why Our SEO Gets Results\nWe don’t guess. We analyze, optimize, and dominate. From technical fixes to authority building, our proven system has helped businesses achieve **Page 1 rankings** and **300%+ traffic growth** in months — not years.",
+      "seoQuote": "From 2K to 45K monthly visitors in 6 months. Absolute game changer."
+    },
+
+    "maintenance": {
+      "name": "Maintenance & Support",
+      "title": "Worry-Free Website Care",
+      "shortDesc": "We keep your site fast, secure, and always up-to-date — forever.",
+      "features": [
+        "Daily Cloud Backups",
+        "24/7 Security Monitoring",
+        "Core & Plugin Updates",
+        "Performance Optimization",
+        "Priority Support (Slack/Email)",
+        "Monthly Health Reports"
+      ],
+      "seoHeading": "Website Maintenance That Prevents Problems Before They Happen",
+      "seoBody": "Your website is your digital storefront. One hack, one slow load, one broken link — and you lose trust.\n\n**Sleep easy knowing experts have your back.**\n\n# Peace of Mind, Included\nProactive monitoring, instant fixes, and unlimited small updates — all for a flat monthly fee.",
+      "seoQuote": "We haven’t had a single issue in 2 years. Worth every penny."
+    }
+  },
+
+  "footer": {
+    "brandTitle": "EmpireK",
+    "brandDesc": "Turn your idea into a live store in hours, not weeks",
+    "startProject": "Start Your Project",
+    "servicesTitle": "Services",
+    "services": [
+      "Custom Website Design",
+      "E-commerce Development",
+      "Webapps Development ",
+      "Client Dashboard / CMS",
+      "SEO & Performance",
+      "Maintenance & Support"
+    ],
+    "contactTitle": "Get in Touch",
+    "email": "Hello@empireK.com",
+    "phone": "+20 1515912781",
+    "location": "Cairo, Egypt",
+    "copyright": "© 2025 EmpireK. All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "cookies": "Cookie Policy"
+  }
+}
