@@ -207,5 +207,7 @@ body {
 }
 video::-webkit-media-controls-start-playback-button {
   display: none !important;
-  -webkit-appearance: none;
+}
+video::-webkit-media-controls-panel {
+  display: none !important; /* Optional: hides all controls if unwanted */
 }
