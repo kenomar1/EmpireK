@@ -34,7 +34,7 @@ export default function ContactPage() {
   const onSubmit = async (data: FormData) => {
     try {
       const response = await fetch(
-        "https://your-vercel-project.vercel.app/api/send-email",
+        "https://empire-k-zyz3.vercel.app//api/send-email",
         {
           // ← Your URL
           method: "POST",

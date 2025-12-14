@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/src/api/send-email.js",
-      "destination": "/src/api/send-email.js"
+      "source": "api/send-email.js",
+      "destination": "api/send-email.js"
     },
     {
       "source": "/(.*)",
