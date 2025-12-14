@@ -15,17 +15,23 @@ export function HeroPromo() {
 
   return (
     <>
-      {/* Fixed Full-Screen Video Background */}
+      {/* Full-Screen Video Background — Always visible */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
         <video
-          className=" absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover"
           autoPlay
           muted
           loop
+          playsInline // Critical for iOS
           preload="auto"
-          poster="/hero-fallback.jpg"
+          poster="/hero-fallback.jpg" // Fallback if video fails to load
         >
           <source src="/hero-background.mp4" type="video/mp4" />
+          {/* Fallback content if video not supported */}
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: "url('/hero-fallback.jpg')" }}
+          />
         </video>
       </div>
 
