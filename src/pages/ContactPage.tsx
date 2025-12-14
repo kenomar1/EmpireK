@@ -8,7 +8,6 @@ import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, Calendar, Send, ArrowRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
-import { Resend } from "resend"; // ← Add this import
 
 const formSchema = z.object({
   name: z.string().min(2, "الاسم يجب أن يكون حرفين على الأقل"),
@@ -32,35 +31,31 @@ export default function ContactPage() {
     resolver: zodResolver(formSchema),
   });
 
-  // ← REPLACE the entire onSubmit function with this
   const onSubmit = async (data: FormData) => {
-    const resend = new Resend("re_JXuSQpi9_6QA12NLvmExqz13teWCggpSq"); // ← REPLACE THIS WITH YOUR REAL KEY
-
     try {
-      await resend.emails.send({
-        from: "Contact Form <onboarding@resend.dev>", // Allowed for testing
-        to: "dev.empirek@hotmail.com",
-        replyTo: data.email, // So you can reply directly
-        subject: `New message from ${data.name}`,
-        text: `
-Name: ${data.name}
-Email: ${data.email}
-Phone: ${data.phone}
-
-Message:
-${data.message}
-        `.trim(),
-      });
-
-      toast.success(t("contact.success") || "تم إرسال الرسالة بنجاح!");
-      reset();
-    } catch (error: any) {
-      console.error("Resend error:", error);
-      toast.error(
-        error?.message?.includes("Unauthorized")
-          ? "خطأ في مفتاح Resend، تحقق من المفتاح."
-          : "فشل إرسال الرسالة، حاول مرة أخرى."
+      const response = await fetch(
+        "https://your-vercel-project.vercel.app/api/send-email",
+        {
+          // ← Your URL
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: data.name,
+            email: data.email,
+            phone: data.phone,
+            message: data.message,
+          }),
+        }
       );
+
+      if (response.ok) {
+        toast.success(t("contact.success") || "تم إرسال الرسالة بنجاح!");
+        reset();
+      } else {
+        toast.error("فشل الإرسال، حاول مرة أخرى.");
+      }
+    } catch (error) {
+      toast.error("خطأ في الاتصال.");
     }
   };
 
