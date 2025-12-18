@@ -1,164 +1,230 @@
-// src/pages/BlogPage.tsx
-import { Calendar, Clock, ArrowRight } from "lucide-react";
-import { useTranslation } from "react-i18next";
-import Footer from "../components/layout/Footer";
-import { Link } from "react-router-dom";
+// src/pages/Blog.tsx (Fixed & Updated for Category References)
 
-interface BlogPost {
-  id: number;
-  slug: string;
-  category: keyof typeof categoryColors;
-  readTime: number;
-  date: string;
+import { Link } from "react-router-dom";
+import { format } from "date-fns";
+import { Calendar, Clock } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { client, urlFor } from "../lib/sanityClient";
+
+interface Category {
+  title?: string;
+  colorGradient?: string; // e.g., "from-blue-500 to-cyan-500"
 }
 
-const BLOG_POSTS: BlogPost[] = [
-  {
-    id: 1,
-    slug: "future-of-web-development-2025",
-    category: "webDevelopment",
-    readTime: 6,
-    date: "2025-03-15",
-  },
-  {
-    id: 2,
-    slug: "ui-ux-trends-2025",
-    category: "uiUx",
-    readTime: 8,
-    date: "2025-02-28",
-  },
-  {
-    id: 3,
-    slug: "why-headless-cms-is-the-future",
-    category: "cms",
-    readTime: 5,
-    date: "2025-02-10",
-  },
-  {
-    id: 4,
-    slug: "building-native-mobile-apps-react-native",
-    category: "mobileApps",
-    readTime: 10,
-    date: "2025-01-20",
-  },
-  {
-    id: 5,
-    slug: "seo-strategies-that-actually-work",
-    category: "seo",
-    readTime: 7,
-    date: "2025-01-05",
-  },
-  {
-    id: 6,
-    slug: "maintenance-tips-for-long-living-projects",
-    category: "maintenance",
-    readTime: 4,
-    date: "2024-12-20",
-  },
-];
+interface Author {
+  name?: string;
+  role?: string;
+  avatar?: any;
+}
 
-const categoryColors = {
-  webDevelopment: "from-blue-500 to-cyan-500",
-  uiUx: "from-purple-500 to-pink-500",
-  cms: "from-green-500 to-emerald-500",
-  mobileApps: "from-orange-500 to-red-500",
-  seo: "from-indigo-500 to-purple-500",
-  maintenance: "from-amber-500 to-orange-500",
-} as const;
+interface Post {
+  _id: string;
+  title: string;
+  slug: { current: string };
+  excerpt?: string;
+  mainImage?: any;
+  publishedAt: string;
+  tags?: string[];
+  readTime: number;
+  author?: Author;
+  category?: Category;
+}
 
-export default function BlogPage() {
+export default function Blog() {
   const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === "ar";
+  const currentLang = i18n.language === "ar" ? "ar" : "en";
+
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const query = `*[_type == "post" && language == $lang] | order(publishedAt desc) {
+      _id,
+      title,
+      slug,
+      excerpt,
+      mainImage,
+      publishedAt,
+      tags,
+      "readTime": round(length(pt::text(body)) / 600 + 1),
+      author->{
+        name,
+        role,
+        avatar
+      },
+      category->{
+        title,
+        colorGradient
+      }
+    }`;
+
+    client
+      .fetch(query, { lang: currentLang })
+      .then((data: Post[]) => {
+        setPosts(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching posts:", err);
+        setLoading(false);
+      });
+  }, [currentLang]);
+
+  // Fallback gradient if category has no colorGradient defined
+  const fallbackGradient = "from-gray-500 to-gray-700";
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-2xl text-muted-foreground">
+          {t("blog.loading", "Loading posts...")}
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div
-      className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background"
-      dir={isRTL ? "rtl" : "ltr"}
-    >
-      {/* Hero */}
-      <section className="py-20 px-6 text-center">
-        <div className="max-w-5xl mx-auto">
-          <div className="inline-flex items-center gap-3 bg-primary/10 px-6 py-3 rounded-full text-primary font-semibold mb-6">
-            <span className="tracking-wider">{t("blog.latest")}</span>
+    <>
+      <title>
+        {t(
+          "blog.pageTitle",
+          "Blog | EmpireK - Insights on Web Development & Design"
+        )}
+      </title>
+      <meta
+        name="description"
+        content={t(
+          "blog.pageDescription",
+          "Explore expert articles, tutorials, and case studies on modern web development, performance, design, and agency growth."
+        )}
+      />
+
+      <div className="min-h-screen bg-gradient-to-br from-background via-primary/10 to-background py-16 px-6">
+        <div className="max-w-7xl mx-auto">
+          {/* Hero */}
+          <div className="text-center mb-20">
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tighter text-primary">
+              {t("blog.heroTitle", "Our Blog")}
+            </h1>
+            <p className="mt-6 text-xl text-muted-foreground max-w-3xl mx-auto">
+              {t(
+                "blog.heroSubtitle",
+                "Insights, tutorials, and thoughts on modern web development, design, performance, and agency life."
+              )}
+            </p>
           </div>
-          <h1 className="text-5xl md:text-7xl font-black tracking-tighter bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-            {t("blog.heroTitle")}
-          </h1>
-          <p className="mt-6 text-xl text-muted-foreground max-w-2xl mx-auto">
-            {t("blog.heroSubtitle")}
-          </p>
-        </div>
-      </section>
 
-      {/* Blog Posts Grid */}
-      <section className="max-w-7xl mx-auto px-6 pb-24">
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {BLOG_POSTS.map((post) => (
-            <Link
-              key={post.id}
-              to={`/blogpost`}
-              className="group bg-card rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border border-border/50 flex flex-col h-full"
-            >
-              {/* Image */}
-              <div className="aspect-video overflow-hidden bg-muted">
-                <img
-                  src={`https://images.unsplash.com/photo-${
-                    post.id + 1500000000
-                  }?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600&q=80`}
-                  alt={t(`blog.posts.${post.slug}.title`)}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-              </div>
+          {/* Posts Grid */}
+          {posts.length === 0 ? (
+            <div className="text-center py-20">
+              <p className="text-2xl text-muted-foreground">
+                {t(
+                  "blog.noPosts",
+                  "No posts yet. Time to write your first one in Sanity Studio! 🚀"
+                )}
+              </p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+              {posts.map((post) => {
+                const gradient =
+                  post.category?.colorGradient || fallbackGradient;
+                const categoryTitle = post.category?.title;
 
-              {/* Content */}
-              <div className="p-7 flex flex-col flex-grow">
-                {/* Category Badge */}
-                <span
-                  className={`inline-block w-fit px-4 py-2 rounded-full text-xs font-bold bg-gradient-to-r ${
-                    categoryColors[post.category]
-                  } text-white mb-4`}
-                >
-                  {t(`blog.categories.${post.category}`)}
-                </span>
+                return (
+                  <Link
+                    key={post._id}
+                    to={`/blog/${post.slug.current}`}
+                    className="group bg-card/80 backdrop-blur-sm border border-border/50 rounded-3xl overflow-hidden hover:shadow-2xl hover:-translate-y-3 transition-all duration-500 flex flex-col h-full"
+                  >
+                    {/* Featured Image */}
+                    {post.mainImage ? (
+                      <div className="aspect-video overflow-hidden bg-muted">
+                        <img
+                          src={urlFor(post.mainImage)
+                            .width(800)
+                            .height(500)
+                            .fit("crop")
+                            .url()}
+                          alt={post.title}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        />
+                      </div>
+                    ) : (
+                      <div className="aspect-video bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
+                        <p className="text-3xl font-bold text-primary/50">
+                          {t("blog.noImage", "No Image")}
+                        </p>
+                      </div>
+                    )}
 
-                {/* Title */}
-                <h2 className="text-2xl font-black mb-3 group-hover:text-primary transition-colors line-clamp-2">
-                  {t(`blog.posts.${post.slug}.title`)}
-                </h2>
+                    {/* Card Content */}
+                    <div className="p-8 flex flex-col flex-1">
+                      <div className="flex-1">
+                        <h2 className="text-2xl font-bold mb-3 line-clamp-2 group-hover:text-primary transition-colors">
+                          {post.title}
+                        </h2>
 
-                {/* Excerpt */}
-                <p className="text-muted-foreground text-sm mb-6 flex-grow line-clamp-3">
-                  {t(`blog.posts.${post.slug}.excerpt`)}
-                </p>
-
-                {/* Meta */}
-                <div className="flex items-center justify-between text-sm text-muted-foreground mt-auto">
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-1.5">
-                      <Calendar className="w-4 h-4" />
-                      <span>
-                        {new Date(post.date).toLocaleDateString(
-                          i18n.language === "ar" ? "ar-EG" : "en-US",
-                          { year: "numeric", month: "short", day: "numeric" }
+                        {post.excerpt && (
+                          <p className="text-muted-foreground line-clamp-3 mb-6">
+                            {post.excerpt}
+                          </p>
                         )}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <Clock className="w-4 h-4" />
-                      <span>
-                        {post.readTime} {t("blog.minRead")}
-                      </span>
-                    </div>
-                  </div>
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
 
-      <Footer />
-    </div>
+                        {/* Author + Date + Read Time */}
+                        <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-8">
+                          {post.author?.name && (
+                            <span className="font-medium text-foreground">
+                              {post.author.name}
+                            </span>
+                          )}
+                          <div className="flex items-center gap-2">
+                            <Calendar className="w-4 h-4" />
+                            {format(new Date(post.publishedAt), "MMM d, yyyy")}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Clock className="w-4 h-4" />
+                            {post.readTime} {t("blog.minRead", "min read")}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Bottom: Category + Tags */}
+                      {(categoryTitle ||
+                        (post.tags && post.tags.length > 0)) && (
+                        <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-border/30">
+                          {categoryTitle && (
+                            <span
+                              className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold text-white bg-gradient-to-r ${gradient}`}
+                            >
+                              <div className="w-2 h-2 rounded-full bg-white/70" />
+                              {categoryTitle}
+                            </span>
+                          )}
+
+                          {post.tags && post.tags.length > 0 && (
+                            <div className="flex flex-wrap gap-2">
+                              {post.tags.map((tag: string) => (
+                                <span
+                                  key={tag}
+                                  className="px-3 py-1 text-xs font-medium bg-muted/70 rounded-full border border-border/50 text-muted-foreground"
+                                >
+                                  #{tag}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+    </>
   );
 }

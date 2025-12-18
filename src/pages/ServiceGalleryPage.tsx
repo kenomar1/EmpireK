@@ -1,302 +1,368 @@
-// src/pages/ServiceGalleryPage.tsx
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+"use client";
+
+import { useEffect, useState } from "react";
 import {
-  Palette,
   Globe,
+  Palette,
   Code2,
-  Smartphone,
   Search,
   Shield,
-  ArrowRight,
-  Star,
-  Quote,
-  ChevronLeft,
-  ChevronRight,
+  ExternalLink,
+  Calendar,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import Footer from "../components/layout/Footer";
+import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
+import { client, urlFor } from "../lib/sanityClient";
 
-interface ServiceConfig {
-  key: string;
-  icon: React.FC<any>;
-  color: string;
-  images: string[];
-}
+const icons = {
+  globe: Globe,
+  palette: Palette,
+  code: Code2,
+  search: Search,
+  shield: Shield,
+};
 
-const SERVICE_CONFIG: ServiceConfig[] = [
-  {
-    key: "webDevelopment",
-    icon: Globe,
-    color: "from-blue-500 to-cyan-500",
-    images: [
-      "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=1200&h=800&fit=crop",
-    ],
-  },
-  {
-    key: "uiUx",
-    icon: Palette,
-    color: "from-purple-500 to-pink-500",
-    images: [
-      "https://images.unsplash.com/photo-1562577308-9e5e8f5a6b0b?w=1200&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1559028006-44836d92b96f?w=1200&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1551650975-87de5e12a9b8?w=1200&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1561070791-36a0e720ae27?w=1200&h=800&fit=crop",
-    ],
-  },
-  {
-    key: "cms",
-    icon: Code2,
-    color: "from-green-500 to-emerald-500",
-    images: [
-      "https://images.unsplash.com/photo-1547658719-da2bb8d5e2b3?w=1200&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1551033406-6110c3f5b7b9?w=1200&h=800&fit=crop",
-    ],
-  },
-  {
-    key: "mobileApps",
-    icon: Smartphone,
-    color: "from-orange-500 to-red-500",
-    images: [
-      "https://images.unsplash.com/photo-1512941937669-90a6b5b83691?w=1200&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1611224923853-80b023a89d0f?w=1200&h=800&fit=crop",
-    ],
-  },
-  {
-    key: "seo",
-    icon: Search,
-    color: "from-indigo-500 to-purple-500",
-    images: [
-      "https://images.unsplash.com/photo-1562577309-4932fdd64cd1?w=1200&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=800&fit=crop",
-    ],
-  },
-  {
-    key: "maintenance",
-    icon: Shield,
-    color: "from-amber-500 to-orange-500",
-    images: [
-      "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?w=1200&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1581093450021-4a7360e9c636?w=1200&h=800&fit=crop",
-    ],
-  },
-];
+type Category = {
+  _id: string;
+  title: string;
+  icon: keyof typeof icons;
+};
 
-export default function ServiceGalleryPage() {
+type Project = {
+  _id: string;
+  title: string;
+  slug: { current: string };
+  client?: string;
+  year?: number;
+  description?: string;
+  mainImage?: { asset?: { url: string } };
+  images?: Array<{ _key: string; asset?: { url: string }; caption?: string }>;
+  link?: string;
+  category?: Category | null;
+};
+
+type BlogPost = {
+  _id: string;
+  title: string;
+  slug: { current: string };
+  excerpt?: string;
+  mainImage?: { asset?: { url: string } };
+  publishedAt?: string;
+};
+
+export default function GalleryPage() {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [projectsByCategory, setProjectsByCategory] = useState<
+    Record<string, Project[]>
+  >({});
+  const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null);
+  const [highlightedPosts, setHighlightedPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const { t, i18n } = useTranslation();
+  const currentLang = i18n.language === "ar" ? "ar" : "en";
   const isRTL = i18n.language === "ar";
-  const [activeTab, setActiveTab] = useState(0); // Index-based
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
-  const currentService = SERVICE_CONFIG[activeTab];
-  const Icon = currentService.icon;
+  useEffect(() => {
+    const query = `
+      {
+        "projects": *[_type == "project" && language == $lang] | order(_createdAt desc) {
+          _id,
+          title,
+          slug,
+          client,
+          year,
+          description,
+          link,
+          mainImage { asset-> { url } },
+          images[] { _key, caption, asset-> { url } },
+          "category": category-> { _id, title, icon }
+        },
+        "categories": *[_type == "category"] { _id, title, icon }
+      }
+    `;
 
-  const handleTabClick = (index: number) => {
-    setActiveTab(index);
-    setSelectedImageIndex(0); // Reset image on tab change
-  };
+    client
+      .fetch<{ projects: Project[]; categories: Category[] }>(query, {
+        lang: currentLang,
+      })
+      .then((data) => {
+        const uniqueCategories = data.categories;
+        const grouped: Record<string, Project[]> = {};
+        data.projects.forEach((project) => {
+          const catId = project.category?._id || "uncategorized";
+          if (!grouped[catId]) grouped[catId] = [];
+          grouped[catId].push(project);
+        });
 
-  const nextImage = () => {
-    setSelectedImageIndex((prev) =>
-      prev === currentService.images.length - 1 ? 0 : prev + 1
+        setProjects(data.projects);
+        setCategories(uniqueCategories);
+        setProjectsByCategory(grouped);
+        setActiveCategoryId(uniqueCategories[0]?._id || null);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
+  }, [currentLang]);
+
+  // Fetch highlighted blog posts for the active category
+  useEffect(() => {
+    if (!activeCategoryId) {
+      setHighlightedPosts([]);
+      return;
+    }
+
+    const postsQuery = `*[_type == "post" && isHighlighted == true && language == $lang && category._ref == $categoryId] | order(publishedAt desc) [0...6] {
+      _id,
+      title,
+      slug,
+      excerpt,
+      publishedAt,
+      "mainImage": mainImage.asset-> { url }
+    }`;
+
+    client
+      .fetch<BlogPost[]>(postsQuery, {
+        lang: currentLang,
+        categoryId: activeCategoryId,
+      })
+      .then(setHighlightedPosts)
+      .catch(() => setHighlightedPosts([]));
+  }, [activeCategoryId, currentLang]);
+
+  if (loading)
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p>{t("common.loading")}</p>
+      </div>
     );
-  };
-
-  const prevImage = () => {
-    setSelectedImageIndex((prev) =>
-      prev === 0 ? currentService.images.length - 1 : prev - 1
+  if (projects.length === 0)
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p>{t("gallery.noProjects")}</p>
+      </div>
     );
-  };
 
   return (
-    <div
-      className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background"
-      dir={isRTL ? "rtl" : "ltr"}
-    >
+    <div dir={isRTL ? "rtl" : "ltr"} className="min-h-screen bg-background">
       {/* Hero */}
-      <section className="py-20 px-6 text-center">
+      <section className="pt-24 pb-32 px-6 text-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5" />
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          className="max-w-5xl mx-auto"
+          className="relative max-w-5xl mx-auto"
         >
-          <div className="inline-flex items-center gap-3 bg-primary/10 px-6 py-3 rounded-full text-primary font-semibold mb-6">
-            <Icon className="w-6 h-6" />
-            {t(`gallery.services.${currentService.key}.name`)}
-          </div>
-          <h1 className="text-5xl md:text-7xl font-black tracking-tighter bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-            {t("gallery.heroTitle")}
+          <h1 className="text-5xl md:text-7xl font-black mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+            {t("gallery.heroTitle", "Our Work Gallery")}
           </h1>
-          <p className="mt-6 text-xl text-muted-foreground max-w-2xl mx-auto">
-            {t("gallery.heroSubtitle")}
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            {t(
+              "gallery.heroSubtitle",
+              "Real projects delivered for real clients"
+            )}
           </p>
         </motion.div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-6 pb-24">
-        <div className="grid lg:grid-cols-4 gap-10">
-          {/* Side Tabs */}
-          <aside className="space-y-3">
-            {SERVICE_CONFIG.map((service, index) => {
-              const ServiceIcon = service.icon;
-              const isActive = index === activeTab;
+      {/* Category Tabs */}
+      <section className="px-6 mb-16">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-wrap justify-center gap-6">
+            {categories.map((category) => {
+              const Icon = icons[category.icon] || Globe;
+              const isActive = activeCategoryId === category._id;
 
               return (
                 <motion.button
-                  key={service.key}
-                  onClick={() => handleTabClick(index)}
-                  whileHover={{ x: isRTL ? -8 : 8 }}
-                  className={`w-full text-left p-5 rounded-2xl transition-all flex items-center gap-4 ${
+                  key={category._id}
+                  onClick={() => setActiveCategoryId(category._id)}
+                  whileHover={{ scale: 1.05 }}
+                  className={`flex flex-col items-center gap-4 px-10 py-8 rounded-3xl font-bold text-lg shadow-xl transition-all ${
                     isActive
-                      ? "bg-primary text-primary-foreground shadow-2xl ring-4 ring-primary/20"
-                      : "bg-card hover:bg-accent/70 border border-border"
+                      ? "bg-primary text-primary-foreground ring-4 ring-primary/30"
+                      : "bg-card hover:bg-accent"
                   }`}
                 >
-                  <div
-                    className={`p-3 rounded-xl ${
-                      isActive ? "bg-white/20" : "bg-primary/10"
-                    }`}
-                  >
-                    <ServiceIcon
-                      className={`w-6 h-6 ${
-                        isActive ? "text-white" : "text-primary"
-                      }`}
-                    />
+                  <div className="p-5 bg-white/20 rounded-2xl">
+                    <Icon className="w-12 h-12" />
                   </div>
-                  <span className="font-semibold">
-                    {t(`gallery.services.${service.key}.name`)}
-                  </span>
-                  {isActive && <ArrowRight className="ml-auto w-5 h-5" />}
+                  <span>{category.title}</span>
                 </motion.button>
               );
             })}
-          </aside>
-
-          {/* Gallery */}
-          <div className="lg:col-span-3">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, x: isRTL ? -50 : 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-              className="relative rounded-3xl overflow-hidden bg-black/50 shadow-2xl"
-            >
-              <AnimatePresence mode="wait">
-                <motion.img
-                  key={selectedImageIndex}
-                  src={currentService.images[selectedImageIndex]}
-                  alt={`${t(`gallery.services.${currentService.key}.name`)} ${
-                    selectedImageIndex + 1
-                  }`}
-                  initial={{ opacity: 0, scale: 1.1 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.6 }}
-                  className="w-full aspect-video object-cover"
-                />
-              </AnimatePresence>
-
-              {/* Navigation */}
-              <button
-                onClick={prevImage}
-                className="absolute left-6 top-1/2 -translate-y-1/2 p-4 bg-white/20 backdrop-blur-md rounded-full hover:bg-white/30 transition-all"
-              >
-                <ChevronLeft className="w-8 h-8" />
-              </button>
-              <button
-                onClick={nextImage}
-                className="absolute right-6 top-1/2 -translate-y-1/2 p-4 bg-white/20 backdrop-blur-md rounded-full hover:bg-white/30 transition-all"
-              >
-                <ChevronRight className="w-8 h-8" />
-              </button>
-
-              {/* Dots */}
-              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3">
-                {currentService.images.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setSelectedImageIndex(i)}
-                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                      i === selectedImageIndex ? "bg-white w-10" : "bg-white/50"
-                    }`}
-                  />
-                ))}
-              </div>
-            </motion.div>
-
-            <p className="text-center mt-6 text-muted-foreground font-medium">
-              {selectedImageIndex + 1} / {currentService.images.length}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Testimonials */}
-      <section className="px-6 py-24 bg-gradient-to-t from-primary/5 to-background">
-        <div className="max-w-7xl mx-auto">
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-5xl md:text-6xl font-black text-center mb-16"
-          >
-            {t("gallery.testimonialsTitle")}
-          </motion.h2>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {(t("gallery.testimonials", { returnObjects: true }) as any[]).map(
-              (testimonial: any, i: number) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.15 }}
-                  className="bg-card/90 backdrop-blur-xl rounded-3xl p-8 shadow-xl border border-border/50"
-                >
-                  <Quote className="w-12 h-12 text-primary/20 mb-6" />
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(testimonial.rating)].map((_, starIdx) => (
-                      <Star
-                        key={starIdx}
-                        className="w-5 h-5 fill-primary text-primary"
-                      />
-                    ))}
-                  </div>
-                  <p className="text-lg italic text-foreground/80 mb-8">
-                    "{testimonial.content}"
-                  </p>
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white font-bold text-xl">
-                      {testimonial.name[0]}
-                    </div>
-                    <div>
-                      <p className="font-bold">{testimonial.name}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {testimonial.role}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              )
-            )}
-          </div>
-
-          <div className="text-center mt-16">
-            <a
-              href="/contact"
-              className="inline-flex items-center gap-4 px-10 py-6 bg-primary text-primary-foreground rounded-full text-xl font-bold shadow-2xl hover:scale-105 transition-all duration-300"
-            >
-              {t("gallery.cta")} <ArrowRight className="w-6 h-6" />
-            </a>
           </div>
         </div>
       </section>
 
-      <Footer />
+      {/* Projects Grid */}
+      <section className="px-6 pb-32">
+        <div className="max-w-7xl mx-auto">
+          <AnimatePresence mode="wait">
+            {activeCategoryId && (
+              <motion.div
+                key={activeCategoryId}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
+              >
+                {(projectsByCategory[activeCategoryId] || []).map(
+                  (project, i) => (
+                    <motion.div
+                      key={project._id}
+                      initial={{ opacity: 0, y: 40 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.1 }}
+                      className="group bg-card rounded-3xl overflow-hidden shadow-xl hover:shadow-foreground/60 shadow-foreground/30 transition-all duration-500 "
+                    >
+                      {project.mainImage?.asset?.url ? (
+                        <div className="aspect-video overflow-hidden">
+                          <img
+                            src={urlFor(project.mainImage)
+                              .width(800)
+                              .height(500)
+                              .fit("crop")
+                              .url()}
+                            alt={project.title}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                          />
+                        </div>
+                      ) : (
+                        <div className="aspect-video bg-muted flex items-center justify-center">
+                          <span className="text-muted-foreground">
+                            No image
+                          </span>
+                        </div>
+                      )}
+
+                      <div className="p-8">
+                        <h3 className="text-2xl font-bold mb-3 group-hover:text-primary transition-colors">
+                          {project.title}
+                        </h3>
+                        {(project.client || project.year) && (
+                          <p className="text-muted-foreground mb-4">
+                            {project.client && <span>{project.client}</span>}
+                            {project.client && project.year && " • "}
+                            {project.year && <span>{project.year}</span>}
+                          </p>
+                        )}
+                        {project.description && (
+                          <p className="text-muted-foreground line-clamp-3 mb-6">
+                            {project.description}
+                          </p>
+                        )}
+
+                        <div className="flex items-center justify-between">
+                          <Link
+                            to={`/project/${project.slug.current}`}
+                            className="text-primary font-semibold flex items-center gap-2 hover:gap-3 transition-all"
+                          >
+                            {t("gallery.viewDetails")} →
+                          </Link>
+                          {project.link && (
+                            <a
+                              href={project.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-primary/70 hover:text-primary flex items-center gap-2"
+                            >
+                              <ExternalLink className="w-5 h-5" />
+                              Live
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </motion.div>
+                  )
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </section>
+
+      {/* Related Insights Section - Below Projects */}
+      {highlightedPosts.length > 0 && (
+        <section className="px-6 py-32 bg-muted/30">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-4xl md:text-5xl font-black mb-6">
+                {t("gallery.relatedInsights", "Insights & Expertise")}
+              </h2>
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                {t(
+                  "gallery.insightsSubtitle",
+                  "Articles and thought leadership from this category"
+                )}
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+              {highlightedPosts.slice(0, 6).map((post, index) => (
+                <motion.div
+                  key={post._id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <Link
+                    to={`/blog/${post.slug.current}`}
+                    className="group  bg-foreground text-background rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 h-full flex flex-col "
+                  >
+                    {post.mainImage?.asset?.url ? (
+                      <div className="aspect-video overflow-hidden">
+                        <img
+                          src={urlFor(post.mainImage)
+                            .width(600)
+                            .height(400)
+                            .fit("crop")
+                            .url()}
+                          alt={post.title}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        />
+                      </div>
+                    ) : (
+                      <div className="aspect-video bg-muted/50 flex items-center justify-center">
+                        <span className="text-muted-foreground text-sm">
+                          No image
+                        </span>
+                      </div>
+                    )}
+
+                    <div className="p-8 flex-1 flex flex-col">
+                      <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors line-clamp-2">
+                        {post.title}
+                      </h3>
+                      {post.excerpt && (
+                        <p className="text-muted-foreground text-sm mb-4 line-clamp-3 flex-1">
+                          {post.excerpt}
+                        </p>
+                      )}
+                      {post.publishedAt && (
+                        <div className="mt-auto flex items-center gap-2 text-sm text-muted-foreground">
+                          <Calendar className="w-4 h-4" />
+                          {new Date(post.publishedAt).toLocaleDateString()}
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

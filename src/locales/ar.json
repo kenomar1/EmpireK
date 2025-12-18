@@ -65,6 +65,8 @@
     "heroSubtitle": "مشاريع حقيقية. نتائج حقيقية. شاهد كيف نحول الأفكار إلى روائع رقمية.",
     "testimonialsTitle": "ما يقوله عملاؤنا",
     "cta": "ابدأ مشروعك الآن",
+    "relatedInsights": "مقالات ذات صلة",
+    "viewDetails": "تعرف اكثر",
 
     "services": {
       "webDevelopment": { "name": "تطوير الويب" },
@@ -369,7 +371,21 @@
     "noPosts": "لا توجد مقالات في هذه الفئة بعد.",
     "minRead": "دقيقة قراءة",
     "heroTitle": "رؤى وإلهام",
-    "heroSubtitle": "غوص عميق، دروس تعليمية، وأحدث اتجاهات الصناعة من فريقنا المتخصص.",
+    "pageTitle": "المدونة | EmpireK - رؤى في تطوير الويب والتصميم",
+    "pageDescription": "استكشف مقالات ودروس ودراسات حالة متخصصة في تطوير الويب الحديث، الأداء، التصميم، ونمو الوكالة.",
+    "heroSubtitle": "رؤى ودروس وأفكار حول تطوير الويب الحديث، التصميم، الأداء، وحياة الوكالة.",
+    "loading": "جاري تحميل المقالات...",
+    "noImage": "لا توجد صورة",
+    "loadingArticle": "جاري تحميل المقالة...",
+    "postNotFound": "المقالة غير موجودة",
+    "postTitleTemplate": "{{title}} | EmpireK",
+    "defaultPostDesc": "اقرأ هذه المقالة الرائعة من مدونة وكالتنا.",
+    "defaultAuthor": "فريق EmpireK",
+    "defaultRole": "مطورون خبراء",
+    "shareArticle": "شارك هذا المقال",
+    "spreadKnowledge": "ساعدنا في نشر المعرفة",
+    "copyLink": "نسخ الرابط",
+    "share": "مشاركة",
 
     "categories": {
       "webDevelopment": "تطوير الويب",

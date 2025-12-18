@@ -8,12 +8,26 @@
     "herocta2": "Book a Meeting"
   },
   "blog": {
+    "loadingArticle": "Loading article...",
+    "postNotFound": "Article not found",
+    "postTitleTemplate": "{{title}} | EmpireK",
+    "defaultPostDesc": "Read this insightful article from our agency blog.",
+    "defaultAuthor": "EmpireK Team",
+    "defaultRole": "Expert Developers",
+    "shareArticle": "Share this article",
+    "spreadKnowledge": "Help us spread the knowledge",
+    "copyLink": "Copy link",
+    "share": "Share",
     "latest": "LATEST ARTICLES",
     "allArticles": "All Articles",
     "noPosts": "No articles found in this category yet.",
     "minRead": "min read",
+    "pageTitle": "Blog | EmpireK - Insights on Web Development & Design",
+    "pageDescription": "Explore expert articles, tutorials, and case studies on modern web development, performance, design, and agency growth.",
     "heroTitle": "Insights & Inspiration",
-    "heroSubtitle": "Deep dives, tutorials, and industry trends from our expert team.",
+    "heroSubtitle": "Insights, tutorials, and thoughts on modern web development, design, performance, and agency life.",
+    "loading": "Loading posts...",
+    "noImage": "No Image",
 
     "categories": {
       "webDevelopment": "Web Development",
@@ -109,6 +123,8 @@
     "heroSubtitle": "Real projects. Real results. See how we transform ideas into digital masterpieces.",
     "testimonialsTitle": "What Our Clients Say",
     "cta": "Start Your Project",
+    "relatedInsights": "Insights & Expertise",
+    "viewDetails": "View Details",
 
     "services": {
       "webDevelopment": { "name": "Web Development" },
@@ -411,3 +427,5 @@
     "cookies": "Cookie Policy"
   }
 }
+
+ 
