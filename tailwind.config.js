@@ -51,22 +51,23 @@ export default {
           5: "hsl(var(--chart-5))",
         },
       },
+      // Added Playfair Display font family
+      fontFamily: {
+        playfair: ["'Roboto Slab'", "sans-serif"],
+        Bebas: ["'Bebas Neue'", "serif"],
+        Cairo: ["'Cairo'", "sans-serif"],
+
+        // Optional: keep sans as fallback or for other uses
+        sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+      },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
         },
       },
       animation: {
@@ -76,8 +77,8 @@ export default {
     },
   },
 
-  // إضافة هذا السطر لتفعيل الـ dark mode عبر class
-  darkMode: ["class", "class"],
+  // Fixed: darkMode should be "class" or ["class"], not duplicated
+  darkMode: "class",
 
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 };

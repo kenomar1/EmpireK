@@ -42,12 +42,15 @@ export function FixedNavbar() {
     <header
       key={currentLang}
       dir={isRTL ? "rtl" : "ltr"}
-      className="fixed inset-x-0 top-0 z-50"
+      className="fixed inset-x-0 top-0 z-50 "
     >
-      <div className="bg-background/10 backdrop-blur-[0.5px]">
+      <div className="bg-background/10 font-Cairo font-playfair backdrop-blur-[0.5px]">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:px-8">
           {/* Logo */}
-          <a href="/" className="text-2xl font-bold tracking-tight font-mono">
+          <a
+            href="/"
+            className="text-2xl tracking-widest font-thin font-Bebas "
+          >
             <span className="text-foreground">Empire</span>
             <span className="text-primary">K</span>
           </a>
@@ -123,12 +126,12 @@ export function FixedNavbar() {
             </SheetTrigger>
             <SheetContent
               side={isRTL ? "left" : "right"}
-              className="w-80 bg-background/80 backdrop-blur-xl"
+              className="w-80 bg-background/80 backdrop-blur-sm"
             >
               <div className="flex flex-col gap-8 mt-6">
-                <a href="/" className="text-2xl font-bold">
-                  <span className="text-primary">K</span>
+                <a href="/" className="text-2xl tracking-widest font-Bebas ">
                   <span className="text-foreground">Empire</span>
+                  <span className="text-primary">K</span>
                 </a>
 
                 <nav className="flex flex-col gap-6">

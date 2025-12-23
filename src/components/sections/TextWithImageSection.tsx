@@ -15,11 +15,11 @@ export function TextWithImageSection() {
 
   return (
     <section
-      className="w-full py-16 md:py-24 bg-background"
+      className="w-full  py-16 md:py-24 bg-background"
       dir={isRTL ? "rtl" : "ltr"}
     >
       <div className="text-center mb-12">
-        <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground">
+        <h2 className="text-4xl font-Cairo font-playfair md:text-5xl font-bold tracking-tight text-foreground">
           {textWithImage("heading")}
         </h2>
       </div>
@@ -28,16 +28,16 @@ export function TextWithImageSection() {
         {/* Text Side */}
         <div className={isRTL ? "md:order-2" : "md:order-1"}>
           <div className="space-y-6">
-            <h3 className="text-lg md:text-3xl font-bold text-primary leading-relaxed">
+            <h3 className="text-lg font-Cairo font-playfair md:text-3xl font-bold text-primary leading-relaxed">
               {textWithImage("texthead")}
             </h3>
-            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed whitespace-pre-line">
+            <p className="text-lg md:text-xl  text-muted-foreground leading-relaxed whitespace-pre-line">
               {textWithImage("text")}
             </p>
             <Button
               size="lg"
               variant="default"
-              className="mt-6 shadow-lg hover:shadow-xl transition-all"
+              className="mt-6 font-playfair shadow-lg hover:shadow-xl transition-all"
             >
               {textWithImage("buttonText")}
             </Button>

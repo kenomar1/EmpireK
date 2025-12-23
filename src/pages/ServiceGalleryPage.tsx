@@ -151,7 +151,7 @@ export default function GalleryPage() {
     <div dir={isRTL ? "rtl" : "ltr"} className="min-h-screen bg-background">
       {/* Hero */}
       <section className="pt-24 pb-32 px-6 text-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5" />
+        <div className="absolute inset-0 bg-background" />
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
@@ -182,10 +182,10 @@ export default function GalleryPage() {
                   key={category._id}
                   onClick={() => setActiveCategoryId(category._id)}
                   whileHover={{ scale: 1.05 }}
-                  className={`flex flex-col items-center gap-4 px-10 py-8 rounded-3xl font-bold text-lg shadow-xl transition-all ${
+                  className={`flex flex-col items-center gap-4 px-28 py-8 rounded-3xl font-bold text-lg shadow-xl transition-all ${
                     isActive
-                      ? "bg-primary text-primary-foreground ring-4 ring-primary/30"
-                      : "bg-card hover:bg-accent"
+                      ? "bg-primary text-primary-foreground shadow-primary/40 ring-4 ring-primary/30"
+                      : "bg-card text-foreground shadow-foreground/20 hover:bg-primary/20 hover:shadow-2xl"
                   }`}
                 >
                   <div className="p-5 bg-white/20 rounded-2xl">

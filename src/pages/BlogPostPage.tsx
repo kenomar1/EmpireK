@@ -175,7 +175,7 @@ export default function BlogPostPage() {
       </script>
 
       <div
-        className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background"
+        className="min-h-screen bg-gradient-to-br font-Cairo font-playfair from-background via-muted/20 to-background"
         dir={isRTL ? "rtl" : "ltr"}
       >
         {/* Hero */}

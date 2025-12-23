@@ -27,29 +27,29 @@ export function FloatingBenefits() {
 
   return (
     <section
-      className="relative w-full overflow-hidden bg-background py-16 md:py-24 lg:py-32"
+      className="relative w-full overflow-hidden bg-background py-16 md:py-24 lg:py-32 "
       dir={isRTL ? "rtl" : "ltr"}
     >
-      <div className="mx-auto max-w-7xl px-6">
+      <div className="mx-auto max-w-7xl  px-4">
         {/* Mobile: Stacked layout (text first, icons below) */}
         <div className="block md:hidden space-y-12">
-          <h2 className="text-4xl sm:text-5xl font-black tracking-tight text-foreground text-center">
+          <h2 className="text-4xl  sm:text-5xl font-black tracking-tight text-foreground text-center">
             {heading}
           </h2>
 
           {/* Mobile Floating Icons Grid */}
-          <div className="relative h-80 overflow-hidden rounded-3xl bg-gradient-to-br from-primary/5 to-background">
+          <div className="relative h-80 overflow-hidden rounded-3xl bg-trasnparent">
             {benefits.map((item, i) => {
               const Icon = iconMap[item.icon] || Zap;
               return (
                 <div
                   key={i}
                   className="absolute flex flex-col items-center gap-3 p-5 rounded-2xl 
-                             bg-white/90 backdrop-blur-xl border border-primary/20 
-                             shadow-2xl animate-float"
+                             bg-transparent border border-primary/20 
+                              animate-float"
                   style={{
                     top: `${10 + (i % 2) * 35}%`,
-                    left: `${10 + (i % 3) * 25}%`,
+                    left: `${0 + (i % 3) * 35}%`,
                     animationDelay: `${i * 1.2}s`,
                     animationDuration: `${15 + i * 2}s`,
                   }}
@@ -93,13 +93,13 @@ export function FloatingBenefits() {
                 <div
                   key={i}
                   className="absolute flex flex-col items-center gap-4 p-6 rounded-3xl 
-                             bg-white/95 backdrop-blur-xl border border-primary/20 
-                             shadow-2xl animate-float"
+                             bg-transparent  border border-primary/10 
+                              animate-float"
                   style={{
                     top: `${8 + i * 16}%`,
                     left: `${10 + (i % 3) * 28}%`,
                     animationDelay: `${i * 1.5}s`,
-                    animationDuration: `${16 + i * 3}s`,
+                    animationDuration: `${8 + i * 3}s`,
                   }}
                 >
                   <Icon className="h-16 w-16 text-primary" strokeWidth={1.5} />
@@ -110,7 +110,7 @@ export function FloatingBenefits() {
 
           {/* RIGHT: Text */}
           <div className="space-y-10 lg:space-y-12">
-            <h2 className="text-5xl lg:text-6xl font-black tracking-tight text-foreground">
+            <h2 className="text-5xl lg:text-6xl font-playfair font-black tracking-tight text-foreground">
               {heading}
             </h2>
 
@@ -118,7 +118,7 @@ export function FloatingBenefits() {
               const Icon = iconMap[item.icon] || Zap;
               return (
                 <div key={i} className="flex items-start gap-6">
-                  <div className="p-4 rounded-2xl bg-primary/10 flex-shrink-0">
+                  <div className="p-4 rounded-2xl bg-background flex-shrink-0">
                     <Icon className="h-9 w-9 text-primary" />
                   </div>
                   <div>

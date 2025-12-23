@@ -2,8 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+
 /* Light Theme – Neutral (الألوان الصحيحة دلوقتي) */
 :root {
+  --font-primary: "Playfair Display", "Inter", serif;  /* Serif fallback for elegance */
   /* Light Theme */
   --background: 0 0% 100%;
   --foreground: 240 10% 3.9%;
@@ -32,8 +34,9 @@
 
 :root[data-theme="dark"], 
 html[data-theme="dark"] {
+  
   /* Dark Theme */
-  --background: 240 10% 3.9%;
+  --background: 0 0% 10%;
   --foreground: 0 0% 98%;
   --card: 240 10% 3.9%;
   --card-foreground: 0 0% 98%;

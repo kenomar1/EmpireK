@@ -67,25 +67,25 @@ export function HeroPromo() {
           <div className="relative rounded-3xl bg-black/10 backdrop-blur-sm shadow-2xl overflow-hidden">
             {/* Optional subtle gradient glow */}
 
-            <div className="relative z-10 p-8 md:p-12 lg:p-16 pt-16 md:pt-20">
+            <div className="relative z-10 p-8 md:p-12 lg:p-16 pt-16 md:pt-20 ">
               {/* Heading */}
               <motion.div
                 dir={isRTL ? "ltr" : "rtl"}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-4"
+                className="inline-flex  items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-primary font-medium mb-4"
               >
                 <Earth className="w-4 h-4" />
                 {t("shopPreview.eyebrow")}
               </motion.div>
-              <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-7xl font-black tracking-tight text-white drop-shadow-2xl leading-tight">
+              <h1 className="text-4xl xs:text-5xl font-Cairo font-playfair sm:text-6xl md:text-7xl lg:text-7xl font-black tracking-tight text-white drop-shadow-2xl leading-tight">
                 {heroCopy("heading")}
               </h1>
 
               {/* Subheading */}
               <p
-                className="mt-6 text-lg xs:text-xl sm:text-2xl md:text-3xl font-medium text-white/90 drop-shadow-lg leading-relaxed max-w-3xl mx-auto"
+                className="mt-6 text-lg xs:text-xl  sm:text-2xl md:text-3xl font-medium text-white/90 drop-shadow-lg leading-relaxed max-w-3xl mx-auto"
                 dangerouslySetInnerHTML={{ __html: heroCopy("subheading") }}
               />
 

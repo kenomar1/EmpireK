@@ -22,7 +22,7 @@ export default function CMSDemoSection() {
           <Badge className="mb-6" variant="secondary">
             {cms("badge")}
           </Badge>
-          <h1 className="text-5xl md:text-7xl font-bold mb-8 text-foreground">
+          <h1 className="text-5xl font-Cairo font-playfair md:text-7xl font-bold mb-8 text-foreground">
             {cms("heading")}
           </h1>
           <p
@@ -30,7 +30,11 @@ export default function CMSDemoSection() {
             dangerouslySetInnerHTML={{ __html: cms("subheading") }}
           />
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <Button size="lg" className="text-lg px-10" asChild>
+            <Button
+              size="lg"
+              className="text-lg px-10 font-Cairo font-playfair"
+              asChild
+            >
               <a href="#dashboard">{cms("ctaPrimary")}</a>
             </Button>
           </div>
@@ -46,7 +50,7 @@ export default function CMSDemoSection() {
           <Button
             size="lg"
             variant="secondary"
-            className="text-lg px-12"
+            className="text-lg px-12 font-Cairo font-playfair"
             asChild
           >
             <a href="/contact">{cms("finalCta")}</a>

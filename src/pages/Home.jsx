@@ -17,9 +17,9 @@ export default function Home() {
   const isRTL = i18n.language === "ar";
 
   return (
-    <div dir={isRTL ? "rtl" : "ltr"}>
+    <div className="" dir={isRTL ? "rtl" : "ltr"}>
       <FixedNavbar />
-      <main className="pt-16">
+      <main className="pt-16 font-Cairo">
         <HeroPromo />
         <TextWithImageSection />
         <FloatingBenefits />

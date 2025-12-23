@@ -189,17 +189,17 @@ export default function Services() {
   }
 
   return (
-    <div dir={isRTL ? "rtl" : "ltr"} className="min-h-screen bg-background">
+    <div dir={isRTL ? "rtl" : "ltr"} className="min-h-screen ">
       {/* Hero Section */}
       <section className="pt-24 pb-32 px-6 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 opacity-60" />
+        <div className="absolute inset-0 bg-background opacity-60" />
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
           className="relative max-w-5xl mx-auto text-center"
         >
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight mb-8 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+          <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight mb-8 text-primary bg-clip-text">
             {heroTitle}
           </h1>
           <p className="text-xl sm:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
@@ -222,13 +222,13 @@ export default function Services() {
                   onClick={() => setActiveCategoryId(category._id)}
                   whileHover={{ scale: 1.06 }}
                   whileTap={{ scale: 0.98 }}
-                  className={`flex flex-col items-center gap-4 px-10 py-8 rounded-3xl font-bold text-lg transition-all duration-400 shadow-xl ${
+                  className={`flex flex-col items-center  gap-4 px-28 py-8 rounded-3xl font-bold text-lg transition-all duration-400 shadow-xl ${
                     isActive
                       ? "bg-primary text-primary-foreground shadow-primary/40 ring-4 ring-primary/30"
-                      : "bg-card text-foreground hover:bg-accent hover:shadow-2xl"
+                      : "bg-card text-foreground shadow-foreground/20 hover:bg-primary/20 hover:shadow-2xl"
                   }`}
                 >
-                  <div className="p-5 bg-white/20 rounded-2xl">
+                  <div className="p-5  rounded-2xl">
                     <CatIcon className="w-12 h-12" />
                   </div>
                   <span className="text-xl">{category.title}</span>

@@ -25,10 +25,7 @@ export default function HowWeWork() {
   const subheading = t("howWeWork.subheading");
 
   return (
-    <section
-      className="py-20 px-6 bg-background"
-      dir={isRTL ? "rtl" : "ltr"}
-    >
+    <section className="py-20 px-6 bg-background " dir={isRTL ? "rtl" : "ltr"}>
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16">

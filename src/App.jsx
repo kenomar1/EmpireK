@@ -15,7 +15,7 @@ function App() {
     <BrowserRouter>
       <div
         dir={i18n.language === "ar" ? "rtl" : "ltr"}
-        className="min-h-screen flex flex-col"
+        className="min-h-screen flex flex-col font-Cairo font-playfair"
       >
         <FixedNavbar />
 

@@ -25,7 +25,7 @@ export default function ServicesShowcaseSection() {
     >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-20">
+        <div className="text-center font-playfair mb-20">
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -115,7 +115,7 @@ export default function ServicesShowcaseSection() {
         </div>
 
         {/* CTA */}
-        <div className="flex justify-center items-center gap-6 mt-20">
+        <div className="flex font-playfair justify-center items-center gap-6 mt-20">
           {" "}
           {/* Adjust gap-6 as needed: gap-4 for closer, gap-8 for more space */}
           <motion.a

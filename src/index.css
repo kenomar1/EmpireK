@@ -5,6 +5,7 @@
 /* Single @layer base with only en + ar fonts */
 @layer base {
   :root {
+    --font-primary: "Playfair Display", "Inter", serif;  /* Serif fallback for elegance */
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
@@ -65,7 +66,7 @@
   /* Arabic override */
 /* Arabic override - Cairo is the best modern choice */
 *:lang(ar) {
-  --font-primary: "Cairo", "Tajawal", system-ui, sans-serif;
+  --font-primary: "Amiri", "Cairo", system-ui, sans-serif;
 }
   /* Apply font globally */
   html {

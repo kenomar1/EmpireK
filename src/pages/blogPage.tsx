@@ -100,7 +100,7 @@ export default function Blog() {
         )}
       />
 
-      <div className="min-h-screen bg-gradient-to-br from-background via-primary/10 to-background py-16 px-6">
+      <div className="min-h-screen bg-gradient-to-br from-background via-primary/10 to-background py-16 px-6 font-Cairo font-playfair">
         <div className="max-w-7xl mx-auto">
           {/* Hero */}
           <div className="text-center mb-20">
