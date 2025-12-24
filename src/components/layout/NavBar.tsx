@@ -85,7 +85,7 @@ export function FixedNavbar() {
       animate={visible ? "visible" : "hidden"}
     >
       <div className="mx-auto max-w-5xl pointer-events-auto">
-        <div className="bg-background/80 backdrop-blur-xl border border-border/20 rounded-full shadow-2xl px-6 py-2">
+        <div className="bg-background/40 backdrop-blur-xl border border-border/20 rounded-full shadow-2xl px-6 py-2">
           <div className="flex h-14 items-center justify-between">
             {/* Desktop: Previous layout (Logo left, Nav links middle, Controls right) */}
             <div className="hidden md:flex items-center justify-between w-full">
