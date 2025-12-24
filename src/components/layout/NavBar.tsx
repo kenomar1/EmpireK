@@ -1,7 +1,8 @@
 // src/components/ui/navBar.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { motion, Variants } from "framer-motion";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Menu, Globe, Check } from "lucide-react";
@@ -12,6 +13,8 @@ export function FixedNavbar() {
   const { t, i18n } = useTranslation();
   const [open, setOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const [visible, setVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   const currentLang = i18n.language as "en" | "ar";
   const isRTL = currentLang === "ar";
@@ -35,15 +38,63 @@ export function FixedNavbar() {
     setOpen(false);
   };
 
+  // Scroll detection
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setVisible(false);
+      } else if (currentScrollY < lastScrollY) {
+        setVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
+
+  // Correctly typed Framer Motion variants
+  const navbarVariants: Variants = {
+    visible: {
+      y: 24,
+      opacity: 1,
+      transition: {
+        y: {
+          type: "spring",
+          stiffness: 300,
+          damping: 30,
+        },
+        opacity: { duration: 0.4 },
+      },
+    },
+    hidden: {
+      y: -120,
+      opacity: 0,
+      transition: {
+        y: {
+          type: "spring",
+          stiffness: 300,
+          damping: 35,
+        },
+        opacity: { duration: 0.2 },
+      },
+    },
+  };
+
   return (
-    <header
+    <motion.header
       key={currentLang}
       dir={isRTL ? "rtl" : "ltr"}
-      className="fixed inset-x-0 top-0 z-50 pt-6 px-4 md:px-8"
+      className="fixed inset-x-0 top-0 z-50 px-4 md:px-8 pointer-events-none"
+      variants={navbarVariants}
+      initial="visible"
+      animate={visible ? "visible" : "hidden"}
     >
-      {/* Centered rounded pill navbar */}
-      <div className="mx-auto max-w-5xl">
-        <div className="bg-background/80  border border-border/20 rounded-full shadow-2xl px-6 py-2">
+      <div className="mx-auto max-w-5xl pointer-events-auto">
+        <div className="bg-background/40 backdrop-blur-xl border border-border/20 rounded-full shadow-2xl px-6 py-2">
           <div className="flex h-14 items-center justify-between">
             {/* Logo */}
             <a
@@ -78,9 +129,7 @@ export function FixedNavbar() {
                     <Globe className="w-4 h-4" />
                     <span>{currentLang === "en" ? "English" : "العربية"}</span>
                     <svg
-                      className={`w-4 h-4 transition-transform ${
-                        langOpen ? "rotate-180" : ""
-                      }`}
+                      className={`w-4 h-4 transition-transform ${langOpen ? "rotate-180" : ""}`}
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -95,7 +144,13 @@ export function FixedNavbar() {
                   </button>
 
                   {langOpen && (
-                    <div className="absolute top-full mt-3 left-1/2 -translate-x-1/2 w-48 bg-card rounded-2xl shadow-2xl border border-border/50 z-50 overflow-hidden">
+                    <motion.div
+                      initial={{ opacity: 0, y: -8, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                      transition={{ duration: 0.2, ease: "easeOut" }}
+                      className="absolute top-full mt-3 left-1/2 -translate-x-1/2 w-48 bg-card rounded-2xl shadow-2xl border border-border/50 z-50 overflow-hidden"
+                    >
                       {languages.map((lang) => (
                         <button
                           key={lang.code}
@@ -110,18 +165,15 @@ export function FixedNavbar() {
                           )}
                         </button>
                       ))}
-                    </div>
+                    </motion.div>
                   )}
                 </div>
               </div>
             </nav>
 
-            {/* Mobile Right Side: Theme Toggle + Menu Button */}
+            {/* Mobile: Theme Toggle + Menu */}
             <div className="flex items-center gap-3 md:hidden">
-              {/* Theme Toggle visible on mobile outside the sheet */}
               <ThemeToggle />
-
-              {/* Mobile Menu Trigger */}
               <Sheet open={open} onOpenChange={setOpen}>
                 <SheetTrigger asChild>
                   <Button variant="ghost" size="icon">
@@ -151,7 +203,6 @@ export function FixedNavbar() {
                       ))}
                     </nav>
 
-                    {/* Only Language switcher inside mobile menu now */}
                     <div className="space-y-6 border-t border-border/50 pt-6">
                       <div className="flex flex-col gap-2">
                         <span className="text-sm text-muted-foreground">
@@ -181,6 +232,6 @@ export function FixedNavbar() {
           </div>
         </div>
       </div>
-    </header>
+    </motion.header>
   );
 }
