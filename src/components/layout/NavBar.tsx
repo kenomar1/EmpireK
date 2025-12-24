@@ -56,17 +56,12 @@ export function FixedNavbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
-  // Correctly typed Framer Motion variants
   const navbarVariants: Variants = {
     visible: {
       y: 24,
       opacity: 1,
       transition: {
-        y: {
-          type: "spring",
-          stiffness: 300,
-          damping: 30,
-        },
+        y: { type: "spring", stiffness: 300, damping: 30 },
         opacity: { duration: 0.4 },
       },
     },
@@ -74,11 +69,7 @@ export function FixedNavbar() {
       y: -120,
       opacity: 0,
       transition: {
-        y: {
-          type: "spring",
-          stiffness: 300,
-          damping: 35,
-        },
+        y: { type: "spring", stiffness: 300, damping: 35 },
         opacity: { duration: 0.2 },
       },
     },
@@ -94,33 +85,36 @@ export function FixedNavbar() {
       animate={visible ? "visible" : "hidden"}
     >
       <div className="mx-auto max-w-5xl pointer-events-auto">
-        <div className="bg-background/40 backdrop-blur-xl border border-border/20 rounded-full shadow-2xl px-6 py-2">
+        <div className="bg-background/80 backdrop-blur-xl border border-border/20 rounded-full shadow-2xl px-6 py-2">
           <div className="flex h-14 items-center justify-between">
-            {/* Logo */}
-            <a
-              href="/"
-              className="text-2xl tracking-widest font-thin font-Bebas flex items-center"
-            >
-              <span className="text-foreground">Empire</span>
-              <span className="text-primary">K</span>
-            </a>
+            {/* Desktop: Previous layout (Logo left, Nav links middle, Controls right) */}
+            <div className="hidden md:flex items-center justify-between w-full">
+              {/* Left: Logo */}
+              <a
+                href="/"
+                className="text-2xl tracking-widest font-thin font-Bebas flex items-center"
+              >
+                <span className="text-foreground">Empire</span>
+                <span className="text-primary">K</span>
+              </a>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-10">
-              {navItems.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
-                >
-                  {item.name}
-                </a>
-              ))}
+              {/* Center: Navigation Links */}
+              <nav className="flex items-center gap-10">
+                {navItems.map((item) => (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
+                  >
+                    {item.name}
+                  </a>
+                ))}
+              </nav>
 
+              {/* Right: Theme Toggle + Language */}
               <div className="flex items-center gap-4">
                 <ThemeToggle />
 
-                {/* Desktop Language Dropdown */}
                 <div className="relative">
                   <button
                     onClick={() => setLangOpen(!langOpen)}
@@ -169,11 +163,24 @@ export function FixedNavbar() {
                   )}
                 </div>
               </div>
-            </nav>
+            </div>
 
-            {/* Mobile: Theme Toggle + Menu */}
-            <div className="flex items-center gap-3 md:hidden">
+            {/* Mobile: New layout (Theme left — Logo center — Menu right) */}
+            {/* Reverses correctly in RTL */}
+            <div className="flex items-center justify-between w-full md:hidden">
+              {/* Left: Theme Toggle */}
               <ThemeToggle />
+
+              {/* Center: Logo (fixed middle) */}
+              <a
+                href="/"
+                className="absolute left-1/2 -translate-x-1/2 text-2xl tracking-widest font-thin font-Bebas"
+              >
+                <span className="text-foreground">Empire</span>
+                <span className="text-primary">K</span>
+              </a>
+
+              {/* Right: Menu Button */}
               <Sheet open={open} onOpenChange={setOpen}>
                 <SheetTrigger asChild>
                   <Button variant="ghost" size="icon">
