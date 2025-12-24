@@ -174,8 +174,8 @@ export default function Blog() {
                       group rounded-3xl overflow-hidden hover:shadow-2xl hover:-translate-y-3 transition-all duration-500 flex flex-col h-full
                       ${
                         theme === "dark"
-                          ? "bg-black/30 border-white/20"
-                          : "bg-white/60 border-black/10"
+                          ? "bg-background/30 border-white/20"
+                          : "bg-background/60 border-black/20"
                       } backdrop-blur-md border
                     `}
                   >
@@ -245,7 +245,7 @@ export default function Blog() {
                         <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-border/30">
                           {categoryTitle && (
                             <span
-                              className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold text-white bg-gradient-to-r ${gradient}`}
+                              className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold text-white bg-gradient-to-r from-primary/30 via-parimary/5 to-primary/1`}
                             >
                               <div className="w-2 h-2 rounded-full bg-white/70" />
                               {categoryTitle}
