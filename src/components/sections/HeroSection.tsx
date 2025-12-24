@@ -5,45 +5,42 @@ import { Button } from "../ui/button";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { Earth } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { ShaderGradientCanvas, ShaderGradient } from "@shadergradient/react";
+import { useTheme } from "../../context/ThemeContext"; // ← Adjust this path if your file is elsewhere
 
 export function HeroPromo() {
   const { i18n, t } = useTranslation();
+  const { theme } = useTheme(); // Gets "light" or "dark" from your custom context
+
   const heroCopy = (key: "heading" | "subheading" | "herocta1" | "herocta2") =>
     t(`hero.${key}`);
 
   const isRTL = i18n.language === "ar";
-  const videoRef = useRef<HTMLVideoElement>(null);
 
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.play().catch(() => {
-        // Silent fallback
-      });
-    }
-  }, []);
+  // Dark mode background (your original deep purple/gray style)
+  const darkUrl =
+    "https://shadergradient.co/customize?animate=on&axesHelper=off&bgColor1=%23000000&bgColor2=%23000000&brightness=1.3&cAzimuthAngle=250&cDistance=1.5&cPolarAngle=140&cameraZoom=12.5&color1=%230E001A&color2=%23A12EFF&color3=%235A00A3&destination=onCanvas&embedMode=off&envPreset=city&format=gif&fov=45&frameRate=10&gizmoHelper=hide&grain=off&lightType=3d&pixelDensity=1&positionX=0&positionY=0&positionZ=0&range=enabled&rangeEnd=40&rangeStart=0&reflection=0.5&rotationX=0&rotationY=0&rotationZ=140&shader=defaults&type=sphere&uAmplitude=7&uDensity=0.8&uFrequency=5.5&uSpeed=0.3&uStrength=0.4&uTime=0&wireframe=false";
+
+  // Light mode background – soft, bright, elegant (customize further on shadergradient.co)
+  const lightUrl =
+    "https://shadergradient.co/customize?animate=on&axesHelper=off&bgColor1=%23000000&bgColor2=%23000000&brightness=3&cAzimuthAngle=250&cDistance=1.5&cPolarAngle=140&cameraZoom=12.5&color1=%23410075&color2=%23ffffff&color3=%23ffffff&destination=onCanvas&embedMode=off&envPreset=city&format=gif&fov=45&frameRate=10&gizmoHelper=hide&grain=off&lightType=3d&pixelDensity=1&positionX=0&positionY=0&positionZ=0&range=disabled&rangeEnd=40&rangeStart=0&reflection=0.5&rotationX=0&rotationY=0&rotationZ=140&shader=defaults&type=sphere&uAmplitude=7&uDensity=0.8&uFrequency=5.5&uSpeed=0.3&uStrength=0.4&uTime=0&wireframe=false";
+
+  const backgroundUrl = theme === "dark" ? darkUrl : lightUrl;
 
   return (
     <>
-      {/* Full-Screen Video Background */}
+      {/* Full-Screen Animated Gradient Background */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
-        <video
-          ref={videoRef}
-          className="absolute inset-0 h-full w-full object-cover"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          poster="/hero-fallback.jpg"
+        <ShaderGradientCanvas
+          className="absolute inset-0"
+          style={{ pointerEvents: "none" }}
         >
-          <source src="/hero-background.mp4" type="video/mp4" />
-          {/* Fallback image inside video */}
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: "url('/hero-fallback.jpg')" }}
+          <ShaderGradient
+            control="query"
+            urlString={backgroundUrl}
+            key={theme} // Ensures clean remount when switching themes
           />
-        </video>
+        </ShaderGradientCanvas>
       </div>
 
       {/* Hero Content */}
@@ -52,9 +49,18 @@ export function HeroPromo() {
         dir={isRTL ? "rtl" : "ltr"}
       >
         <div className="w-full max-w-5xl mx-auto text-center">
-          {/* Floating Logo — centered above glass card */}
+          {/* Floating Logo */}
           <div className="relative -mb-12 z-20">
-            <div className="inline-flex items-center justify-center rounded-full bg-white/70 backdrop-blur-sm border-2 border-white/30 p-5 shadow-2xl">
+            <div
+              className={`
+                inline-flex items-center justify-center rounded-full p-5 shadow-2xl backdrop-blur-sm border-2
+                ${
+                  theme === "dark"
+                    ? "bg-white/70 border-white/30"
+                    : "bg-white/90 border-black/20"
+                }
+              `}
+            >
               <img
                 src="/Logo.avif"
                 alt="Logo"
@@ -63,33 +69,53 @@ export function HeroPromo() {
             </div>
           </div>
 
-          {/* Glassmorphism Card — perfectly responsive */}
-          <div className="relative rounded-3xl bg-black/10 backdrop-blur-sm shadow-2xl overflow-hidden">
-            {/* Optional subtle gradient glow */}
-
-            <div className="relative z-10 p-8 md:p-12 lg:p-16 pt-16 md:pt-20 ">
-              {/* Heading */}
+          {/* Glassmorphism Card */}
+          <div
+            className={`
+              relative rounded-3xl shadow-2xl overflow-hidden border
+              ${
+                theme === "dark"
+                  ? "bg-black/10 border-white/20 backdrop-blur-md"
+                  : "bg-white/50 border-black/10 backdrop-blur-lg"
+              }
+            `}
+          >
+            <div className="relative z-10 p-8 md:p-12 lg:p-16 pt-16 md:pt-20">
+              {/* Eyebrow */}
               <motion.div
-                dir={isRTL ? "ltr" : "rtl"}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="inline-flex  items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-primary font-medium mb-4"
+                transition={{ duration: 0.6 }}
+                className={`
+                  inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-6
+                  ${theme === "dark" ? "bg-primary/10 text-primary" : "bg-primary/20 text-primary-foreground"}
+                `}
               >
                 <Earth className="w-4 h-4" />
                 {t("shopPreview.eyebrow")}
               </motion.div>
-              <h1 className="text-4xl xs:text-5xl font-Cairo font-playfair sm:text-6xl md:text-7xl lg:text-7xl font-black tracking-tight text-white drop-shadow-2xl leading-tight">
+
+              {/* Heading */}
+              <h1
+                className={`
+                  text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight drop-shadow-2xl leading-tight font-playfair
+                  ${theme === "dark" ? "text-white" : "text-gray-900"}
+                `}
+              >
                 {heroCopy("heading")}
               </h1>
 
               {/* Subheading */}
               <p
-                className="mt-6 text-lg xs:text-xl  sm:text-2xl md:text-3xl font-medium text-white/90 drop-shadow-lg leading-relaxed max-w-3xl mx-auto"
+                className={`
+                  mt-6 text-lg xs:text-xl sm:text-2xl md:text-3xl font-medium drop-shadow-lg leading-relaxed max-w-3xl mx-auto
+                  ${theme === "dark" ? "text-white/90" : "text-gray-800"}
+                `}
                 dangerouslySetInnerHTML={{ __html: heroCopy("subheading") }}
               />
 
-              {/* CTA Buttons - Responsive */}
+              {/* CTA Buttons */}
               <div className="mt-10 md:mt-12 flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center">
                 <Button
                   size="lg"
@@ -102,8 +128,15 @@ export function HeroPromo() {
 
                 <Button
                   size="lg"
-                  variant="outline" // Changed to outline for better contrast with white bg on light/dark themes
-                  className="w-full sm:w-auto px-10 py-6 text-base md:text-lg font-bold border-2 shadow-2xl hover:shadow-3xl transition-all duration-300 rounded-2xl"
+                  variant="outline"
+                  className={`
+                    w-full sm:w-auto px-10 py-6 text-base md:text-lg font-bold border-2 shadow-2xl hover:shadow-3xl transition-all duration-300 rounded-2xl
+                    ${
+                      theme === "dark"
+                        ? "border-white/50 hover:bg-white/10 text-white"
+                        : "border-gray-700 hover:bg-gray-100 text-gray-900"
+                    }
+                  `}
                   asChild
                 >
                   <a href="/services">{heroCopy("herocta1")}</a>

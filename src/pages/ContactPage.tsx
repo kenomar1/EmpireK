@@ -131,7 +131,7 @@ export default function ContactPage() {
   return (
     <>
       <div
-        className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background py-20 px-6"
+        className="min-h-screen  bg-gradient-to-br from-background via-muted/20 to-background py-20 px-6"
         dir={isRTL ? "rtl" : "ltr"}
       >
         <div className="max-w-7xl mx-auto">
@@ -141,7 +141,7 @@ export default function ContactPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-20"
           >
-            <h1 className="text-5xl md:text-7xl font-black tracking-tighter bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text py-4 text-transparent">
+            <h1 className="text-5xl md:text-7xl  font-black tracking-tighter bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text py-4 text-transparent">
               {t("contact.heroTitle")}
             </h1>
             <p className="mt-6 text-xl text-muted-foreground max-w-3xl mx-auto">
@@ -321,12 +321,12 @@ export default function ContactPage() {
                     <div>
                       <p className="font-semibold">{t("contact.phone")}</p>
                       <a
-  href="tel:+971501234567"
-  dir="ltr"
-  className="inline-flex items-center gap-2 text-primary hover:underline font-medium transition-colors"
->
-  {t("contact.phonenum")}
-</a>
+                        href="tel:+971501234567"
+                        dir="ltr"
+                        className="inline-flex items-center gap-2 text-primary hover:underline font-medium transition-colors"
+                      >
+                        {t("contact.phonenum")}
+                      </a>
                     </div>
                   </div>
 

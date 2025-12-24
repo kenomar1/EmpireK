@@ -257,8 +257,10 @@ export default function BlogPostPage() {
 
         {/* Article Content */}
         <article className="max-w-4xl mx-auto px-6 py-20">
-          <div className="prose prose-lg dark:prose-invert max-w-none text-foreground/80">
-            <PortableText value={post.body} components={ptComponents} />
+          <div className="prose prose-lg  dark:prose-invert max-w-none text-foreground/80">
+            <div>
+              <PortableText value={post.body} components={ptComponents} />
+            </div>
           </div>
         </article>
 
@@ -270,7 +272,7 @@ export default function BlogPostPage() {
                 <Link
                   key={tag}
                   to={`/blog/tag/${tag.toLowerCase().replace(/\s+/g, "-")}`}
-                  className="px-5 py-2 bg-muted/70 rounded-full text-sm font-medium text-muted-foreground border border-border/50 hover:bg-accent hover:text-accent-foreground transition"
+                  className="px-5 font-mono py-2 bg-muted/70 rounded-full text-sm font-medium text-muted-foreground border border-border/50 hover:bg-accent hover:text-accent-foreground transition"
                 >
                   #{tag}
                 </Link>
