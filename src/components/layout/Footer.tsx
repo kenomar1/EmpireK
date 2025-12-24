@@ -51,7 +51,13 @@ export default function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
             {/* Brand Column */}
             <div className={isRTL ? "lg:col-start-3" : ""}>
-              <h3 className="text-2xl font-bold mb-4">{tf("brandTitle")}</h3>
+              <a
+                href="/"
+                className="text-3xl tracking-widest font-thin font-Bebas "
+              >
+                <span className="text-foreground">Empire</span>
+                <span className="text-primary">K</span>
+              </a>
               <p className="text-muted-foreground mb-6 max-w-md">
                 {tf("brandDesc")}
               </p>

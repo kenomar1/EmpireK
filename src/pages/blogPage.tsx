@@ -160,7 +160,7 @@ export default function Blog() {
               </p>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 p-6 rounded-xl bg-background/40 shadow-lg shadow-background  backdrop-blur-sm">
               {posts.map((post) => {
                 const gradient =
                   post.category?.colorGradient || fallbackGradient;
