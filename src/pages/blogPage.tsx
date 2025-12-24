@@ -1,4 +1,5 @@
-// src/pages/Blog.tsx (Fixed & Updated for Category References)
+// src/pages/Blog.tsx
+"use client"; // If using Next.js App Router; remove if using pages router with React Router
 
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
@@ -6,10 +7,12 @@ import { Calendar, Clock } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { client, urlFor } from "../lib/sanityClient";
+import { ShaderGradientCanvas, ShaderGradient } from "@shadergradient/react";
+import { useTheme } from "../context/ThemeContext"; // Adjust path if needed
 
 interface Category {
   title?: string;
-  colorGradient?: string; // e.g., "from-blue-500 to-cyan-500"
+  colorGradient?: string;
 }
 
 interface Author {
@@ -33,10 +36,21 @@ interface Post {
 
 export default function Blog() {
   const { t, i18n } = useTranslation();
+  const { theme } = useTheme(); // "light" or "dark"
   const currentLang = i18n.language === "ar" ? "ar" : "en";
 
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Same backgrounds as in HeroPromo
+  const darkUrl =
+    "https://shadergradient.co/customize?animate=on&axesHelper=off&bgColor1=%23000000&bgColor2=%23000000&brightness=1.3&cAzimuthAngle=250&cDistance=1.5&cPolarAngle=140&cameraZoom=12.5&color1=%230E001A&color2=%23A12EFF&color3=%235A00A3&destination=onCanvas&embedMode=off&envPreset=city&format=gif&fov=45&frameRate=10&gizmoHelper=hide&grain=off&lightType=3d&pixelDensity=1&positionX=0&positionY=0&positionZ=0&range=enabled&rangeEnd=40&rangeStart=0&reflection=0.5&rotationX=0&rotationY=0&rotationZ=140&shader=defaults&type=sphere&uAmplitude=7&uDensity=0.8&uFrequency=5.5&uSpeed=0.3&uStrength=0.4&uTime=0&wireframe=false";
+
+  // Light mode background – soft, bright, elegant (customize further on shadergradient.co)
+  const lightUrl =
+    "https://shadergradient.co/customize?animate=on&axesHelper=off&bgColor1=%23000000&bgColor2=%23000000&brightness=3&cAzimuthAngle=250&cDistance=1.5&cPolarAngle=140&cameraZoom=12.5&color1=%23410075&color2=%23ffffff&color3=%23ffffff&destination=onCanvas&embedMode=off&envPreset=city&format=gif&fov=45&frameRate=10&gizmoHelper=hide&grain=off&lightType=3d&pixelDensity=1&positionX=0&positionY=0&positionZ=0&range=disabled&rangeEnd=40&rangeStart=0&reflection=0.5&rotationX=0&rotationY=0&rotationZ=140&shader=defaults&type=sphere&uAmplitude=7&uDensity=0.8&uFrequency=5.5&uSpeed=0.3&uStrength=0.4&uTime=0&wireframe=false";
+
+  const backgroundUrl = theme === "dark" ? darkUrl : lightUrl;
 
   useEffect(() => {
     const query = `*[_type == "post" && language == $lang] | order(publishedAt desc) {
@@ -71,7 +85,6 @@ export default function Blog() {
       });
   }, [currentLang]);
 
-  // Fallback gradient if category has no colorGradient defined
   const fallbackGradient = "from-gray-500 to-gray-700";
 
   if (loading) {
@@ -100,14 +113,33 @@ export default function Blog() {
         )}
       />
 
-      <div className="min-h-screen bg-gradient-to-br from-background via-primary/10 to-background py-16 px-6 font-Cairo font-playfair">
+      {/* Full-Screen Animated Gradient Background */}
+      <div className="fixed inset-0 -z-10 overflow-hidden">
+        <ShaderGradientCanvas
+          className="absolute inset-0"
+          style={{ pointerEvents: "none" }}
+        >
+          <ShaderGradient
+            control="query"
+            urlString={backgroundUrl}
+            key={theme} // Remount on theme change for smooth switch
+          />
+        </ShaderGradientCanvas>
+      </div>
+
+      {/* Blog Content */}
+      <div className="relative min-h-screen  py-16 px-6">
         <div className="max-w-7xl mx-auto">
           {/* Hero */}
           <div className="text-center mb-20">
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tighter text-primary">
+            <h1
+              className={`text-5xl md:text-7xl font-bold tracking-tighter ${theme === "dark" ? "text-white" : "text-gray-900"}`}
+            >
               {t("blog.heroTitle", "Our Blog")}
             </h1>
-            <p className="mt-6 text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p
+              className={`mt-6 text-xl max-w-3xl mx-auto ${theme === "dark" ? "text-white/80" : "text-gray-700"}`}
+            >
               {t(
                 "blog.heroSubtitle",
                 "Insights, tutorials, and thoughts on modern web development, design, performance, and agency life."
@@ -118,7 +150,9 @@ export default function Blog() {
           {/* Posts Grid */}
           {posts.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-2xl text-muted-foreground">
+              <p
+                className={`text-2xl ${theme === "dark" ? "text-white/70" : "text-gray-600"}`}
+              >
                 {t(
                   "blog.noPosts",
                   "No posts yet. Time to write your first one in Sanity Studio! 🚀"
@@ -136,7 +170,14 @@ export default function Blog() {
                   <Link
                     key={post._id}
                     to={`/blog/${post.slug.current}`}
-                    className="group bg-card/80 backdrop-blur-sm border border-border/50 rounded-3xl overflow-hidden hover:shadow-2xl hover:-translate-y-3 transition-all duration-500 flex flex-col h-full"
+                    className={`
+                      group rounded-3xl overflow-hidden hover:shadow-2xl hover:-translate-y-3 transition-all duration-500 flex flex-col h-full
+                      ${
+                        theme === "dark"
+                          ? "bg-black/30 border-white/20"
+                          : "bg-white/60 border-black/10"
+                      } backdrop-blur-md border
+                    `}
                   >
                     {/* Featured Image */}
                     {post.mainImage ? (
@@ -162,20 +203,28 @@ export default function Blog() {
                     {/* Card Content */}
                     <div className="p-8 flex flex-col flex-1">
                       <div className="flex-1">
-                        <h2 className="text-2xl font-bold mb-3 line-clamp-2 group-hover:text-primary transition-colors">
+                        <h2
+                          className={`text-2xl font-bold mb-3 line-clamp-2 group-hover:text-primary transition-colors ${theme === "dark" ? "text-white" : "text-gray-900"}`}
+                        >
                           {post.title}
                         </h2>
 
                         {post.excerpt && (
-                          <p className="text-muted-foreground line-clamp-3 mb-6">
+                          <p
+                            className={`line-clamp-3 mb-6 ${theme === "dark" ? "text-white/70" : "text-gray-600"}`}
+                          >
                             {post.excerpt}
                           </p>
                         )}
 
                         {/* Author + Date + Read Time */}
-                        <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-8">
+                        <div
+                          className={`flex flex-wrap items-center gap-4 text-sm mb-8 ${theme === "dark" ? "text-white/60" : "text-gray-600"}`}
+                        >
                           {post.author?.name && (
-                            <span className="font-medium text-foreground">
+                            <span
+                              className={`font-medium ${theme === "dark" ? "text-white" : "text-gray-900"}`}
+                            >
                               {post.author.name}
                             </span>
                           )}
@@ -190,7 +239,7 @@ export default function Blog() {
                         </div>
                       </div>
 
-                      {/* Bottom: Category + Tags */}
+                      {/* Category + Tags */}
                       {(categoryTitle ||
                         (post.tags && post.tags.length > 0)) && (
                         <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-border/30">
@@ -208,7 +257,11 @@ export default function Blog() {
                               {post.tags.map((tag: string) => (
                                 <span
                                   key={tag}
-                                  className="px-3 py-1 text-xs font-medium bg-muted/70 rounded-full border border-border/50 text-muted-foreground"
+                                  className={`px-3 py-1 text-xs font-medium rounded-full border ${
+                                    theme === "dark"
+                                      ? "bg-white/10 border-white/30 text-white/80"
+                                      : "bg-gray-100 border-gray-300 text-gray-700"
+                                  }`}
                                 >
                                   #{tag}
                                 </span>
