@@ -4,6 +4,7 @@ import {visionTool} from '@sanity/vision'
 import {codeInput} from '@sanity/code-input'
 import {documentInternationalization} from '@sanity/document-internationalization'
 import {schemaTypes} from './schemaTypes'
+import {structure} from './structure' // ← Add this import (your new structure file)
 
 export default defineConfig({
   name: 'default',
@@ -13,7 +14,9 @@ export default defineConfig({
   dataset: 'posts',
 
   plugins: [
-    structureTool(),
+    structureTool({
+      structure, // ← Pass your custom structure here
+    }),
     visionTool(),
     codeInput(),
     documentInternationalization({
