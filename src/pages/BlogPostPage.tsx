@@ -1,17 +1,11 @@
-// src/pages/BlogPostPage.tsx
+"use client";
+
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { PortableText } from "@portabletext/react";
-import { Link } from "react-router-dom";
 import { format } from "date-fns";
-import {
-  Calendar,
-  Clock,
-  Share2,
-  Twitter,
-  Linkedin,
-  Link2,
-} from "lucide-react";
+import { User, MessageSquare, Reply } from "lucide-react";
+import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { client, urlFor } from "../lib/sanityClient";
 import Footer from "../components/layout/Footer";
@@ -65,26 +59,45 @@ const ptComponents = {
   },
 };
 
+type Comment = {
+  _id: string;
+  name: string;
+  message: string;
+  createdAt: string;
+  parent?: { _ref: string };
+};
+
 export default function BlogPostPage() {
   const { slug } = useParams<{ slug: string }>();
   const { t, i18n } = useTranslation();
-  const currentLang = i18n.language === "ar" ? "ar" : "en";
   const isRTL = i18n.language === "ar";
 
   const [post, setPost] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [loadingComments, setLoadingComments] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [website, setWebsite] = useState("");
+  const [message, setMessage] = useState("");
+  const [replyTo, setReplyTo] = useState<string | null>(null);
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
+  const [submitStatus, setSubmitStatus] = useState<
+    "idle" | "success" | "error"
+  >("idle");
 
   useEffect(() => {
     if (!slug) return;
 
-    const query = `*[_type == "post" && slug.current == $slug && language == $lang][0]{
+    const query = `*[_type == "post" && slug.current == $slug][0]{
+      _id,
       title,
       excerpt,
       mainImage,
       publishedAt,
       body,
       tags,
-      category,
       author->{
         name,
         role,
@@ -94,24 +107,108 @@ export default function BlogPostPage() {
     }`;
 
     client
-      .fetch(query, { slug, lang: currentLang })
-      .then((data) => {
-        setPost(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error fetching post:", err);
-        setLoading(false);
-      });
-  }, [slug, currentLang]); // ← Re-run when slug or language changes
+      .fetch(query, { slug })
+      .then((data) => setPost(data))
+      .catch((err) => console.error("Error fetching post:", err));
+  }, [slug]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-2xl text-muted-foreground">
-        {t("blog.loadingArticle", "Loading article...")}
-      </div>
-    );
-  }
+  const fetchComments = async () => {
+    if (!post?._id) return;
+
+    setLoadingComments(true);
+    // Show all comments immediately (no approval filter)
+    const commentsQuery = `*[_type == "comment" && post._ref == $postId] | order(createdAt desc) {
+      _id,
+      name,
+      message,
+      createdAt,
+      parent
+    }`;
+
+    try {
+      const data: Comment[] = await client.fetch(commentsQuery, {
+        postId: post._id,
+      });
+      setComments(data);
+    } catch (err) {
+      console.error("Error fetching comments:", err);
+    } finally {
+      setLoadingComments(false);
+    }
+  };
+
+  useEffect(() => {
+    if (post?._id) fetchComments();
+  }, [post?._id]);
+
+  const validateForm = () => {
+    const errors: { [key: string]: string } = {};
+    if (!name.trim()) errors.name = t("blog.required", "Required");
+    if (!email.trim()) {
+      errors.email = t("blog.required", "Required");
+    } else if (!/^[\w.-]+@([\w-]+\.)+[\w-]{2,4}$/.test(email.trim())) {
+      errors.email = t("blog.invalidEmail", "Invalid email");
+    }
+    if (!message.trim()) {
+      errors.message = t("blog.required", "Required");
+    } else if (message.trim().length < 10) {
+      errors.message = t("blog.minLength", "Minimum 10 characters");
+    } else if (message.trim().length > 1000) {
+      errors.message = t("blog.maxLength", "Maximum 1000 characters");
+    }
+    if (website && !/^https?:\/\/.+/.test(website)) {
+      errors.website = t("blog Year's.invalidUrl", "Invalid URL");
+    }
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleSubmitComment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!post?._id || !validateForm()) return;
+
+    setSubmitting(true);
+    setSubmitStatus("idle");
+
+    const newComment = {
+      _type: "comment",
+      post: { _type: "reference", _ref: post._id },
+      name: name.trim(),
+      email: email.trim(),
+      website: website.trim() || undefined,
+      message: message.trim(),
+      createdAt: new Date().toISOString(),
+      parent: replyTo
+        ? { _type: "reference", _ref: replyTo, _weak: true }
+        : undefined,
+      // No 'approved' field — comments appear immediately
+    };
+
+    try {
+      const created = await client.create(newComment);
+
+      // Optimistic update: show comment instantly
+      setComments((prev) => [created, ...prev]);
+
+      setName("");
+      setEmail("");
+      setWebsite("");
+      setMessage("");
+      setReplyTo(null);
+      setSubmitStatus("success");
+    } catch (err: any) {
+      console.error("Comment submission failed:", err);
+      setSubmitStatus("error");
+      fetchComments(); // Sync on error
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleReply = (commentId: string) => {
+    setReplyTo(commentId);
+    document.querySelector("form")?.scrollIntoView({ behavior: "smooth" });
+  };
 
   if (!post) {
     return (
@@ -121,76 +218,24 @@ export default function BlogPostPage() {
     );
   }
 
-  const shareUrl = window.location.href;
-  const shareTitle = encodeURIComponent(post.title);
-  const pageTitle = t("blog.postTitleTemplate", "{{title}} | EmpireK", {
-    title: post.title,
-  });
-  const pageDesc =
-    post.excerpt ||
-    t(
-      "blog.defaultPostDesc",
-      "Read this insightful article from our agency blog."
-    );
-
   return (
     <>
-      {/* === NATIVE SEO (React 19) === */}
-      <title>{pageTitle}</title>
-      <meta name="description" content={pageDesc} />
-      <meta property="og:title" content={post.title} />
-      <meta property="og:description" content={pageDesc} />
-      <meta property="og:type" content="article" />
-      <meta property="og:url" content={shareUrl} />
-      {post.mainImage && (
-        <meta
-          property="og:image"
-          content={urlFor(post.mainImage).width(1200).height(630).url()}
-        />
-      )}
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={post.title} />
-      <meta name="twitter:description" content={pageDesc} />
-      {post.mainImage && (
-        <meta
-          name="twitter:image"
-          content={urlFor(post.mainImage).width(1200).height(630).url()}
-        />
-      )}
-
-      {/* === Structured Data (JSON-LD) === */}
-      <script type="application/ld+json">
-        {JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "BlogPosting",
-          headline: post.title,
-          description: pageDesc,
-          image: post.mainImage ? urlFor(post.mainImage).url() : undefined,
-          datePublished: post.publishedAt,
-          author: {
-            "@type": "Person",
-            name: post.author?.name || t("blog.defaultAuthor", "EmpireK Team"),
-          },
-        })}
-      </script>
+      <title>{post.title} | EmpireK</title>
+      <meta name="description" content={post.excerpt || "Blog post"} />
 
       <div
-        className="min-h-screen bg-gradient-to-br font-Cairo font-playfair from-background via-muted/20 to-background"
+        className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background"
         dir={isRTL ? "rtl" : "ltr"}
       >
-        {/* Hero */}
+        {/* Hero Section */}
         <section className="pt-10 pb-20 px-6">
           <div className="max-w-5xl mx-auto">
-            {/* Category Badge */}
-
-            {/* Title */}
             <h1 className="text-5xl mt-5 md:text-7xl font-black tracking-tighter bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent leading-tight">
               {post.title}
             </h1>
 
             {/* Meta */}
             <div className="flex flex-wrap items-center gap-6 mt-10 text-muted-foreground">
-              {/* Author */}
               <div className="flex items-center gap-4">
                 {post.author?.avatar ? (
                   <img
@@ -217,22 +262,6 @@ export default function BlogPostPage() {
                   </p>
                 </div>
               </div>
-
-              {/* Date + Read Time */}
-              <div className="flex items-center gap-6 text-sm">
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-5 h-5" />
-                  <span>
-                    {format(new Date(post.publishedAt), "MMMM d, yyyy")}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="w-5 h-5" />
-                  <span>
-                    {post.readTime} {t("blog.minRead", "min read")}
-                  </span>
-                </div>
-              </div>
             </div>
           </div>
         </section>
@@ -257,76 +286,236 @@ export default function BlogPostPage() {
 
         {/* Article Content */}
         <article className="max-w-4xl mx-auto px-6 py-20">
-          <div className="prose prose-lg  dark:prose-invert max-w-none text-foreground/80">
-            <div>
-              <PortableText value={post.body} components={ptComponents} />
-            </div>
+          <div className="prose prose-lg dark:prose-invert max-w-none text-foreground/80">
+            <PortableText value={post.body} components={ptComponents} />
           </div>
         </article>
 
-        {/* Tags */}
-        {post.tags && post.tags.length > 0 && (
-          <div className="max-w-5xl mx-auto px-6 pb-16">
-            <div className="flex flex-wrap gap-3">
-              {post.tags.map((tag: string) => (
-                <Link
-                  key={tag}
-                  to={`/blog/tag/${tag.toLowerCase().replace(/\s+/g, "-")}`}
-                  className="px-5 font-mono py-2 bg-muted/70 rounded-full text-sm font-medium text-muted-foreground border border-border/50 hover:bg-accent hover:text-accent-foreground transition"
-                >
-                  #{tag}
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
+        {/* Comments Section - Flat Layout with Instant Visibility */}
+        <section className="px-4 py-16 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-background/70 backdrop-blur-xl rounded-3xl shadow-2xl border border-border/30 p-6 sm:p-10 lg:p-16"
+          >
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-10 flex items-center gap-3 flex-wrap">
+              <MessageSquare className="w-9 h-9 sm:w-10 sm:h-10 text-primary" />
+              <span>
+                {t("blog.comments", "Comments")} ({comments.length})
+              </span>
+            </h2>
 
-        {/* Share Section */}
-        <div className="max-w-5xl mx-auto px-6 pb-24 border-t border-border/50">
-          <div className="py-12 flex flex-col sm:flex-row items-center justify-between gap-8">
-            <div>
-              <p className="text-2xl font-bold mb-2">
-                {t("blog.shareArticle", "Share this article")}
-              </p>
-              <p className="text-muted-foreground">
-                {t("blog.spreadKnowledge", "Help us spread the knowledge")}
-              </p>
-            </div>
+            {/* Comment Form */}
+            <form onSubmit={handleSubmitComment} className="mb-12">
+              {replyTo && (
+                <div className="mb-6 p-4 bg-muted/50 rounded-xl flex items-center justify-between flex-wrap gap-4">
+                  <p className="text-sm text-muted-foreground">
+                    {t("blog.replyingTo", "Replying to")}{" "}
+                    <span className="font-medium text-foreground">
+                      @
+                      {comments.find((c) => c._id === replyTo)?.name ||
+                        "a comment"}
+                    </span>
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setReplyTo(null)}
+                    className="text-primary text-sm underline"
+                  >
+                    {t("blog.cancel", "Cancel")}
+                  </button>
+                </div>
+              )}
 
-            <div className="flex items-center gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-6">
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    {t("blog.name", "Name")} *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border/50 focus:border-primary focus:outline-none transition text-base"
+                    placeholder={t("blog.yourName", "Your name")}
+                  />
+                  {formErrors.name && (
+                    <p className="mt-1 text-red-600 text-sm">
+                      {formErrors.name}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    {t("blog.email", "Email")} *
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border/50 focus:border-primary focus:outline-none transition text-base"
+                    placeholder={t("blog.yourEmail", "your@email.com")}
+                  />
+                  {formErrors.email && (
+                    <p className="mt-1 text-red-600 text-sm">
+                      {formErrors.email}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    {t("blog.website", "Website")} (
+                    {t("blog.optional", "optional")})
+                  </label>
+                  <input
+                    type="url"
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border/50 focus:border-primary focus:outline-none transition text-base"
+                    placeholder={t("blog.yourWebsite", "https://yoursite.com")}
+                  />
+                  {formErrors.website && (
+                    <p className="mt-1 text-red-600 text-sm">
+                      {formErrors.website}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <label className="block text-sm font-medium mb-2">
+                  {t("blog.message", "Message")} *
+                </label>
+                <textarea
+                  required
+                  rows={5}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border/50 focus:border-primary focus:outline-none transition resize-none text-base"
+                  placeholder={t("blog.yourComment", "Share your thoughts...")}
+                />
+                {formErrors.message && (
+                  <p className="mt-1 text-red-600 text-sm">
+                    {formErrors.message}
+                  </p>
+                )}
+              </div>
+
               <button
-                onClick={() => navigator.clipboard.writeText(shareUrl)}
-                className="p-4 bg-card rounded-full hover:bg-accent transition-all hover:scale-110"
-                title={t("blog.copyLink", "Copy link")}
+                type="submit"
+                disabled={submitting}
+                className="w-full sm:w-auto px-8 py-4 bg-primary text-primary-foreground rounded-full font-bold hover:shadow-xl hover:scale-105 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-3 mx-auto sm:mx-0"
               >
-                <Link2 className="w-6 h-6" />
+                {submitting
+                  ? t("blog.submitting", "Submitting...")
+                  : t("blog.postComment", "Post Comment")}
               </button>
-              <a
-                href={`https://twitter.com/intent/tweet?text=${shareTitle}&url=${shareUrl}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-4 bg-card rounded-full hover:bg-accent transition-all hover:scale-110"
-              >
-                <Twitter className="w-6 h-6" />
-              </a>
-              <a
-                href={`https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-4 bg-card rounded-full hover:bg-accent transition-all hover:scale-110"
-              >
-                <Linkedin className="w-6 h-6" />
-              </a>
-              <button className="p-4 bg-primary text-primary-foreground rounded-full hover:scale-110 transition-all flex items-center gap-3 font-bold">
-                <Share2 className="w-6 h-6" />
-                {t("blog.share", "Share")}
-              </button>
-            </div>
-          </div>
-        </div>
+
+              {submitStatus === "success" && (
+                <p className="mt-6 text-green-600 font-medium text-center sm:text-left">
+                  {t("blog.commentSuccess", "Your comment has been posted!")}
+                </p>
+              )}
+              {submitStatus === "error" && (
+                <p className="mt-6 text-red-600 font-medium text-center sm:text-left">
+                  {t(
+                    "blog.commentError",
+                    "Something went wrong. Please try again."
+                  )}
+                </p>
+              )}
+            </form>
+
+            {/* Flat Comments List */}
+            {loadingComments ? (
+              <p className="text-muted-foreground text-center py-8">
+                {t("blog.loadingComments", "Loading comments...")}
+              </p>
+            ) : comments.length === 0 ? (
+              <p className="text-muted-foreground text-lg text-center py-12">
+                {t(
+                  "blog.noComments",
+                  "No comments yet. Be the first to share your thoughts!"
+                )}
+              </p>
+            ) : (
+              <div className="space-y-8">
+                {comments.map((comment) => (
+                  <FlatCommentItem
+                    key={comment._id}
+                    comment={comment}
+                    allComments={comments}
+                    handleReply={handleReply}
+                    t={t}
+                  />
+                ))}
+              </div>
+            )}
+          </motion.div>
+        </section>
 
         <Footer />
       </div>
     </>
   );
 }
+
+// Flat Comment Item - Shows "Replying to @name"
+const FlatCommentItem: React.FC<{
+  comment: Comment;
+  allComments: Comment[];
+  handleReply: (id: string) => void;
+  t: any;
+}> = ({ comment, allComments, handleReply, t }) => {
+  const parentComment = comment.parent?._ref
+    ? allComments.find((c) => c._id === comment.parent?._ref)
+    : null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className="flex gap-4 pb-10 border-b border-border/30 last:border-0"
+    >
+      <div className="w-14 h-14 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0">
+        <User className="w-7 h-7 text-primary" />
+      </div>
+
+      <div className="flex-1 min-w-0">
+        {parentComment && (
+          <p className="text-xs text-muted-foreground mb-2">
+            {t("blog.replyingTo", "Replying to")}{" "}
+            <span className="font-medium text-foreground">
+              @{parentComment.name}
+            </span>
+          </p>
+        )}
+
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mb-2">
+          <h4 className="font-bold text-foreground text-lg">{comment.name}</h4>
+          <span className="text-xs text-muted-foreground">
+            {format(new Date(comment.createdAt), "MMM d, yyyy")}
+          </span>
+        </div>
+
+        <p className="text-foreground/80 leading-relaxed break-words">
+          {comment.message}
+        </p>
+
+        <button
+          onClick={() => handleReply(comment._id)}
+          className="mt-3 text-primary flex items-center gap-1.5 text-sm hover:underline"
+        >
+          <Reply className="w-4 h-4" />
+          {t("blog.reply", "Reply")}
+        </button>
+      </div>
+    </motion.div>
+  );
+};

@@ -85,7 +85,6 @@ export default function Blog() {
       });
   }, [currentLang]);
 
-  const fallbackGradient = "from-gray-500 to-gray-700";
 
   if (loading) {
     return (
@@ -162,8 +161,6 @@ export default function Blog() {
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 p-6 rounded-xl bg-background/40 shadow-lg shadow-background  backdrop-blur-sm">
               {posts.map((post) => {
-                const gradient =
-                  post.category?.colorGradient || fallbackGradient;
                 const categoryTitle = post.category?.title;
 
                 return (

@@ -99,9 +99,11 @@ export function HeroPromo() {
               {/* Heading */}
               <h1
                 className={`
-                  text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight drop-shadow-2xl leading-tight font-playfair
-                  ${theme === "dark" ? "text-white" : "text-gray-900"}
-                `}
+    text-2xl xs:text-2xl sm:text-6xl md:text-2xl lg:text-7xl 
+    font-bold tracking-tight drop-shadow-2xl leading-tight
+    ${i18n.language === "ar" ? "font-cairo" : "font-playfair"}
+    ${theme === "dark" ? "text-white" : "text-gray-900"}
+  `}
               >
                 {heroCopy("heading")}
               </h1>

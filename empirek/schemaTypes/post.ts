@@ -2,7 +2,6 @@
 import {defineField, defineType} from 'sanity'
 import {SlugValidationContext} from 'sanity'
 
-// Custom slug uniqueness: allows same slug if language is different
 async function isUniqueOtherThanLanguage(slug: string, context: SlugValidationContext) {
   const {document, getClient} = context
 
@@ -33,14 +32,12 @@ export const post = defineType({
   title: 'Blog Posts',
   type: 'document',
   fields: [
-    // Hidden language field required by the internationalization plugin
     defineField({
       name: 'language',
       type: 'string',
       hidden: true,
     }),
 
-    // === Core Fields ===
     defineField({
       name: 'title',
       title: 'Title',
@@ -55,7 +52,6 @@ export const post = defineType({
       options: {
         source: 'title',
         maxLength: 96,
-        // This allows same slug for different languages
         isUnique: isUniqueOtherThanLanguage,
       },
       validation: (Rule) => Rule.required(),
@@ -83,20 +79,15 @@ export const post = defineType({
       options: {hotspot: true},
     }),
 
-    // === Highlight Checkbox ===
     defineField({
       name: 'isHighlighted',
       title: 'Include in highlight',
       type: 'boolean',
-      description:
-        'Check this to feature this post in service page highlights and other featured sections',
+      description: 'Check this to feature this post in service page highlights',
       initialValue: false,
-      options: {
-        layout: 'checkbox',
-      },
+      options: {layout: 'checkbox'},
     }),
 
-    // === Recommended ===
     defineField({
       name: 'tags',
       title: 'Tags',
@@ -121,7 +112,6 @@ export const post = defineType({
       to: [{type: 'author'}],
     }),
 
-    // === Body ===
     defineField({
       name: 'body',
       title: 'Body',
@@ -129,7 +119,6 @@ export const post = defineType({
       of: [{type: 'block'}, {type: 'image', options: {hotspot: true}}, {type: 'code'}],
     }),
 
-    // === SEO ===
     defineField({
       name: 'seo',
       title: 'SEO Settings',
@@ -140,6 +129,16 @@ export const post = defineType({
         defineField({name: 'ogImage', title: 'Open Graph Image', type: 'image'}),
       ],
       options: {collapsible: true, collapsed: true},
+    }),
+
+    // Virtual comments field — shows approved comments in the post document
+    defineField({
+      name: 'comments',
+      title: 'Comments',
+      type: 'array',
+      of: [{type: 'reference', to: [{type: 'comment'}]}],
+      readOnly: true,
+      description: 'All comments on this post (manage in Comments list)',
     }),
   ],
 
@@ -157,7 +156,7 @@ export const post = defineType({
       const {title, subtitle, media, author, category, date, isHighlighted} = selection
 
       const authorPart = author ? `by ${author}` : 'Unknown author'
-      const categoryPart = category ? ` • ${category}` : 'Uncategorized' // Fixed typo
+      const categoryPart = category ? ` • ${category}` : 'Uncategorized'
       const datePart = date ? new Date(date).toLocaleDateString() : 'No date'
       const excerptPart = subtitle
         ? `: ${subtitle.substring(0, 80)}${subtitle.length > 80 ? '...' : ''}`
