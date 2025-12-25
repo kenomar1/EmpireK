@@ -128,7 +128,7 @@ export default function Blog() {
       </div>
 
       {/* Blog Content */}
-      <div className="relative min-h-screen  py-16 px-6">
+      <div className="relative min-h-screen pt-5  py-16 px-6">
         <div className="max-w-7xl mx-auto">
           {/* Hero */}
           <div className="text-center mb-20">

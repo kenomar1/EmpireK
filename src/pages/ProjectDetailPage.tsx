@@ -13,9 +13,12 @@ import {
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { client, urlFor } from "../lib/sanityClient";
+import { PortableText } from "@portabletext/react";
 
 type ImageAsset = {
   asset?: { url: string };
+  caption?: string;
+  alt?: string;
 };
 
 type GalleryImage = {
@@ -29,7 +32,7 @@ type Project = {
   title: string;
   client?: string;
   year?: number;
-  body?: string;
+  body?: any[]; // Portable Text value
   link?: string;
   mainImage?: ImageAsset;
   images?: GalleryImage[];
@@ -104,6 +107,71 @@ export default function ProjectDetailPage() {
     );
   };
 
+  // Premium Portable Text components
+  const ptComponents = {
+    block: {
+      h1: ({ children }: any) => (
+        <h1 className="text-5xl md:text-6xl font-black mt-16 mb-8 text-foreground">
+          {children}
+        </h1>
+      ),
+      h2: ({ children }: any) => (
+        <h2 className="text-4xl md:text-5xl font-bold mt-14 mb-6 text-foreground">
+          {children}
+        </h2>
+      ),
+      h3: ({ children }: any) => (
+        <h3 className="text-3xl font-semibold mt-12 mb-5 text-foreground">
+          {children}
+        </h3>
+      ),
+      normal: ({ children }: any) => (
+        <p className="text-lg leading-relaxed mb-8 text-foreground/80">
+          {children}
+        </p>
+      ),
+    },
+    marks: {
+      strong: ({ children }: any) => (
+        <span className="font-bold text-foreground">{children}</span>
+      ),
+      em: ({ children }: any) => <em className="italic">{children}</em>,
+    },
+    list: {
+      bullet: ({ children }: any) => (
+        <ul className="list-disc pl-8 space-y-4 mb-8 text-lg text-foreground/80">
+          {children}
+        </ul>
+      ),
+      number: ({ children }: any) => (
+        <ol className="list-decimal pl-8 space-y-4 mb-8 text-lg text-foreground/80">
+          {children}
+        </ol>
+      ),
+    },
+    types: {
+      image: ({ value }: any) => (
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="my-16 rounded-3xl overflow-hidden shadow-2xl border border-border/30"
+        >
+          <img
+            src={urlFor(value).width(1400).fit("max").url()}
+            alt={value.alt || ""}
+            className="w-full"
+          />
+          {value.caption && (
+            <p className="text-center text-muted-foreground py-6 text-lg italic bg-background/50">
+              {value.caption}
+            </p>
+          )}
+        </motion.div>
+      ),
+    },
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -132,28 +200,31 @@ export default function ProjectDetailPage() {
           <motion.img
             initial={{ scale: 1.2 }}
             animate={{ scale: 1 }}
-            transition={{ duration: 1.2 }}
+            transition={{ duration: 1.4, ease: "easeOut" }}
             src={urlFor(mainImg.url).width(1920).height(1080).fit("crop").url()}
             alt={project.title}
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
 
           {/* Hero Content */}
           <div className="absolute bottom-0 left-0 right-0 p-12 text-white">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
+              transition={{ delay: 0.6 }}
+              className="max-w-5xl mx-auto"
             >
-              <h1 className="text-5xl md:text-7xl font-black mb-6">
+              <h1 className="text-5xl md:text-7xl font-black mb-6 drop-shadow-2xl">
                 {project.title}
               </h1>
-              <div className="flex flex-wrap items-center gap-6 text-xl">
-                {project.client && <span>{project.client}</span>}
+              <div className="flex flex-wrap items-center gap-8 text-xl">
+                {project.client && (
+                  <span className="drop-shadow-lg">{project.client}</span>
+                )}
                 {project.year && (
-                  <span className="flex items-center gap-2">
-                    <Calendar className="w-5 h-5" />
+                  <span className="flex items-center gap-3 drop-shadow-lg">
+                    <Calendar className="w-6 h-6" />
                     {project.year}
                   </span>
                 )}
@@ -162,9 +233,9 @@ export default function ProjectDetailPage() {
                     href={project.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-6 py-3 rounded-full hover:bg-white/30 transition-all"
+                    className="inline-flex items-center gap-3 bg-white/20 backdrop-blur-md px-8 py-4 rounded-full hover:bg-white/30 transition-all shadow-xl"
                   >
-                    <ExternalLink className="w-5 h-5" />
+                    <ExternalLink className="w-6 h-6" />
                     {t("gallery.viewLive", "View Live")}
                   </a>
                 )}
@@ -174,16 +245,17 @@ export default function ProjectDetailPage() {
         </section>
       )}
 
-      {/* Description */}
+      {/* Rich Description with Glassmorphic Card */}
       {project.body && (
-        <section className="px-6 py-20 max-w-5xl mx-auto">
+        <section className="px-6 py-20 mt-20 relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 60 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="prose prose-lg max-w-none text-foreground/80"
+            transition={{ duration: 0.8 }}
+            className="max-w-4xl mx-auto bg-background/70 backdrop-blur-xl rounded-3xl shadow-2xl border border-border/30 p-12 lg:p-20"
           >
-            <p className="text-xl leading-relaxed">{project.body}</p>
+            <PortableText value={project.body} components={ptComponents} />
           </motion.div>
         </section>
       )}
@@ -193,15 +265,15 @@ export default function ProjectDetailPage() {
         <section className="px-6 pb-32">
           <div className="max-w-7xl mx-auto">
             <motion.h2
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-4xl md:text-5xl font-black text-center mb-16"
+              className="text-5xl md:text-6xl font-black text-center mb-20"
             >
               {t("gallery.projectGallery", "Project Gallery")}
             </motion.h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
               {galleryImgs.map((img, index) => (
                 <motion.div
                   key={img.caption || `img-${index}`}
@@ -210,20 +282,20 @@ export default function ProjectDetailPage() {
                   transition={{ delay: index * 0.1 }}
                   viewport={{ once: true }}
                   onClick={() => openLightbox(mainImg ? index + 1 : index)}
-                  className="relative overflow-hidden rounded-3xl shadow-xl cursor-pointer group"
+                  className="relative overflow-hidden rounded-3xl shadow-2xl cursor-pointer group bg-card/50 backdrop-blur-sm border border-border/30"
                 >
                   <img
                     src={urlFor(img.url)
-                      .width(800)
-                      .height(600)
+                      .width(900)
+                      .height(700)
                       .fit("crop")
                       .url()}
                     alt={img.caption || project.title}
                     className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-700"
                   />
                   {img.caption && (
-                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <p className="text-white text-center font-medium">
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-8 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                      <p className="text-white text-center font-medium text-lg">
                         {img.caption}
                       </p>
                     </div>
@@ -235,7 +307,7 @@ export default function ProjectDetailPage() {
         </section>
       )}
 
-      {/* Lightbox */}
+      {/* Enhanced Lightbox */}
       <AnimatePresence>
         {lightboxOpen && allImages.length > 0 && (
           <motion.div
@@ -243,13 +315,13 @@ export default function ProjectDetailPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={closeLightbox}
-            className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-8"
+            className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-8 backdrop-blur-sm"
           >
             <button
               onClick={closeLightbox}
-              className="absolute top-8 right-8 text-white hover:text-primary transition-colors"
+              className="absolute top-8 right-8 text-white hover:text-primary transition-colors z-10"
             >
-              <X className="w-10 h-10" />
+              <X className="w-12 h-12 drop-shadow-2xl" />
             </button>
 
             <button
@@ -257,9 +329,9 @@ export default function ProjectDetailPage() {
                 e.stopPropagation();
                 prevImage();
               }}
-              className="absolute left-8 text-white hover:text-primary transition-colors"
+              className="absolute left-8 text-white hover:text-primary transition-colors z-10"
             >
-              <ChevronLeft className="w-12 h-12" />
+              <ChevronLeft className="w-14 h-14 drop-shadow-2xl" />
             </button>
 
             <button
@@ -267,31 +339,32 @@ export default function ProjectDetailPage() {
                 e.stopPropagation();
                 nextImage();
               }}
-              className="absolute right-8 text-white hover:text-primary transition-colors"
+              className="absolute right-8 text-white hover:text-primary transition-colors z-10"
             >
-              <ChevronRight className="w-12 h-12" />
+              <ChevronRight className="w-14 h-14 drop-shadow-2xl" />
             </button>
 
             <motion.img
               key={currentImageIndex}
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.9 }}
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.3 }}
               src={urlFor(allImages[currentImageIndex].url)
                 .width(1920)
                 .height(1080)
                 .url()}
               alt={allImages[currentImageIndex].caption || project.title}
-              className="max-w-full max-h-full object-contain"
+              className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl"
             />
 
             {allImages[currentImageIndex].caption && (
-              <div className="absolute bottom-16 left-1/2 -translate-x-1/2 text-white text-lg bg-black/50 px-6 py-3 rounded-full">
+              <div className="absolute bottom-24 left-1/2 -translate-x-1/2 text-white text-xl bg-black/40 backdrop-blur-sm px-8 py-4 rounded shadow-2xl">
                 {allImages[currentImageIndex].caption}
               </div>
             )}
 
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white text-lg">
+            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/80 text-lg bg-black/40 backdrop-blur-md px-6 py-3 rounded-full">
               {currentImageIndex + 1} / {allImages.length}
             </div>
           </motion.div>

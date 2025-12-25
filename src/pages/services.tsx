@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { client, urlFor } from "../lib/sanityClient";
+import Footer from "../components/layout/Footer";
 
 const icons = {
   globe: Globe,
@@ -439,6 +440,7 @@ export default function Services() {
           </div>
         </section>
       )}
+      <Footer />
     </div>
   );
 }
