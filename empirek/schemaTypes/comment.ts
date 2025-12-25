@@ -33,13 +33,6 @@ export const comment = defineType({
     }),
 
     defineField({
-      name: 'website',
-      title: 'Website (Optional)',
-      type: 'url',
-      description: 'Your website URL (optional)',
-    }),
-
-    defineField({
       name: 'message',
       title: 'Message',
       type: 'text',

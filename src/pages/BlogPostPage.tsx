@@ -79,7 +79,6 @@ export default function BlogPostPage() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [website, setWebsite] = useState("");
   const [message, setMessage] = useState("");
   const [replyTo, setReplyTo] = useState<string | null>(null);
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
@@ -156,9 +155,6 @@ export default function BlogPostPage() {
     } else if (message.trim().length > 1000) {
       errors.message = t("blog.maxLength", "Maximum 1000 characters");
     }
-    if (website && !/^https?:\/\/.+/.test(website)) {
-      errors.website = t("blog Year's.invalidUrl", "Invalid URL");
-    }
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -175,7 +171,6 @@ export default function BlogPostPage() {
       post: { _type: "reference", _ref: post._id },
       name: name.trim(),
       email: email.trim(),
-      website: website.trim() || undefined,
       message: message.trim(),
       createdAt: new Date().toISOString(),
       parent: replyTo
@@ -192,7 +187,6 @@ export default function BlogPostPage() {
 
       setName("");
       setEmail("");
-      setWebsite("");
       setMessage("");
       setReplyTo(null);
       setSubmitStatus("success");
@@ -331,7 +325,7 @@ export default function BlogPostPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-6">
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    {t("blog.name", "Name")} *
+                    {t("blog.name", "Name")}
                   </label>
                   <input
                     type="text"
@@ -350,7 +344,7 @@ export default function BlogPostPage() {
 
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    {t("blog.email", "Email")} *
+                    {t("blog.email", "Email")}
                   </label>
                   <input
                     type="email"
@@ -366,30 +360,11 @@ export default function BlogPostPage() {
                     </p>
                   )}
                 </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    {t("blog.website", "Website")} (
-                    {t("blog.optional", "optional")})
-                  </label>
-                  <input
-                    type="url"
-                    value={website}
-                    onChange={(e) => setWebsite(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border/50 focus:border-primary focus:outline-none transition text-base"
-                    placeholder={t("blog.yourWebsite", "https://yoursite.com")}
-                  />
-                  {formErrors.website && (
-                    <p className="mt-1 text-red-600 text-sm">
-                      {formErrors.website}
-                    </p>
-                  )}
-                </div>
               </div>
 
               <div className="mb-6">
                 <label className="block text-sm font-medium mb-2">
-                  {t("blog.message", "Message")} *
+                  {t("blog.message", "Message")}
                 </label>
                 <textarea
                   required
