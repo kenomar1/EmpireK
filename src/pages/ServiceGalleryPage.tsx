@@ -35,7 +35,7 @@ type Project = {
   slug: { current: string };
   client?: string;
   year?: number;
-  description?: string;
+  body?: string;
   mainImage?: { asset?: { url: string } };
   images?: Array<{ _key: string; asset?: { url: string }; caption?: string }>;
   link?: string;
@@ -74,7 +74,7 @@ export default function GalleryPage() {
           slug,
           client,
           year,
-          description,
+          body,
           link,
           mainImage { asset-> { url } },
           images[] { _key, caption, asset-> { url } },
@@ -251,9 +251,33 @@ export default function GalleryPage() {
                             {project.year && <span>{project.year}</span>}
                           </p>
                         )}
-                        {project.description && (
+                        {project.body && (
                           <p className="text-muted-foreground line-clamp-3 mb-6">
-                            {project.description}
+                            {Array.isArray(project.body)
+                              ? project.body
+                                  // Extract only plain text from Portable Text blocks
+                                  .flatMap((block: any) =>
+                                    block._type === "block"
+                                      ? block.children?.map(
+                                          (child: any) => child.text || ""
+                                        ) || []
+                                      : []
+                                  )
+                                  .join(" ")
+                                  .slice(0, 100) // Limit to first 100 characters
+                                  .trim()
+                              : ""}
+                            {Array.isArray(project.body) &&
+                              project.body
+                                .flatMap((block: any) =>
+                                  block._type === "block"
+                                    ? block.children?.map(
+                                        (child: any) => child.text || ""
+                                      ) || []
+                                    : []
+                                )
+                                .join(" ").length > 100 &&
+                              "..."}
                           </p>
                         )}
 
