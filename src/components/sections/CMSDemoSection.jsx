@@ -15,14 +15,16 @@ export default function CMSDemoSection() {
 
   return (
     <div className="relative" dir={isRTL ? "rtl" : "ltr"}>
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br backdrop-blur-sm from-background/90 via-primary/20 to-background pt-32 pb-32">
-        <div className="absolute inset-0 bg-grid-primary/5 [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
+      {/* Hero Section – No solid or gradient background (fully transparent) */}
+      <section className="relative overflow-hidden pt-32 pb-32">
+        {/* Optional subtle grid overlay – kept for visual depth without blocking the global shader */}
+        <div className="absolute inset-0 bg-grid-primary/5 [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)] pointer-events-none" />
+
         <div className="relative max-w-7xl mx-auto px-6 text-center z-10">
           <Badge className="mb-6" variant="secondary">
             {cms("badge")}
           </Badge>
-          <h1 className="text-5xl font-Cairo font-playfair md:text-7xl font-bold mb-8 text-foreground">
+          <h1 className="text-5xl  md:text-7xl font-bold mb-8 text-foreground">
             {cms("heading")}
           </h1>
           <p
@@ -30,27 +32,23 @@ export default function CMSDemoSection() {
             dangerouslySetInnerHTML={{ __html: cms("subheading") }}
           />
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <Button
-              size="lg"
-              className="text-lg px-10 font-Cairo font-playfair"
-              asChild
-            >
+            <Button size="lg" className="text-lg px-10 " asChild>
               <a href="#dashboard">{cms("ctaPrimary")}</a>
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="py-16  px-6 bg-primary text-primary-foreground  relative z-10">
+      {/* Final CTA – Removed solid primary background for transparency */}
+      <section className="py-16 px-6 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-6xl font-bold mb-8">
+          <h2 className="text-4xl md:text-6xl font-bold mb-8 text-foreground">
             {cms("finalHeading")}
           </h2>
           <Button
             size="lg"
             variant="secondary"
-            className="text-lg px-12 font-Cairo font-playfair"
+            className="text-lg px-12 "
             asChild
           >
             <a href="/contact">{cms("finalCta")}</a>
