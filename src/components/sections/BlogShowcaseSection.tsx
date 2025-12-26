@@ -78,7 +78,7 @@ export default function BlogGridShowcase() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="mt-8 text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed"
+            className="mt-8 text-xl md:text-2xl text-foreground max-w-3xl mx-auto leading-relaxed"
           >
             {t("blog.showcase.subtitle")}
           </motion.p>
