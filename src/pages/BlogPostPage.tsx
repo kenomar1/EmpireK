@@ -71,9 +71,11 @@ export default function BlogPostPage() {
   const { slug } = useParams<{ slug: string }>();
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
+  const currentLang = i18n.language; // Use current language from i18n
 
   const [post, setPost] = useState<any>(null);
   const [comments, setComments] = useState<Comment[]>([]);
+  const [loadingPost, setLoadingPost] = useState(true); // Separate loading for post
   const [loadingComments, setLoadingComments] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
@@ -89,7 +91,9 @@ export default function BlogPostPage() {
   useEffect(() => {
     if (!slug) return;
 
-    const query = `*[_type == "post" && slug.current == $slug][0]{
+    setLoadingPost(true); // Show loading when refetching on lang change
+
+    const query = `*[_type == "post" && slug.current == $slug && language == $lang][0]{
       _id,
       title,
       excerpt,
@@ -106,10 +110,16 @@ export default function BlogPostPage() {
     }`;
 
     client
-      .fetch(query, { slug })
-      .then((data) => setPost(data))
-      .catch((err) => console.error("Error fetching post:", err));
-  }, [slug]);
+      .fetch(query, { slug, lang: currentLang }) // Include language in params
+      .then((data) => {
+        setPost(data);
+        setLoadingPost(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching post:", err);
+        setLoadingPost(false);
+      });
+  }, [slug, currentLang]); // Depend on currentLang to refetch on language change
 
   const fetchComments = async () => {
     if (!post?._id) return;
@@ -138,7 +148,7 @@ export default function BlogPostPage() {
 
   useEffect(() => {
     if (post?._id) fetchComments();
-  }, [post?._id]);
+  }, [post?._id]); // Refetch comments when post changes (which happens on lang switch)
 
   const validateForm = () => {
     const errors: { [key: string]: string } = {};
@@ -203,6 +213,14 @@ export default function BlogPostPage() {
     setReplyTo(commentId);
     document.querySelector("form")?.scrollIntoView({ behavior: "smooth" });
   };
+
+  if (loadingPost) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-2xl text-muted-foreground">
+        {t("blog.loadingArticle", "Loading article...")}
+      </div>
+    );
+  }
 
   if (!post) {
     return (
@@ -384,7 +402,7 @@ export default function BlogPostPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full sm:w-auto px-8 py-4 bg-primary text-primary-foreground rounded-full font-bold hover:shadow-xl hover:scale-105 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-3 mx-auto sm:mx-0"
+                className="w-full sm:w-auto px-8 py-4 bg-primary text-primary-foreground rounded-lg font-bold hover:shadow-xl hover:scale-105 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-3 mx-auto sm:mx-0"
               >
                 {submitting
                   ? t("blog.submitting", "Submitting...")
