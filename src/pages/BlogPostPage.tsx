@@ -47,7 +47,6 @@ type Comment = {
   email: string;
   message: string;
   createdAt: string;
-  approved: boolean;
   parent?: {
     _ref: string;
     name?: string; // Now properly typed and fetched
@@ -108,7 +107,7 @@ export default function BlogPostPage() {
       setPost(fetchedPost);
 
       // Fetch approved comments + parent name for replies
-      const commentsQuery = `*[_type == "comment" && post._ref == $postId && approved == true] | order(createdAt desc){
+      const commentsQuery = `*[_type == "comment" && post._ref == $postId ] | order(createdAt desc){
         _id,
         name,
         message,
@@ -167,7 +166,6 @@ export default function BlogPostPage() {
           name: newComment.name.trim(),
           email: newComment.email.trim(),
           message: newComment.message.trim(),
-          approved: false,
           ...(replyTo && { parent: { _type: "reference", _ref: replyTo } }),
         });
 
