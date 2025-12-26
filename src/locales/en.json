@@ -27,6 +27,23 @@
     "heroTitle": "Insights & Inspiration",
     "heroSubtitle": "Insights, tutorials, and thoughts on modern web development, design, performance, and agency life.",
     "loading": "Loading posts...",
+
+    "errorFetching": "Error fetching data. Please try again later.",
+    "commentSubmitted": "Comment submitted successfully! It will appear after moderation.",
+    "commentError": "Error submitting comment. Please try again.",
+    "replyToComment": "Reply to Comment",
+    "leaveComment": "Leave a Comment",
+    "namePlaceholder": "Your Name",
+    "emailPlaceholder": "Your Email",
+    "messagePlaceholder": "Your Message",
+    "submitting": "Submitting...",
+    "submit": "Submit Comment",
+    "cancelReply": "Cancel Reply",
+    "noComments": "No comments yet. Be the first!",
+    "loadMore": "Load More Comments",
+    "replyTo": "Replying to",
+    "reply": "Reply",
+    "comments": "Comments",
     "noImage": "No Image",
 
     "categories": {
