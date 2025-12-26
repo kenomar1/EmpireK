@@ -15,7 +15,6 @@
     "gallery": "المعرض",
     "blog": "المدونة"
   },
-
   "contact": {
     "heroTitle": "لنبنِ معًا",
     "heroSubtitle": "جاهز لتحويل رؤيتك إلى واقع؟ نحن على رسالة واحدة فقط منك.",
@@ -61,7 +60,6 @@
 
     "error": "حدث خطأ ما. يرجى المحاولة مرة أخرى."
   },
-
   "gallery": {
     "heroTitle": "أعمالنا في العمل",
     "heroSubtitle": "مشاريع حقيقية. نتائج حقيقية. شاهد كيف نحول الأفكار إلى روائع رقمية.",
@@ -259,7 +257,7 @@
   },
 
   "services": {
-    "webDevelopment": {
+    "web-development": {
       "name": "تطوير المواقع",
       "title": "خدمات تطوير مواقع مخصصة",
       "shortDesc": "مواقع سريعة وآمنة ومخصصة بالكامل باستخدام أحدث التقنيات.",
@@ -273,7 +271,7 @@
       "seoHeading": "وكالة تطوير مواقع احترافية – حلول تحول الزوار إلى عملاء",
       "seoBody": "نختصّ في تصميم وتطوير مواقع إلكترونية عالية الأداء والسرعة، مركّزة بالكامل على تحقيق أعلى معدلات التحويل باستخدام أحدث التقنيات مثل Next.js، React، TypeScript، Tailwind CSS، Node.js، PostgreSQL، Supabase وAWS."
     },
-    "uiUx": {
+    "ui-ux": {
       "name": "تصميم واجهات المستخدم",
       "title": "تصميم واجهات وتجربة مستخدم تحويلية",
       "shortDesc": "تصاميم جميلة وبديهية تحول الزوار إلى عملاء دائمين.",
@@ -301,7 +299,7 @@
       "seoHeading": "أفضل خدمات تطوير أنظمة إدارة المحتوى – تحكم كامل في محتواك",
       "seoBody": "<p>توقف عن الاعتماد على المطورين لتغييرات بسيطة. حلولنا تمنحك التحكم الكامل.</p>"
     },
-    "mobileApps": {
+    "mobile-apps": {
       "name": "تطبيقات الجوال",
       "title": "تطوير تطبيقات iOS و Android",
       "shortDesc": "تطبيقات أصلية ومتعددة المنصات باستخدام React Native و Flutter.",
@@ -367,7 +365,6 @@
     "terms": "شروط الخدمة",
     "cookies": "سياسة الكوكيز"
   },
-
   "blog": {
     "showcase": {
       "title": "من مدونتنا",
@@ -378,79 +375,66 @@
       "defaultAuthor": "فريق EmpireK",
       "cta": "استعرض جميع المقالات"
     },
-    "general": {
-      "latest": "أحدث المقالات",
-      "allArticles": "جميع المقالات",
-      "noPosts": "لا توجد مقالات في هذه الفئة بعد.",
-      "minRead": "دقيقة قراءة",
-      "heroTitle": "رؤى وإلهام",
-      "pageTitle": "المدونة | EmpireK - رؤى في تطوير الويب والتصميم",
-      "pageDescription": "استكشف مقالات ودروس ودراسات حالة متخصصة في تطوير الويب الحديث، الأداء، التصميم، ونمو الوكالة.",
-      "heroSubtitle": "رؤى ودروس وأفكار حول تطوير الويب الحديث، التصميم، الأداء، وحياة الوكالة.",
-      "loading": "جاري تحميل المقالات...",
-      "noImage": "لا توجد صورة",
-      "postTitleTemplate": "{{title}} | EmpireK",
-      "defaultPostDesc": "اقرأ هذه المقالة الرائعة من مدونة وكالتنا.",
-      "defaultAuthor": "فريق EmpireK",
-      "defaultRole": "مطورون خبراء",
-      "shareArticle": "شارك هذا المقال",
-      "spreadKnowledge": "ساعدنا في نشر المعرفة",
-      "copyLink": "نسخ الرابط",
-      "share": "مشاركة",
-      "loadingArticle": "جاري تحميل المقال...",
-      "postNotFound": "المقال غير موجود",
-      "errorFetching": "خطأ في جلب البيانات. يرجى المحاولة لاحقًا."
-    },
+    "loadingArticle": "جاري تحميل المقال...",
+    "postNotFound": "المقال غير موجود",
+    "postTitleTemplate": "{{title}} | EmpireK",
+    "defaultPostDesc": "اقرأ هذه المقالة الرائعة من مدونة وكالتنا.",
+    "defaultAuthor": "فريق EmpireK",
+    "defaultRole": "مطورون خبراء",
+    "shareArticle": "شارك هذا المقال",
+    "spreadKnowledge": "ساعدنا في نشر المعرفة",
+    "copyLink": "نسخ الرابط",
+    "share": "مشاركة",
+    "latest": "أحدث المقالات",
+    "allArticles": "جميع المقالات",
+    "noPosts": "لا توجد مقالات في هذه الفئة بعد.",
+    "minRead": "دقيقة قراءة",
+    "pageTitle": "المدونة | EmpireK - رؤى في تطوير الويب والتصميم",
+    "pageDescription": "استكشف مقالات ودروس ودراسات حالة متخصصة في تطوير الويب الحديث، الأداء، التصميم، ونمو الوكالة.",
+    "heroTitle": "رؤى وإلهام",
+    "heroSubtitle": "رؤى ودروس وأفكار حول تطوير الويب الحديث، التصميم، الأداء، وحياة الوكالة.",
+    "loading": "جاري تحميل المقالات...",
 
-    "comments": {
-      "commentSubmitted": "تم إرسال التعليق بنجاح! سيظهر بعد الموافقة.",
-      "commentError": "خطأ في إرسال التعليق. يرجى المحاولة مرة أخرى.",
-      "replyToComment": "الرد على التعليق",
-      "leaveComment": "اترك تعليقًا",
-      "namePlaceholder": "اسمك",
-      "emailPlaceholder": "بريدك الإلكتروني",
-      "messagePlaceholder": "رسالتك",
-      "submitting": "جاري الإرسال...",
-      "submit": "إرسال التعليق",
-      "cancelReply": "إلغاء الرد",
-      "noComments": "لا توجد تعليقات بعد. كن الأول!",
-      "loadMore": "تحميل المزيد من التعليقات",
-      "replyTo": "الرد على",
-      "reply": "رد",
-      "comments": "التعليقات"
-    },
-
-    "categories": {
-      "webDevelopment": "تطوير الويب",
-      "uiUx": "تصميم واجهة وتجربة المستخدم",
-      "cms": "أنظمة إدارة المحتوى بدون رأس",
-      "mobileApps": "تطبيقات الجوال",
-      "seo": "تحسين محركات البحث والتسويق",
-      "maintenance": "الصيانة والدعم"
-    },
+    "errorFetching": "خطأ في جلب البيانات. يرجى المحاولة لاحقًا.",
+    "commentSubmitted": "تم إرسال التعليق بنجاح! سيظهر بعد الموافقة.",
+    "commentError": "خطأ في إرسال التعليق. يرجى المحاولة مرة أخرى.",
+    "replyToComment": "الرد على التعليق",
+    "leaveComment": "اترك تعليقًا",
+    "namePlaceholder": "اسمك",
+    "emailPlaceholder": "بريدك الإلكتروني",
+    "messagePlaceholder": "رسالتك",
+    "submitting": "جاري الإرسال...",
+    "submit": "إرسال التعليق",
+    "cancelReply": "إلغاء الرد",
+    "noComments": "لا توجد تعليقات بعد. كن الأول!",
+    "loadMore": "تحميل المزيد من التعليقات",
+    "replyTo": "الرد على",
+    "reply": "رد",
+    "comments": "التعليقات",
+    "noImage": "لا توجد صورة",
 
     "posts": {
-      "futureOfWebDevelopment2025": {
+      "future-of-web-development-2025": {
         "title": "مستقبل تطوير الويب في 2025",
         "excerpt": "اكتشف التقنيات الناشئة مثل WebAssembly والأدوات المدعومة بالذكاء الاصطناعي والحوسبة على الحافة التي تعيد تشكيل طريقة بناء الويب."
       },
-      "uiUxTrends2025": {
+      "ui-ux-trends-2025": {
         "title": "أبرز اتجاهات تصميم واجهة وتجربة المستخدم لعام 2025",
         "excerpt": "من الزجاجية إلى الحد الأدنى الفائق والتفاعلات ثلاثية الأبعاد – إليك الاتجاهات التي يجب أن تعرفها."
       },
-      "whyHeadlessCmsIsTheFuture": {
+      "why-headless-cms-is-the-future": {
         "title": "لماذا تعتبر أنظمة CMS بدون رأس مستقبل إدارة المحتوى",
         "excerpt": "افصل الواجهة الأمامية عن الخلفية وقدّم المحتوى في أي مكان بسرعة ومرونة فائقة."
       },
-      "buildingNativeMobileAppsReactNative": {
+      "building-native-mobile-apps-react-native": {
         "title": "بناء تطبيقات جوال أصلية باستخدام React Native في 2025",
         "excerpt": "الهندسة الجديدة وتحسينات Hermes وأدوات أفضل تجعل React Native الخيار الأمثل للتطبيقات متعددة المنصات."
       },
-      "seoStrategiesThatActuallyWork": {
+      "seo-strategies-that-actually-work": {
         "title": "استراتيجيات SEO التي تعمل فعلاً في 2025",
         "excerpt": "مؤشرات الويب الأساسية، الخبرة والمصداقية، المحتوى المفيد – تعرّف على ما يحرّك الإبرة حقاً اليوم."
       },
-      "maintenanceTipsForLongLivingProjects": {
+      "maintenance-tips-for-long-living-projects": {
         "title": "نصائح صيانة المشاريع طويلة الأمد",
         "excerpt": "كيف تحافظ على قاعدة الكود صحية وآمنة وعالية الأداء بعد سنوات من الإطلاق."
       }

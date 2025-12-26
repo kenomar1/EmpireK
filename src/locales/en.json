@@ -63,15 +63,6 @@
       "seo": "SEO & Marketing",
       "maintenance": "Maintenance"
     },
-    "blogShowcase": {
-      "title": "From Our Blog",
-      "subtitle": "Fresh perspectives on design, development, and digital innovation",
-      "loading": "Loading insights...",
-      "noPosts": "No articles available in this language yet.",
-      "noImage": "No preview",
-      "defaultAuthor": "EmpireK Team",
-      "cta": "Explore All Posts"
-    },
 
     "posts": {
       "future-of-web-development-2025": {
