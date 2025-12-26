@@ -344,7 +344,7 @@
   },
 
   "footer": {
-    "brandTitle": "EmpireK",
+    "brandTitle": "Empire-K",
     "brandDesc": "نبني مواقع إلكترونية عالية الأداء وقابلة للإدارة بالكامل ليحب عملاؤك التعامل معك .",
     "startProject": "ابدأ مشروعك",
     "servicesTitle": "خدماتنا",
@@ -357,10 +357,10 @@
       "الصيانة والدعم الفني"
     ],
     "contactTitle": "تواصل معنا",
-    "email": "Hello@empirek.com",
+    "email": "dev.empirek@hotmail.com",
     "phone": "+20 1515912781",
     "location": "القاهرة، مصر",
-    "copyright": "© ٢٠٢٥    EmpireK. جميع الحقوق محفوظة.",
+    "copyright": "© ٢٠٢٥    Empire-K. جميع الحقوق محفوظة.",
     "privacy": "سياسة الخصوصية",
     "terms": "شروط الخدمة",
     "cookies": "سياسة الكوكيز"
@@ -372,14 +372,14 @@
       "loading": "جاري تحميل المقالات...",
       "noPosts": "لا توجد مقالات متاحة بهذه اللغة بعد.",
       "noImage": "لا توجد معاينة",
-      "defaultAuthor": "فريق EmpireK",
+      "defaultAuthor": "فريق Empire-K",
       "cta": "استعرض جميع المقالات"
     },
     "loadingArticle": "جاري تحميل المقال...",
     "postNotFound": "المقال غير موجود",
-    "postTitleTemplate": "{{title}} | EmpireK",
+    "postTitleTemplate": "{{title}} | Empire-K",
     "defaultPostDesc": "اقرأ هذه المقالة الرائعة من مدونة وكالتنا.",
-    "defaultAuthor": "فريق EmpireK",
+    "defaultAuthor": "فريق Empire-K",
     "defaultRole": "مطورون خبراء",
     "shareArticle": "شارك هذا المقال",
     "spreadKnowledge": "ساعدنا في نشر المعرفة",
@@ -389,7 +389,7 @@
     "allArticles": "جميع المقالات",
     "noPosts": "لا توجد مقالات في هذه الفئة بعد.",
     "minRead": "دقيقة قراءة",
-    "pageTitle": "المدونة | EmpireK - رؤى في تطوير الويب والتصميم",
+    "pageTitle": "المدونة | Empire-K - رؤى في تطوير الويب والتصميم",
     "pageDescription": "استكشف مقالات ودروس ودراسات حالة متخصصة في تطوير الويب الحديث، الأداء، التصميم، ونمو الوكالة.",
     "heroTitle": "رؤى وإلهام",
     "heroSubtitle": "رؤى ودروس وأفكار حول تطوير الويب الحديث، التصميم، الأداء، وحياة الوكالة.",

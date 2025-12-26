@@ -63,7 +63,7 @@ export default function Footer() {
                   className="text-4xl tracking-widest font-thin font-Bebas inline-block mb-6"
                 >
                   <span className="text-foreground">Empire</span>
-                  <span className="text-primary">K</span>
+                  <span className="text-primary">-K</span>
                 </a>
                 <p className="text-muted-foreground mb-8 max-w-md text-lg leading-relaxed">
                   {tf("brandDesc")}

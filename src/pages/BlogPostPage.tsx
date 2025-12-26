@@ -106,7 +106,7 @@ export default function BlogPostPage() {
 
       setPost(fetchedPost);
 
-      // Fetch approved comments + parent name for replies
+      // Fetch comments + parent name for replies
       const commentsQuery = `*[_type == "comment" && post._ref == $postId ] | order(createdAt desc){
         _id,
         name,

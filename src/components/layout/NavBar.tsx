@@ -98,7 +98,7 @@ export function FixedNavbar() {
                   className="text-2xl tracking-widest font-thin font-Bebas flex items-center"
                 >
                   <span className="text-foreground">Empire</span>
-                  <span className="text-primary">K</span>
+                  <span className="text-primary">-K</span>
                 </a>
 
                 {/* Center: Navigation Links */}
@@ -179,7 +179,7 @@ export function FixedNavbar() {
                   className="absolute left-1/2 -translate-x-1/2 text-2xl tracking-widest font-thin font-Bebas"
                 >
                   <span className="text-foreground">Empire</span>
-                  <span className="text-primary">K</span>
+                  <span className="text-primary">-K</span>
                 </a>
 
                 <Sheet open={open} onOpenChange={setOpen}>
@@ -198,7 +198,7 @@ export function FixedNavbar() {
                         className="text-2xl tracking-widest font-Bebas"
                       >
                         <span className="text-foreground">Empire</span>
-                        <span className="text-primary">K</span>
+                        <span className="text-primary">-K</span>
                       </a>
 
                       <nav className="flex flex-col gap-6">

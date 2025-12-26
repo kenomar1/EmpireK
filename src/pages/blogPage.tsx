@@ -101,7 +101,7 @@ export default function Blog() {
       <title>
         {t(
           "blog.pageTitle",
-          "Blog | EmpireK - Insights on Web Development & Design"
+          "Blog | Empire-K - Insights on Web Development & Design"
         )}
       </title>
       <meta

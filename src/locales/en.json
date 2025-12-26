@@ -14,14 +14,14 @@
       "loading": "Loading articles...",
       "noPosts": "No articles available in this language yet.",
       "noImage": "No preview",
-      "defaultAuthor": "EmpireK Team",
+      "defaultAuthor": "Empire-K Team",
       "cta": "Explore All Articles"
     },
     "loadingArticle": "Loading article...",
     "postNotFound": "Article not found",
-    "postTitleTemplate": "{{title}} | EmpireK",
+    "postTitleTemplate": "{{title}} | Empire-K",
     "defaultPostDesc": "Read this insightful article from our agency blog.",
-    "defaultAuthor": "EmpireK Team",
+    "defaultAuthor": "Empire-K Team",
     "defaultRole": "Expert Developers",
     "shareArticle": "Share this article",
     "spreadKnowledge": "Help us spread the knowledge",
@@ -31,7 +31,7 @@
     "allArticles": "All Articles",
     "noPosts": "No articles found in this category yet.",
     "minRead": "min read",
-    "pageTitle": "Blog | EmpireK - Insights on Web Development & Design",
+    "pageTitle": "Blog | Empire-K - Insights on Web Development & Design",
     "pageDescription": "Explore expert articles, tutorials, and case studies on modern web development, performance, design, and agency growth.",
     "heroTitle": "Insights & Inspiration",
     "heroSubtitle": "Insights, tutorials, and thoughts on modern web development, design, performance, and agency life.",
@@ -418,7 +418,7 @@
   },
 
   "footer": {
-    "brandTitle": "EmpireK",
+    "brandTitle": "Empire-K",
     "brandDesc": "Turn your idea into a live store in hours, not weeks",
     "startProject": "Start Your Project",
     "servicesTitle": "Services",
@@ -431,10 +431,10 @@
       "Maintenance & Support"
     ],
     "contactTitle": "Get in Touch",
-    "email": "Hello@empireK.com",
+    "email": "dev.empirek@hotmail.com.com",
     "phone": "+20 1515912781",
     "location": "Cairo, Egypt",
-    "copyright": "© 2025 EmpireK. All rights reserved.",
+    "copyright": "© 2025 Empire-K. All rights reserved.",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
     "cookies": "Cookie Policy"

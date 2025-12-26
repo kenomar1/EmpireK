@@ -56,6 +56,7 @@ export default {
         playfair: ["'Roboto Slab'", "sans-serif"],
         Bebas: ["'Bebas Neue'", "serif"],
         Cairo: ["'Cairo'", "sans-serif"],
+        BBHBogle: ["'BBH Bogle'", "sans-serif"],
 
         // Optional: keep sans as fallback or for other uses
         sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
