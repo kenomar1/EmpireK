@@ -102,7 +102,6 @@ export const post = defineType({
       title: 'Category',
       type: 'reference',
       to: [{type: 'category'}],
-      validation: (Rule) => Rule.required(),
     }),
 
     defineField({
@@ -116,7 +115,37 @@ export const post = defineType({
       name: 'body',
       title: 'Body',
       type: 'array',
-      of: [{type: 'block'}, {type: 'image', options: {hotspot: true}}, {type: 'code'}],
+      of: [
+        {
+          type: 'block',
+          // Enable headings + common styles
+          styles: [
+            {title: 'Normal', value: 'normal'},
+            {title: 'H1', value: 'h1'},
+            {title: 'H2', value: 'h2'},
+            {title: 'H3', value: 'h3'},
+            {title: 'H4', value: 'h4'},
+            {title: 'H5', value: 'h5'},
+            {title: 'H6', value: 'h6'},
+            {title: 'Quote', value: 'blockquote'},
+          ],
+          lists: [
+            {title: 'Bullet List', value: 'bullet'},
+            {title: 'Numbered List', value: 'number'},
+          ],
+          // Optional: Add decorators if needed (bold, italic are default)
+          marks: {
+            decorators: [
+              {title: 'Bold', value: 'strong'},
+              {title: 'Italic', value: 'em'},
+              {title: 'Underline', value: 'underline'},
+              {title: 'Code', value: 'code'},
+            ],
+          },
+        },
+        {type: 'image', options: {hotspot: true}},
+        {type: 'code'},
+      ],
     }),
 
     defineField({

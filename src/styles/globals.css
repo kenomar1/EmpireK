@@ -214,3 +214,16 @@ video::-webkit-media-controls-start-playback-button {
 video::-webkit-media-controls-panel {
   display: none !important; /* Optional: hides all controls if unwanted */
 }
+/* Fix Tailwind Prose contrast in Sanity Studio dark mode */
+.prose {
+  @apply dark:prose-invert;
+}
+
+/* Ensure bold and headings are visible */
+.prose strong {
+  @apply font-bold text-inherit;
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+  @apply font-bold text-inherit;
+}
