@@ -227,3 +227,7 @@ video::-webkit-media-controls-panel {
 .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
   @apply font-bold text-inherit;
 }
+html, body, #root {
+  @apply bg-transparent;
+  height: 100%;
+}
