@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { client, urlFor } from "../lib/sanityClient";
 import { ShaderGradientCanvas, ShaderGradient } from "@shadergradient/react";
 import { useTheme } from "../context/ThemeContext"; // Adjust path if needed
+import Footer from "../components/layout/Footer";
 
 interface Category {
   title?: string;
@@ -84,7 +85,6 @@ export default function Blog() {
         setLoading(false);
       });
   }, [currentLang]);
-
 
   if (loading) {
     return (
@@ -275,6 +275,7 @@ export default function Blog() {
           )}
         </div>
       </div>
+      <Footer />
     </>
   );
 }
