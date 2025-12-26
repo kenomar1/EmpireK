@@ -321,7 +321,7 @@ export default function ContactPage() {
                     <div>
                       <p className="font-semibold">{t("contact.phone")}</p>
                       <a
-                        href="tel:+971501234567"
+                        href="tel:+201515912781"
                         dir="ltr"
                         className="inline-flex items-center gap-2 text-primary hover:underline font-medium transition-colors"
                       >
@@ -416,7 +416,7 @@ export default function ContactPage() {
                     {...registerBook("bookPhone")}
                     type="tel"
                     className="w-full px-5 py-4 rounded-xl bg-background/50 border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
-                    placeholder="+971 50 123 4567"
+                    placeholder="+20 1515912781"
                   />
                   {bookErrors.bookPhone && (
                     <p className="text-red-500 text-sm mt-1">
