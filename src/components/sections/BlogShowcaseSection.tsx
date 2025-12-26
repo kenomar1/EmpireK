@@ -59,7 +59,7 @@ export default function BlogGridShowcase() {
   }
 
   return (
-    <section className="py-32 px-6 bg-muted/30" dir={isRTL ? "rtl" : "ltr"}>
+    <section className="py-32 px-6 bg-transparent" dir={isRTL ? "rtl" : "ltr"}>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-20">
