@@ -8,6 +8,15 @@
     "herocta2": "Book a Meeting"
   },
   "blog": {
+    "showcase": {
+      "title": "From Our Blog",
+      "subtitle": "Fresh insights on design, development, and digital innovation",
+      "loading": "Loading articles...",
+      "noPosts": "No articles available in this language yet.",
+      "noImage": "No preview",
+      "defaultAuthor": "EmpireK Team",
+      "cta": "Explore All Articles"
+    },
     "loadingArticle": "Loading article...",
     "postNotFound": "Article not found",
     "postTitleTemplate": "{{title}} | EmpireK",
@@ -53,6 +62,15 @@
       "mobileApps": "Mobile Apps",
       "seo": "SEO & Marketing",
       "maintenance": "Maintenance"
+    },
+    "blogShowcase": {
+      "title": "From Our Blog",
+      "subtitle": "Fresh perspectives on design, development, and digital innovation",
+      "loading": "Loading insights...",
+      "noPosts": "No articles available in this language yet.",
+      "noImage": "No preview",
+      "defaultAuthor": "EmpireK Team",
+      "cta": "Explore All Posts"
     },
 
     "posts": {

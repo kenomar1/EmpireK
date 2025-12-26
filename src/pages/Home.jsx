@@ -15,6 +15,7 @@ import CMSDemoSection from "../components/sections/CMSDemoSection";
 import Footer from "../components/layout/Footer";
 
 import { useTranslation } from "react-i18next";
+import BlogShowcaseSection from "../components/sections/BlogShowcaseSection";
 
 export default function Home() {
   const { i18n } = useTranslation();
@@ -48,6 +49,7 @@ export default function Home() {
         <ServicesShowcaseSection />
         <HowWeWork />
         <CMSDemoSection />
+        <BlogShowcaseSection />
       </main>
       <Footer />
 
