@@ -7,6 +7,11 @@
     "herocta1": "Explore Our Services...",
     "herocta2": "Book a Meeting"
   },
+  "cookieToast": {
+    "message": "We use cookies to improve your experience and analyze site usage.",
+    "learnMore": "Learn more",
+    "gotIt": "Got it"
+  },
   "blog": {
     "showcase": {
       "title": "From Our Blog",
@@ -17,6 +22,7 @@
       "defaultAuthor": "Empire-K Team",
       "cta": "Explore All Articles"
     },
+
     "showReplies": "Show Replies",
     "hideReplies": "hide Replies",
     "loadingArticle": "Loading article...",
@@ -424,6 +430,8 @@
     "brandDesc": "Turn your idea into a live store in hours, not weeks",
     "startProject": "Start Your Project",
     "servicesTitle": "Services",
+    "cookiesAccepted": "Thanks for your Trust",
+    "cookiesDeclined": "Cookies Declined",
     "services": [
       "Custom Website Design",
       "E-commerce Development",

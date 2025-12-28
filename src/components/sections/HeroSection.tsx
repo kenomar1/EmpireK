@@ -132,11 +132,11 @@ export function HeroPromo() {
                   size="lg"
                   variant="outline"
                   className={`
-                    w-full sm:w-auto px-10 py-6 text-base md:text-lg font-bold border-2 shadow-2xl hover:shadow-3xl transition-all duration-300 rounded-2xl
+                    w-full sm:w-auto px-10 py-6  md:text-lg font-bold border-2 shadow-2xl hover:shadow-3xl transition-all duration-300 rounded-2xl
                     ${
                       theme === "dark"
-                        ? "border-white/50 hover:bg-white/10 text-white"
-                        : "border-gray-700 hover:bg-gray-100 text-gray-900"
+                        ? "border-white/50 hover:bg-foreground text-white"
+                        : "border-foreground/50 hover:bg-background/90 hover:text-foreground text-gray-900"
                     }
                   `}
                   asChild
