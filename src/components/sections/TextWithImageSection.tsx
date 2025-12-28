@@ -15,45 +15,50 @@ export function TextWithImageSection() {
 
   return (
     <section
-      className="w-full  py-16 md:py-24 bg-background"
+      className="w-full py-16 md:py-24 bg-transparent"
       dir={isRTL ? "rtl" : "ltr"}
     >
-      <div className="text-center mb-12">
-        <h2 className="text-4xl font-Cairo font-playfair md:text-5xl font-bold tracking-tight text-foreground">
-          {textWithImage("heading")}
-        </h2>
-      </div>
-
-      <div className="mx-auto max-w-7xl px-6 grid md:grid-cols-2 gap-12 items-center">
-        {/* Text Side */}
-        <div className={isRTL ? "md:order-2" : "md:order-1"}>
-          <div className="space-y-6">
-            <h3 className="text-lg font-Cairo font-playfair md:text-3xl font-bold text-primary leading-relaxed">
-              {textWithImage("texthead")}
-            </h3>
-            <p className="text-lg md:text-xl  text-muted-foreground leading-relaxed whitespace-pre-line">
-              {textWithImage("text")}
-            </p>
-            <Button
-              size="lg"
-              variant="default"
-              className="mt-6 font-playfair shadow-lg hover:shadow-xl transition-all"
-            >
-              {textWithImage("buttonText")}
-            </Button>
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="glass-panel p-8 md:p-16 rounded-[2.5rem] border-white/10">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-6xl font-playfair font-black tracking-tight text-foreground">
+              {textWithImage("heading")}
+            </h2>
           </div>
-        </div>
 
-        {/* Image Side */}
-        <div
-          className={`hidden sm:block ${isRTL ? "md:order-1" : "md:order-2"}`}
-        >
-          <div className="relative overflow-hidden">
-            <img
-              src={LOCAL_IMAGE_SRC}
-              alt={textWithImage("heading")}
-              className="w-full h-auto object-cover aspect-video md:aspect-square rounded-2xl shadow-2xl"
-            />
+          <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
+            {/* Text Side */}
+            <div className={isRTL ? "md:order-2" : "md:order-1"}>
+              <div className="space-y-8">
+                <h3 className="text-2xl md:text-4xl font-bold text-primary leading-tight">
+                  {textWithImage("texthead")}
+                </h3>
+                <p className="text-lg md:text-xl text-foreground/80 leading-relaxed whitespace-pre-line">
+                  {textWithImage("text")}
+                </p>
+                <Button
+                  size="lg"
+                  variant="default"
+                  className="mt-8 px-10 py-7 text-lg font-bold shadow-2xl hover:shadow-primary/30 transition-all rounded-2xl"
+                >
+                  {textWithImage("buttonText")}
+                </Button>
+              </div>
+            </div>
+
+            {/* Image Side */}
+            <div
+              className={`hidden sm:block ${isRTL ? "md:order-1" : "md:order-2"}`}
+            >
+              <div className="relative group">
+                <div className="absolute -inset-4 bg-primary/20 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <img
+                  src={LOCAL_IMAGE_SRC}
+                  alt={textWithImage("heading")}
+                  className="relative w-full h-auto object-cover aspect-square rounded-[2rem] shadow-2xl border border-white/10"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>

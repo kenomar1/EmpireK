@@ -1,0 +1,44 @@
+{
+  "en": {
+    "services": {
+      "web-development": "$4,500+",
+      "ui-ux-design": "$3,200+",
+      "branding-and-identity": "$2,500+",
+      "e-commerce-solutions": "$5,000+",
+      "mobile-app-development": "$8,000+",
+      "seo-optimization": "$1,200/mo",
+      "cms-integration": "$2,800+",
+      "custom-software": "$10,000+",
+      "digital-marketing": "$1,500/mo",
+      "maintenance-support": "$500/mo",
+      "consulting-strategy": "$3,500+",
+      "landing-page-design": "$1,800+",
+      "base": "$2,500+"
+    },
+    "products": {
+      "ecom-elite": "$1,499",
+      "saas-starter": "$99/mo"
+    }
+  },
+  "ar": {
+    "services": {
+      "web-development": "٤,٥٠٠ $ +",
+      "ui-ux-design": "٣,٢٠٠ $ +",
+      "branding-and-identity": "٢,٥٠٠ $ +",
+      "e-commerce-solutions": "٥,٠٠٠ $ +",
+      "mobile-app-development": "٨,٠٠٠ $ +",
+      "seo-optimization": "١,٢٠٠ $ / شهر",
+      "cms-integration": "٢,٨٠٠ $ +",
+      "custom-software": "١٠,٠٠٠ $ +",
+      "digital-marketing": "١,٥٠٠ $ / شهر",
+      "maintenance-support": "٥٠٠ $ / شهر",
+      "consulting-strategy": "٣,٥٠٠ $ +",
+      "landing-page-design": "١,٨٠0 $ +",
+      "base": "٢,٥٠٠ $ +"
+    },
+    "products": {
+      "ecom-elite": "١,٤٩٩ $",
+      "saas-starter": "٩٩ $ / شهر"
+    }
+  }
+}

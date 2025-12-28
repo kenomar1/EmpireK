@@ -7,8 +7,7 @@ import { Calendar, Clock } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { client, urlFor } from "../lib/sanityClient";
-import { ShaderGradientCanvas, ShaderGradient } from "@shadergradient/react";
-import { useTheme } from "../context/ThemeContext"; // Adjust path if needed
+import { useTheme } from "../context/ThemeContext"; 
 import Footer from "../components/layout/Footer";
 
 interface Category {
@@ -43,15 +42,7 @@ export default function Blog() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Same backgrounds as in HeroPromo
-  const darkUrl =
-    "https://shadergradient.co/customize?animate=on&axesHelper=off&bgColor1=%23000000&bgColor2=%23000000&brightness=1.3&cAzimuthAngle=250&cDistance=1.5&cPolarAngle=140&cameraZoom=12.5&color1=%230E001A&color2=%23A12EFF&color3=%235A00A3&destination=onCanvas&embedMode=off&envPreset=city&format=gif&fov=45&frameRate=10&gizmoHelper=hide&grain=off&lightType=3d&pixelDensity=1&positionX=0&positionY=0&positionZ=0&range=enabled&rangeEnd=40&rangeStart=0&reflection=0.5&rotationX=0&rotationY=0&rotationZ=140&shader=defaults&type=sphere&uAmplitude=7&uDensity=0.8&uFrequency=5.5&uSpeed=0.3&uStrength=0.4&uTime=0&wireframe=false";
 
-  // Light mode background – soft, bright, elegant (customize further on shadergradient.co)
-  const lightUrl =
-    "https://shadergradient.co/customize?animate=on&axesHelper=off&bgColor1=%23000000&bgColor2=%23000000&brightness=3&cAzimuthAngle=250&cDistance=1.5&cPolarAngle=140&cameraZoom=12.5&color1=%23410075&color2=%23ffffff&color3=%23ffffff&destination=onCanvas&embedMode=off&envPreset=city&format=gif&fov=45&frameRate=10&gizmoHelper=hide&grain=off&lightType=3d&pixelDensity=1&positionX=0&positionY=0&positionZ=0&range=disabled&rangeEnd=40&rangeStart=0&reflection=0.5&rotationX=0&rotationY=0&rotationZ=140&shader=defaults&type=sphere&uAmplitude=7&uDensity=0.8&uFrequency=5.5&uSpeed=0.3&uStrength=0.4&uTime=0&wireframe=false";
-
-  const backgroundUrl = theme === "dark" ? darkUrl : lightUrl;
 
   useEffect(() => {
     const query = `*[_type == "post" && language == $lang] | order(publishedAt desc) {
@@ -98,7 +89,7 @@ export default function Blog() {
 
   return (
     <>
-      <title>{t("Blog | Empire-K ")}</title>
+      <title>{t("blog.pageTitle")}</title>
       <meta
         name="description"
         content={t(
@@ -107,33 +98,17 @@ export default function Blog() {
         )}
       />
 
-      {/* Full-Screen Animated Gradient Background */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
-        <ShaderGradientCanvas
-          className="absolute inset-0"
-          style={{ pointerEvents: "none" }}
-        >
-          <ShaderGradient
-            control="query"
-            urlString={backgroundUrl}
-            key={theme} // Remount on theme change for smooth switch
-          />
-        </ShaderGradientCanvas>
-      </div>
+
 
       {/* Blog Content */}
-      <div className="relative min-h-screen pt-5  py-16 px-6">
+      <div className="relative min-h-screen pt-32 pb-16 px-6">
         <div className="max-w-7xl mx-auto">
           {/* Hero */}
-          <div className="text-center mb-20">
-            <h1
-              className={`text-5xl md:text-7xl font-bold tracking-tighter ${theme === "dark" ? "text-white" : "text-gray-900"}`}
-            >
+          <div className="text-center mb-24 glass-panel premium-border p-12 rounded-[2.5rem]">
+            <h1 className="text-5xl md:text-8xl font-black tracking-tighter text-foreground">
               {t("blog.heroTitle", "Our Blog")}
             </h1>
-            <p
-              className={`mt-6 text-xl max-w-3xl mx-auto ${theme === "dark" ? "text-white/80" : "text-gray-700"}`}
-            >
+            <p className="mt-8 text-xl md:text-2xl text-foreground/80 max-w-3xl mx-auto font-medium leading-relaxed">
               {t(
                 "blog.heroSubtitle",
                 "Insights, tutorials, and thoughts on modern web development, design, performance, and agency life."
@@ -154,7 +129,7 @@ export default function Blog() {
               </p>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 p-6 rounded-xl bg-background/40 shadow-lg shadow-background  backdrop-blur-sm">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 p-6 rounded-xl bg-transparent">
               {posts.map((post) => {
                 const categoryTitle = post.category?.title;
 
@@ -162,18 +137,11 @@ export default function Blog() {
                   <Link
                     key={post._id}
                     to={`/blog/${post.slug.current}`}
-                    className={`
-                      group rounded-3xl overflow-hidden hover:shadow-2xl hover:-translate-y-3 transition-all duration-500 flex flex-col h-full
-                      ${
-                        theme === "dark"
-                          ? "bg-background/30 border-white/20"
-                          : "bg-background/60 border-black/20"
-                      } backdrop-blur-md border
-                    `}
+                    className="group glass-panel premium-border rounded-[2rem] overflow-hidden hover:shadow-2xl transition-all duration-500 flex flex-col h-full border-white/10 p-2"
                   >
                     {/* Featured Image */}
                     {post.mainImage ? (
-                      <div className="aspect-video overflow-hidden bg-muted">
+                      <div className="aspect-video overflow-hidden bg-muted rounded-2xl">
                         <img
                           src={urlFor(post.mainImage)
                             .width(800)
@@ -202,9 +170,7 @@ export default function Blog() {
                         </h2>
 
                         {post.excerpt && (
-                          <p
-                            className={`line-clamp-3 mb-6 ${theme === "dark" ? "text-white/70" : "text-gray-600"}`}
-                          >
+                          <p className="line-clamp-3 mb-6 text-foreground/70">
                             {post.excerpt}
                           </p>
                         )}

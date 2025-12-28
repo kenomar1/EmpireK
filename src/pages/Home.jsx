@@ -5,17 +5,21 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 
-import { HeroPromo } from "../components/sections/HeroSection";
-import { FixedNavbar } from "../components/layout/NavBar";
+
 import { TextWithImageSection } from "../components/sections/TextWithImageSection";
 import { FloatingBenefits } from "../components/sections/FloatingBenefits";
-import ServicesShowcaseSection from "../components/sections/ServicesShowcase";
 import HowWeWork from "../components/sections/HowWeWork";
 import CMSDemoSection from "../components/sections/CMSDemoSection";
 import Footer from "../components/layout/Footer";
 
 import { useTranslation } from "react-i18next";
-import BlogShowcaseSection from "../components/sections/BlogShowcaseSection";
+import { lazy, Suspense } from "react";
+
+// Lazy load heavy sections
+const HeroPromo = lazy(() => import("../components/sections/HeroSection").then(m => ({ default: m.HeroPromo })));
+const ServicesShowcaseSection = lazy(() => import("../components/sections/ServicesShowcase"));
+const BlogShowcaseSection = lazy(() => import("../components/sections/BlogShowcaseSection"));
+
 
 export default function Home() {
   const { i18n } = useTranslation();
@@ -40,17 +44,23 @@ export default function Home() {
   };
 
   return (
-    <div className="mt-[-300px]" dir={isRTL ? "rtl" : "ltr"}>
-      <FixedNavbar />
-      <main className="pt-16 font-Cairo">
-        <HeroPromo />
+    <div dir={isRTL ? "rtl" : "ltr"}>
+      <main className="font-Cairo overflow-x-hidden">
+        <Suspense fallback={<div className="h-screen bg-background" />}>
+          <HeroPromo />
+        </Suspense>
         <TextWithImageSection />
         <FloatingBenefits />
-        <ServicesShowcaseSection />
+        <Suspense fallback={<div className="h-96 bg-background" />}>
+          <ServicesShowcaseSection />
+        </Suspense>
         <HowWeWork />
         <CMSDemoSection />
-        <BlogShowcaseSection />
+        <Suspense fallback={<div className="h-96 bg-background" />}>
+          <BlogShowcaseSection />
+        </Suspense>
       </main>
+
       <Footer />
 
       {/* Premium Back-to-Top Button */}

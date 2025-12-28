@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { PortableText } from "@portabletext/react";
 import { format } from "date-fns";
-import { MessageSquare, Reply, ChevronDown, ChevronUp } from "lucide-react";
+import { MessageSquare, Reply, ChevronDown, ChevronUp, User, Calendar, Clock, Tag } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
@@ -34,6 +34,9 @@ type Post = {
   author?: { name?: string; role?: string; avatar?: any };
   publishedAt?: string;
   excerpt?: string;
+  readTime: number;
+  tags?: string[];
+  category?: { title: string };
 };
 
 type Comment = {
@@ -79,8 +82,10 @@ export default function BlogPostPage() {
     try {
       const fetchedPost = await client.fetch<Post | null>(
         `*[_type == "post" && slug.current == $slug && language == $lang][0]{
-          _id, title, excerpt, mainImage, publishedAt, body,
-          author-> { name, role, avatar }, category-> { title }
+          _id, title, excerpt, mainImage, publishedAt, body, tags,
+          "readTime": round(length(pt::text(body)) / 600 + 1),
+          author-> { name, role, avatar }, 
+          category-> { title }
         }`,
         { slug, lang: currentLang }
       );
@@ -231,52 +236,132 @@ export default function BlogPostPage() {
     );
 
   return (
-    <div className="min-h-screen bg-background" dir={isRTL ? "rtl" : "ltr"}>
+    <div className="min-h-screen bg-transparent" dir={isRTL ? "rtl" : "ltr"}>
+      {post && (
+        <>
+          <title>{`${post.title} | ${t("common.brandName")}`}</title>
+          <meta name="description" content={post.excerpt || post.title} />
+        </>
+      )}
+
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary/10 to-background py-32">
-        {post.mainImage && (
-          <img
-            src={urlFor(post.mainImage).width(1920).height(1080).url()}
-            alt={post.title}
-            className="absolute inset-0 h-full w-full object-cover opacity-20"
-            loading="lazy"
-          />
-        )}
-        <div className="container relative z-10 mx-auto px-6">
+      <section className="relative overflow-hidden bg-transparent pt-32 pb-16">
+        <div className="container relative mx-auto px-6 max-w-[95vw] text-center">
+          {/* Photo Card (Layered Under) */}
+          {post.mainImage && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2, duration: 1 }}
+              className="glass-panel premium-border p-4 rounded-[4rem] shadow-2xl relative z-0 mx-auto max-w-7xl"
+            >
+              <div className="relative rounded-[3.5rem] overflow-hidden aspect-[21/9]">
+                <img
+                  src={urlFor(post.mainImage).width(1920).height(1080).url()}
+                  alt={post.title}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent" />
+              </div>
+            </motion.div>
+          )}
+
+          {/* Title Card (Layered Above) */}
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
+            className="glass-panel premium-border p-14 md:p-20 rounded-[4rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] relative z-10 -mt-24 md:-mt-40 max-w-7xl mx-auto flex flex-col items-center gap-10 border-white/10"
           >
-            <h1 className="mb-8 text-5xl font-bold md:text-7xl">
+            {/* Meta Chips */}
+            <div className="flex flex-wrap items-center justify-center gap-4 text-sm font-bold uppercase tracking-widest text-primary">
+              {post.category?.title && (
+                <span className="px-6 py-2.5 rounded-full border border-primary/20 bg-primary/5">
+                  {post.category.title}
+                </span>
+              )}
+              {post.publishedAt && (
+                <span className="flex items-center gap-2 px-6 py-2.5 rounded-full border border-white/10 bg-white/5 text-foreground/70">
+                  <Calendar className="w-4 h-4" />
+                  {format(new Date(post.publishedAt), "MMM d, yyyy")}
+                </span>
+              )}
+              <span className="flex items-center gap-2 px-6 py-2.5 rounded-full border border-white/10 bg-white/5 text-foreground/70">
+                <Clock className="w-4 h-4" />
+                {post.readTime} {t("blog.minRead", "Min Read")}
+              </span>
+            </div>
+
+            <h1 className="text-5xl font-black md:text-9xl tracking-tighter leading-[0.95] text-foreground">
               {post.title}
             </h1>
+
+            {/* Author Info */}
+            {post.author && (
+              <div className="flex items-center gap-6 mt-4">
+                {post.author.avatar ? (
+                  <img
+                    src={urlFor(post.author.avatar).width(120).height(120).url()}
+                    alt={post.author.name}
+                    className="w-16 h-16 rounded-full border-2 border-primary/30"
+                  />
+                ) : (
+                  <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center">
+                    <User className="w-8 h-8 text-primary" />
+                  </div>
+                )}
+                <div className="text-left">
+                  <p className="font-bold text-xl text-foreground">{post.author.name}</p>
+                  <p className="text-sm text-foreground/60 tracking-wider uppercase font-medium">{post.author.role || t("blog.author")}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Tags */}
+            {post.tags && post.tags.length > 0 && (
+              <div className="flex flex-wrap justify-center gap-3">
+                {post.tags.map(tag => (
+                  <span key={tag} className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-foreground/50 transition-colors hover:border-primary/50 hover:text-foreground">
+                    <Tag className="w-3.5 h-3.5" />
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
           </motion.div>
         </div>
       </section>
 
       {/* Article Body */}
-      <article className="container mx-auto max-w-4xl px-6 py-20">
-        {post.excerpt && (
-          <p className="mb-12 text-xl text-foreground">{post.excerpt}</p>
-        )}
-        <div className="prose prose-lg dark:prose-invert max-w-none text-foreground">
-          <PortableText value={post.body} components={ptComponents} />
-        </div>
+      <article className="container mx-auto max-w-5xl px-6 py-20">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="glass-panel premium-border p-10 md:p-16 rounded-[3rem] shadow-xl"
+        >
+          {post.excerpt && (
+            <p className="mb-12 text-2xl text-foreground font-medium leading-relaxed italic opacity-90">{post.excerpt}</p>
+          )}
+          <div className="prose prose-lg md:prose-xl dark:prose-invert max-w-none text-foreground leading-loose [&_li::marker]:text-primary">
+            <PortableText value={post.body} components={ptComponents} />
+          </div>
+        </motion.div>
       </article>
 
       {/* Comments Section */}
       <section className="container mx-auto border-t border-border px-6 py-16">
-        <h2 className="mb-12 flex items-center gap-3 text-4xl font-bold">
-          <MessageSquare className="h-8 w-8 text-primary" />
+        <h2 className="mb-16 flex items-center gap-4 text-4xl md:text-5xl font-black">
+          <MessageSquare className="h-10 w-10 text-primary" />
           {t("blog.comments")}
         </h2>
 
         {/* Comment Form */}
         <form
           onSubmit={handleSubmit}
-          className="mb-16 rounded-2xl bg-card p-8 shadow-lg"
+          className="mb-16 rounded-[2.5rem] glass-panel premium-border p-10 shadow-2xl"
         >
-          <h3 className="mb-6 text-2xl font-semibold">
+          <h3 className="mb-8 text-3xl font-bold">
             {replyTo ? t("blog.replyToComment") : t("blog.leaveComment")}
           </h3>
           {replyTo && replyingToName && (
@@ -295,7 +380,7 @@ export default function BlogPostPage() {
               }
               required
               disabled={isSubmitting}
-              className="rounded-lg border border-border bg-background p-4 focus:ring-2 focus:ring-primary disabled:opacity-50"
+              className="rounded-xl border border-border bg-background/50 p-5 focus:ring-2 focus:ring-primary focus:border-transparent disabled:opacity-50 transition-all"
             />
             <input
               type="email"
@@ -306,7 +391,7 @@ export default function BlogPostPage() {
               }
               required
               disabled={isSubmitting}
-              className="rounded-lg border border-border bg-background p-4 focus:ring-2 focus:ring-primary disabled:opacity-50"
+              className="rounded-xl border border-border bg-background/50 p-5 focus:ring-2 focus:ring-primary focus:border-transparent disabled:opacity-50 transition-all"
             />
           </div>
 
@@ -319,14 +404,14 @@ export default function BlogPostPage() {
             required
             rows={5}
             disabled={isSubmitting}
-            className="mt-6 w-full rounded-lg border border-border bg-background p-4 focus:ring-2 focus:ring-primary disabled:opacity-50"
+            className="mt-6 w-full rounded-xl border border-border bg-background/50 p-5 focus:ring-2 focus:ring-primary focus:border-transparent disabled:opacity-50 transition-all resize-none"
           />
 
           <div className="mt-6 flex items-center gap-4">
             <button
               type="submit"
               disabled={isSubmitting}
-              className="rounded-lg bg-primary px-8 py-4 font-bold text-primary-foreground disabled:opacity-50"
+              className="rounded-full bg-primary px-10 py-5 font-bold text-lg text-primary-foreground shadow-xl hover:shadow-primary/40 hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? t("blog.submitting") : t("blog.submit")}
             </button>
@@ -407,7 +492,7 @@ const CommentItem: React.FC<{
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl border border-border bg-card p-8 shadow-md"
+      className="glass-panel premium-border rounded-[2.5rem] p-10 shadow-xl"
       style={{ marginLeft: depth > 0 ? `${depth * 40}px` : 0 }}
     >
       {comment.parent?.name && (

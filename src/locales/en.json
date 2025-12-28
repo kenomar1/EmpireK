@@ -1,5 +1,19 @@
 {
   "languageName": "English",
+  "language": "Language",
+  "common": {
+    "brandName": "Empire-K",
+    "brandNamePrefix": "Empire",
+    "brandNameSuffix": "-K",
+    "copyright": "© {{year}} Empire-K. All rights reserved.",
+    "loading": "Loading..."
+  },
+  "bottomNav": {
+    "home": "Home",
+    "search": "Search",
+    "cart": "Templates",
+    "profile": "Contact"
+  },
 
   "hero": {
     "heading": "Speed. Beauty. Control.",
@@ -181,12 +195,7 @@
       }
     ]
   },
-  "bottomNav": {
-    "home": "Home",
-    "search": "Search",
-    "cart": "Cart",
-    "profile": "Profile"
-  },
+
 
   "floatingBenefits": {
     "heading": "Why Teams Trust Us",
@@ -255,9 +264,7 @@
       }
     ]
   },
-  "common": {
-    "loading": "Loading"
-  },
+
 
   "shopPreview": {
     "eyebrow": "Web Development Agency",
@@ -300,9 +307,31 @@
     "heroSubtitle": "End-to-end solutions that grow your business — fast, beautiful, and fully managed.",
     "orderCta": "Order This Service Now",
     "orderMeta": "Starting from {{price}} • Delivered in {{timeline}}",
-    "price": "$25+",
     "noServices": "NO SER",
-    "timeline": "2–14 days"
+    "timeline": "2–14 days",
+    "all": "All Services",
+    "sortBy": "Sort By",
+    "sortName": "Name",
+    "sortNewest": "Newest",
+    "digitalProductsTitle": "Ready-to-Launch Templates",
+    "digitalProductsSubtitle": "Skip the build time and launch instantly with our high-fidelity, conversion-optimized site templates.",
+    "modelSale": "One-time Purchase",
+    "modelSubscription": "Monthly Subscription",
+    "buyNow": "Get Started",
+    "productsList": [
+      {
+        "id": "ecom-elite",
+        "title": "Elite E-commerce Solution",
+        "desc": "Full-stack template with cart, payments, and admin dashboard.",
+        "type": "sale"
+      },
+      {
+        "id": "saas-starter",
+        "title": "SaaS Launchpad",
+        "desc": "Modern dashboard, auth flow, and landing page for startups.",
+        "type": "subscription"
+      }
+    ]
   },
   "textWithImage": {
     "heading": "Obsessed With Growth, Not Just Good Looks",
@@ -324,7 +353,9 @@
     "demoUrl": "https://kendrickStudios/admin",
     "loginInfo": "Demo login: <code class='font-bold'>demo@client.com</code> • Password: <code class='font-bold'>tryitnow</code>",
     "finalHeading": "Ready to Stop Doing Revisions Forever?",
-    "finalCta": "Book a Free Strategy Call"
+    "finalCta": "Book a Free Strategy Call",
+    "ecommerceHeading": "Pro E-commerce Templates",
+    "ecommerceCta": "Browse Digital Products"
   },
 
   "services": {
@@ -448,6 +479,49 @@
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
     "cookies": "Cookie Policy"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "content": [
+      "Your privacy is important to us at Empire-K. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website.",
+      "We collect information you provide directly to us, such as when you fill out a contact form, subscribe to updates, or communicate with us.",
+      "We also automatically collect certain information about your device and browsing actions using cookies and similar technologies.",
+      "We use this information to improve our services, personalize your experience, analyze site usage, and communicate with you.",
+      "We do not sell your personal information to third parties. We may share information with trusted service providers who assist us in operating our website and conducting our business.",
+      "You have the right to access, correct, or delete your personal information. You may also opt out of certain data collection practices.",
+      "We implement reasonable security measures to protect your information, but no method of transmission over the internet is 100% secure.",
+      "This policy may be updated from time to time. We will notify you of any material changes by posting the new policy on this page.",
+      "If you have any questions about this Privacy Policy, please contact us at the information provided in the footer."
+    ]
+  },
+
+  "terms": {
+    "title": "Terms of Service",
+    "content": [
+      "Welcome to Empire-K. By accessing or using our website, you agree to be bound by these Terms of Service.",
+      "All content on this site, including text, graphics, logos, and images, is the property of Empire-K and protected by copyright laws.",
+      "You may use our website for personal, non-commercial purposes. Any commercial use requires prior written permission.",
+      "We reserve the right to modify or discontinue any part of the service without notice.",
+      "You are responsible for maintaining the confidentiality of any account information and for all activities that occur under your account.",
+      "We are not liable for any direct, indirect, incidental, or consequential damages arising from your use of the website.",
+      "These terms are governed by the laws of the jurisdiction in which Empire-K operates.",
+      "We may update these terms at any time. Continued use of the site after changes constitutes acceptance of the new terms.",
+      "If you have any questions about these Terms of Service, please contact us."
+    ]
+  },
+  "close": "Close",
+  "iaccept": "I Accept",
+
+  "cookies": {
+    "title": "Cookie Policy",
+    "content": [
+      "We use cookies to enhance your experience, analyze site traffic, and deliver personalized content.",
+      "Cookies are small text files stored on your device that help us remember your preferences and understand how you use our site.",
+      "We use both session cookies (which expire when you close your browser) and persistent cookies (which remain until deleted).",
+      "You can control cookies through your browser settings. However, disabling cookies may affect the functionality of the site.",
+      "By continuing to use this site, you consent to our use of cookies as described in this policy.",
+      "For more details, see our full Privacy Policy."
+    ]
   }
 }
 

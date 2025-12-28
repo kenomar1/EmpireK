@@ -8,6 +8,7 @@ import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Menu, Globe, Check } from "lucide-react";
 import ThemeToggle from "../common/ThemeToggle";
 import { useTranslation } from "react-i18next";
+import { Magnetic } from "../ui/magnetic";
 
 export function FixedNavbar() {
   const { t, i18n } = useTranslation();
@@ -87,30 +88,33 @@ export function FixedNavbar() {
         animate={visible ? "visible" : "hidden"}
       >
         <div className="mx-auto max-w-5xl pointer-events-auto">
-          <div className="bg-background/40 backdrop-blur-xl border border-border/20 rounded-full shadow-2xl px-6 py-2">
+          <div className="glass-panel border-white/10 rounded-full px-6 py-2 premium-border overflow-visible">
             <div className="flex h-14 items-center justify-between">
               {/* Desktop: Logo left, Nav center, Controls right */}
               <div className="hidden md:flex items-center justify-between w-full">
                 {/* Left: Logo */}
-                <a
-                  href="/"
-                  dir="ltr"
-                  className="text-2xl tracking-widest font-thin font-Bebas flex items-center"
-                >
-                  <span className="text-foreground">Empire</span>
-                  <span className="text-primary">-K</span>
-                </a>
+                <Magnetic>
+                  <a
+                    href="/"
+                    dir="ltr"
+                    className="text-2xl tracking-widest font-thin font-Bebas flex items-center"
+                  >
+                    <span className="text-foreground">{t("common.brandNamePrefix")}</span>
+                    <span className="text-primary">{t("common.brandNameSuffix")}</span>
+                  </a>
+                </Magnetic>
 
                 {/* Center: Navigation Links */}
                 <nav className="flex items-center gap-10">
                   {navItems.map((item) => (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
-                    >
-                      {item.name}
-                    </a>
+                    <Magnetic key={item.name}>
+                      <a
+                        href={item.href}
+                        className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
+                      >
+                        {item.name}
+                      </a>
+                    </Magnetic>
                   ))}
                 </nav>
 
@@ -176,10 +180,10 @@ export function FixedNavbar() {
 
                 <a
                   href="/"
-                  className="absolute left-1/2 -translate-x-1/2 text-2xl tracking-widest font-thin font-Bebas"
+                  className="absolute left-1/2 -translate-x-1/2 text-2xl tracking-widest font-thin font-Bebas whitespace-nowrap"
                 >
-                  <span className="text-foreground">Empire</span>
-                  <span className="text-primary">-K</span>
+                  <span className="text-foreground">{t("common.brandNamePrefix")}</span>
+                  <span className="text-primary">{t("common.brandNameSuffix")}</span>
                 </a>
 
                 <Sheet open={open} onOpenChange={setOpen}>
@@ -206,10 +210,10 @@ export function FixedNavbar() {
                           onClick={() => setOpen(false)}
                         >
                           <h1 className="text-4xl tracking-widest font-Bebas leading-none">
-                            <span className="text-foreground">Empire</span>
-                            <span className="text-primary">-K</span>
+                            <span className="text-foreground">{t("common.brandNamePrefix")}</span>
+                            <span className="text-primary">{t("common.brandNameSuffix")}</span>
                           </h1>
-                          <p className="text-sm text-foreground mt-2 tracking-wide">
+                          <p className="text-sm text-foreground/60 mt-2 tracking-wide font-Cairo">
                             {t("hero.heading")}
                           </p>
                         </a>
@@ -252,7 +256,7 @@ export function FixedNavbar() {
                       {/* Language Selector */}
                       <div className="border-t border-border/30 pt-8">
                         <p className="text-sm font-medium text-muted-foreground mb-4 uppercase tracking-wider">
-                          {t("language") || "Language"}
+                          {t("language")}
                         </p>
                         <div className="grid grid-cols-2 gap-3">
                           {languages.map((lang) => (
@@ -286,8 +290,7 @@ export function FixedNavbar() {
                       {/* Optional Footer Touch */}
                       <div className="mt-12 text-center">
                         <p className="text-xs text-muted-foreground">
-                          © {new Date().getFullYear()} Empire-K. All rights
-                          reserved.
+                          {t("common.copyright", { year: new Date().getFullYear() })}
                         </p>
                       </div>
                     </div>
@@ -298,9 +301,6 @@ export function FixedNavbar() {
           </div>
         </div>
       </motion.header>
-      {/* Safe padding for page content below the navbar */}
-      <div className="h-32 md:h-32" />{" "}
-      {/* Matches the visible y:32 + navbar height */}
     </>
   );
 }

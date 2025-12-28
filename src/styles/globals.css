@@ -3,62 +3,133 @@
 @tailwind utilities;
 
 
-/* Light Theme – Neutral (الألوان الصحيحة دلوقتي) */
-:root {
-  --font-primary: "Playfair Display", "Inter", serif;  /* Serif fallback for elegance */
-  /* Light Theme */
-  --background: 0 0% 90%;
-  --foreground: 240 10% 3.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 240 10% 3.9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 3.9%;
+/* Light Theme – Champagne Pearl (Luxury & Warm) */
+  :root {
+    --font-primary: "Playfair Display", "Inter", serif;
+    --background: 34 33% 96%;
+    --foreground: 24 15% 12%;
+    --card: 34 33% 98%;
+    --card-foreground: 24 15% 12%;
+    --popover: 34 33% 100%;
+    --popover-foreground: 24 15% 12%;
+    --primary: 43 100% 42%;
+    --primary-foreground: 34 33% 98%;
+    --secondary: 34 20% 90%;
+    --secondary-foreground: 24 15% 12%;
+    --muted: 34 15% 88%;
+    --muted-foreground: 24 10% 45%;
+    --accent: 43 100% 42%;
+    --accent-foreground: 34 33% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 34 15% 82%;
+    --input: 34 15% 82%;
+    --ring: 43 100% 42%;
+    --radius: 0.75rem;
 
-  /* Gold Primary – غامق وأنيق في الوضع الفاتح */
-  --primary: 42 100% 42%;           /* ذهبي غني ≈ #d4af37 مع لمسة أغمق لتباين أعلى */
-  --primary-foreground: 0 0% 98%; /* نص أبيض تقريبًا */
+    /* Glass Effect Tokens - Light */
+    --glass-background: rgba(255, 252, 245, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.6);
+    --glass-shadow: rgba(80, 60, 20, 0.05);
+    --glass-blur: 20px;
+  }
 
-  --secondary: 240 4.8% 95.9%;
-  --secondary-foreground: 240 5.9% 10%;
-  --muted: 240 4.8% 95.9%;
-  --muted-foreground: 240 3.8% 46.1%;
-  --accent: 240 4.8% 95.9%;
-  --accent-foreground: 240 5.9% 10%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 240 5.9% 90%;
-  --input: 240 5.9% 90%;
-  --ring: 42 100% 42%;
-  --radius: 0.5rem;
-}
+  :root[data-theme="dark"], 
+  html[data-theme="dark"] {
+    --background: 245 45% 4%;
+    --foreground: 210 20% 98%;
+    --card: 245 45% 6%;
+    --card-foreground: 210 20% 98%;
+    --popover: 245 45% 4%;
+    --popover-foreground: 210 20% 98%;
+    --primary: 45 100% 64%;
+    --primary-foreground: 245 45% 10%;
+    --secondary: 245 25% 12%;
+    --secondary-foreground: 210 20% 98%;
+    --muted: 245 25% 10%;
+    --muted-foreground: 245 15% 65%;
+    --accent: 45 100% 64%;
+    --accent-foreground: 245 45% 10%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 245 25% 18%;
+    --input: 245 25% 18%;
+    --ring: 45 100% 64%;
 
-:root[data-theme="dark"], 
-html[data-theme="dark"] {
-  
-  /* Dark Theme */
-  --background: 0 0% 10%;
-  --foreground: 0 0% 98%;
-  --card: 240 10% 3.9%;
-  --card-foreground: 0 0% 98%;
-  --popover: 240 10% 3.9%;
-  --popover-foreground: 0 0% 98%;
+    /* Glass Effect Tokens - Dark */
+    --glass-background: rgba(10, 15, 30, 0.35);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --glass-shadow: rgba(0, 0, 0, 0.5);
+    --glass-blur: 24px;
+  }
 
-  /* Gold Primary في الدارك – فاتح ولامع جدًا */
-  --primary: 48 100% 62%;           /* ذهبي فاتح لامع ≈ #ffed4e → يضوي في الخلفية السوداء */
-  --primary-foreground: 42 80% 20%; /* نص ذهبي غامق أو أسود-بني لتباين مثالي */
+  /* Glassmorphism Utility */
+  .glass-panel {
+    position: relative;
+    background: var(--glass-background);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 var(--glass-shadow);
+  }
 
-  --secondary: 240 3.7% 15.9%;
-  --secondary-foreground: 0 0% 98%;
-  --muted: 240 3.7% 15.9%;
-  --muted-foreground: 240 5% 64.9%;
-  --accent: 240 3.7% 15.9%;
-  --accent-foreground: 0 0% 98%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 240 3.7% 15.9%;
-  --input: 240 3.7% 15.9%;
-  --ring: 48 100% 62%;
-}
+  /* Subtle Noise Texture */
+  .glass-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.035;
+    pointer-events: none;
+  }
+
+  /* Premium Border Utility */
+  .premium-border {
+    position: relative;
+  }
+
+  .premium-border::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.3),
+      transparent 40%,
+      transparent 60%,
+      rgba(255, 255, 255, 0.2)
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  /* Interactive Spotlight Container */
+  .spotlight-container {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .spotlight-glow {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .spotlight-container:hover .spotlight-glow {
+    opacity: 0.15;
+  }
 body {
   @apply bg-background text-foreground transition-colors duration-300;
 }
@@ -145,20 +216,16 @@ body {
   }
 }
 @keyframes float {
-  0%,
-  100% {
-    transform: translateY(0) rotate(0deg);
+  0%, 100% {
+    transform: translateY(0);
   }
-  33% {
-    transform: translateY(-30px) rotate(3deg);
-  }
-  66% {
-    transform: translateY(20px) rotate(-3deg);
+  50% {
+    transform: translateY(-20px);
   }
 }
 
 .animate-float {
-  animation: float linear infinite;
+  animation: float 6s ease-in-out infinite;
 }
 .animate-float-delay-1 {
   animation-delay: 0s;

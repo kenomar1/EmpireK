@@ -20,10 +20,11 @@ export default function ServicesShowcaseSection() {
 
   return (
     <section
-      className="py-24 px-4 overflow-hidden bg-gradient-to-b from-background via-transparent to-background/90"
+      className="py-24 px-6 overflow-hidden relative"
       dir={isRTL ? "rtl" : "ltr"}
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="absolute inset-x-4 inset-y-12 glass-panel  rounded-[3.5rem] bg-background/5 border-white/5 pointer-events-none" />
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
         <div className="text-center font-playfair mb-20">
           <motion.h2
@@ -49,66 +50,72 @@ export default function ServicesShowcaseSection() {
 
         {/* Pure Auto-Scrolling Carousel - NO SCROLL DEPENDENCY */}
         <div className="relative mb-20">
-          {/* Gradient Fades */}
-          <div className="absolute inset-y-0 start-0 w-32  z-10 pointer-events-none" />
-          <div className="absolute inset-y-0 end-0 w-32  z-10 pointer-events-none" />
-
           {/* Row 1 - Fast */}
           <motion.div
             className="flex gap-8"
             animate={{
-              x: ["50%", "-50%"],
+              x: ["0%", "-50%"],
             }}
             transition={{
               x: {
                 repeat: Infinity,
                 repeatType: "loop",
-                duration: 20,
+                duration: 40, // Slower for more premium feel
                 ease: "linear",
               },
             }}
           >
             {items.map((src, i) => (
               <div key={`row1-${i}`} className="flex-shrink-0 w-80">
-                <div className="group relative rounded-2xl overflow-hidden shadow-2xl bg-white/5 backdrop-blur-xl border border-white/10">
-                  <img
-                    src={src}
-                    alt={`Preview ${i + 1}`}
-                    className="w-full h-56 object-cover transition-transform duration-700 group-hover:scale-110"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                </div>
+                <motion.div 
+                  whileHover={{ scale: 1.05 }}
+                  className="group relative rounded-[2rem] p-3 glass-panel premium-border shadow-2xl transition-all duration-500"
+                >
+                  <div className="relative rounded-[1.5rem] overflow-hidden">
+                    <img
+                      src={src}
+                      alt={`Preview ${i + 1}`}
+                      className="w-full h-56 object-cover transition-transform duration-700 group-hover:scale-110"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  </div>
+                </motion.div>
               </div>
             ))}
           </motion.div>
 
           {/* Row 2 - Slower, opposite direction */}
           <motion.div
-            className="flex gap-8 mt-8"
+            className="flex gap-8 mt-12"
             animate={{
-              x: ["-50%", "50%"],
+              x: ["-50%", "0%"],
             }}
             transition={{
               x: {
                 repeat: Infinity,
                 repeatType: "loop",
-                duration: 20,
+                duration: 45, // Slower
                 ease: "linear",
               },
             }}
           >
             {items.map((src, i) => (
               <div key={`row2-${i}`} className="flex-shrink-0 w-80">
-                <div className="group relative rounded-2xl overflow-hidden shadow-2xl bg-white/5 backdrop-blur-xl border border-white/10">
-                  <img
-                    src={src}
-                    alt={`Preview ${i + 1}`}
-                    className="w-full h-56 object-cover transition-transform duration-700 group-hover:scale-110"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                </div>
+                <motion.div 
+                   whileHover={{ scale: 1.05 }}
+                   className="group relative rounded-[2rem] p-3 glass-panel premium-border shadow-2xl transition-all duration-500"
+                >
+                  <div className="relative rounded-[1.5rem] overflow-hidden">
+                    <img
+                      src={src}
+                      alt={`Preview ${i + 1}`}
+                      className="w-full h-56 object-cover transition-transform duration-700 group-hover:scale-110"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  </div>
+                </motion.div>
               </div>
             ))}
           </motion.div>

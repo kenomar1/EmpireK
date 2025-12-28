@@ -25,14 +25,14 @@ export default function HowWeWork() {
   const subheading = t("howWeWork.subheading");
 
   return (
-    <section className="py-20 px-6 bg-background " dir={isRTL ? "rtl" : "ltr"}>
+    <section className="py-24 px-6 bg-transparent" dir={isRTL ? "rtl" : "ltr"}>
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+        <div className="text-center mb-24">
+          <h2 className="text-5xl md:text-7xl font-playfair font-black text-foreground mb-6">
             {heading}
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl text-foreground/80 max-w-3xl mx-auto">
             {subheading}
           </p>
         </div>
@@ -45,38 +45,27 @@ export default function HowWeWork() {
               return (
                 <div
                   key={index}
-                  className="flex flex-col items-center text-center group"
+                  className="flex flex-col items-center text-center group p-8 rounded-[3rem] glass-panel border-white/10 premium-border shadow-xl hover:shadow-2xl hover:bg-white/5 transition-all duration-500"
                 >
                   {/* Number Circle */}
                   <div className="relative z-10 mb-8">
-                    <div className="w-20 h-20 rounded-full bg-primary/10 border-4 border-primary flex items-center justify-center text-3xl font-bold text-primary group-hover:scale-110 transition-transform duration-300">
+                    <div className="w-16 h-16 rounded-full bg-primary/20 border-2 border-primary/50 flex items-center justify-center text-2xl font-bold text-primary group-hover:scale-110 transition-transform duration-300">
                       {step.number}
                     </div>
-                    <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-primary/20 blur-xl group-hover:blur-2xl transition-all" />
                   </div>
 
                   {/* Icon */}
-                  <div className="mb-6 p-4 rounded-2xl bg-primary/5 group-hover:bg-primary/10 transition-colors">
+                  <div className="mb-6 p-5 rounded-2xl bg-primary/10 group-hover:bg-primary/20 transition-colors">
                     <Icon className="w-10 h-10 text-primary" />
                   </div>
 
                   {/* Content */}
-                  <h3 className="text-xl font-semibold text-foreground mb-3">
+                  <h3 className="text-2xl font-bold text-foreground mb-4 font-Cairo">
                     {step.title}
                   </h3>
-                  <p className="text-muted-foreground max-w-xs">
+                  <p className="text-base text-foreground/70 leading-relaxed font-Cairo">
                     {step.description}
                   </p>
-
-                  {/* Arrow between steps */}
-                  {index < steps.length - 1 && (
-                    <ArrowRight
-                      className={`absolute top-0 hidden xl:block text-primary/30 ${
-                        isRTL ? "-left-12 rotate-180" : "-right-12"
-                      }`}
-                      size={48}
-                    />
-                  )}
                 </div>
               );
             })}
@@ -84,32 +73,29 @@ export default function HowWeWork() {
         </div>
 
         {/* Mobile: Vertical Timeline */}
-        <div className="lg:hidden space-y-12">
+        <div className="lg:hidden space-y-8">
           {steps.map((step, index) => {
             const Icon = iconMap[step.icon] || Target;
             return (
-              <div key={index} className="relative flex gap-6">
-                {/* Timeline Line */}
-                {index !== steps.length - 1 && (
-                  <div className="absolute left-10 top-20 bottom-0 w-0.5 bg-border/50" />
-                )}
-
+              <div key={index} className="relative flex gap-6 p-8 rounded-[2.5rem] glass-panel border-white/10 premium-border shadow-xl">
                 {/* Circle + Number */}
                 <div className="relative z-10 shrink-0">
-                  <div className="w-20 h-20 rounded-full bg-primary/10 border-4 border-primary flex items-center justify-center text-3xl font-bold text-primary">
+                  <div className="w-16 h-16 rounded-full bg-primary/20 border-2 border-primary/50 flex items-center justify-center text-2xl font-bold text-primary font-Cairo">
                     {step.number}
                   </div>
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 pb-8">
-                  <div className="mb-4 p-3 rounded-xl bg-primary/5 inline-block">
-                    <Icon className="w-8 h-8 text-primary" />
+                <div className="flex-1">
+                  <div className="mb-4 p-4 rounded-xl bg-primary/10 inline-block font-Cairo">
+                    <Icon className="w-6 h-6 text-primary" />
                   </div>
-                  <h3 className="text-2xl font-semibold text-foreground mb-2">
+                  <h3 className="text-3xl font-bold text-foreground mb-3 font-Cairo">
                     {step.title}
                   </h3>
-                  <p className="text-muted-foreground">{step.description}</p>
+                  <p className="text-lg text-foreground/70 font-Cairo leading-relaxed">
+                    {step.description}
+                  </p>
                 </div>
               </div>
             );

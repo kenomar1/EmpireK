@@ -62,27 +62,25 @@ export default function BlogGridShowcase() {
     <section className="py-32 px-6 bg-transparent" dir={isRTL ? "rtl" : "ltr"}>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-20">
-          <motion.h2
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="text-6xl md:text-8xl font-bold tracking-tight text-foreground"
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1 }}
+          className="text-center mb-24 glass-panel premium-border p-12 rounded-[3rem] border-white/10"
+        >
+          <h2
+            className="text-5xl md:text-8xl font-black tracking-tight text-foreground"
           >
             {t("blog.showcase.title")}
-          </motion.h2>
+          </h2>
 
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="mt-8 text-xl md:text-2xl text-foreground max-w-3xl mx-auto leading-relaxed"
+          <p
+            className="mt-8 text-xl md:text-2xl text-foreground/80 max-w-3xl mx-auto leading-relaxed font-medium"
           >
             {t("blog.showcase.subtitle")}
-          </motion.p>
-        </div>
+          </p>
+        </motion.div>
 
         {/* Grid or Empty State */}
         {posts.length === 0 ? (
@@ -106,7 +104,7 @@ export default function BlogGridShowcase() {
                   to={`/blog/${post.slug.current}`}
                   className="block h-full"
                 >
-                  <article className="h-full flex flex-col bg-card rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 border border-border/50 group-hover:border-primary/30">
+                  <article className="h-full flex flex-col glass-panel rounded-3xl overflow-hidden hover:shadow-2xl transition-all duration-500 group-hover:border-primary/50">
                     {post.mainImage ? (
                       <div className="aspect-video overflow-hidden">
                         <img

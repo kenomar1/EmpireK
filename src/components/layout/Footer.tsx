@@ -19,7 +19,7 @@ import toast from "react-hot-toast";
 type ModalType = "privacy" | "terms" | "cookies" | null;
 
 export default function Footer() {
-  const { i18n, t } = useTranslation();
+  const { i18n, t } = useTranslation(); // Default namespace: translation
   const tf = (key: string) => t(`footer.${key}`);
 
   const isRTL = i18n.language === "ar";
@@ -32,6 +32,14 @@ export default function Footer() {
     toast.success(t("footer.cookiesAccepted") || "Cookies accepted 🍪");
   };
 
+  // Get full object for the current modal (title + content array)
+  const modalData = openModal
+    ? (t(openModal, { returnObjects: true }) as {
+        title: string;
+        content: string[];
+      })
+    : null;
+
   return (
     <>
       <footer className="relative my-8" dir={isRTL ? "rtl" : "ltr"}>
@@ -42,17 +50,18 @@ export default function Footer() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="mx-4 md:mx-8 lg:mx-auto max-w-7xl"
         >
-          <div className="bg-background/70 backdrop-blur-xl border border-border/30 rounded-3xl shadow-2xl overflow-hidden">
+          <div className="glass-panel premium-border shadow-2xl overflow-hidden rounded-[2.5rem]">
+            {/* Brand, Services, Contact — unchanged */}
             <div className="py-16 px-8 lg:px-16">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16">
-                {/* Brand */}
+                {/* Brand Column */}
                 <div className={isRTL ? "lg:col-start-3" : ""}>
                   <a
                     href="/"
                     className="text-4xl tracking-widest font-thin font-Bebas inline-block mb-6"
                   >
-                    <span className="text-foreground">Empire</span>
-                    <span className="text-primary">-K</span>
+                    <span className="text-foreground">{t("common.brandNamePrefix")}</span>
+                    <span className="text-primary">{t("common.brandNameSuffix")}</span>
                   </a>
                   <p className="text-muted-foreground mb-8 max-w-md text-lg leading-relaxed">
                     {tf("brandDesc")}
@@ -62,7 +71,7 @@ export default function Footer() {
                   </Button>
                 </div>
 
-                {/* Services */}
+                {/* Services Column */}
                 <div>
                   <h4 className="font-semibold text-xl mb-8 text-foreground">
                     {tf("servicesTitle")}
@@ -83,7 +92,7 @@ export default function Footer() {
                   </ul>
                 </div>
 
-                {/* Contact */}
+                {/* Contact Column */}
                 <div className={isRTL ? "lg:col-start-1 lg:row-start-1" : ""}>
                   <h4 className="font-semibold text-xl mb-8 text-foreground">
                     {tf("contactTitle")}
@@ -103,11 +112,13 @@ export default function Footer() {
               </div>
             </div>
 
+            {/* Bottom Bar */}
             <div className="py-8 px-8 lg:px-16 border-t border-border/50">
               <div
                 className={`flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground gap-6 ${isRTL ? "md:flex-row-reverse" : ""}`}
               >
-                <p>{tf("copyright")}</p>
+                <p>{t("common.copyright", { year: new Date().getFullYear() })}</p>
+
                 <div
                   className={`flex gap-8 ${isRTL ? "flex-row-reverse" : ""}`}
                 >
@@ -139,8 +150,9 @@ export default function Footer() {
         </motion.div>
       </footer>
 
+      {/* Legal Modals */}
       <Dialog open={!!openModal} onOpenChange={() => setOpenModal(null)}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-2xl flex items-center gap-3">
               {openModal === "privacy" && (
@@ -152,41 +164,36 @@ export default function Footer() {
               {openModal === "cookies" && (
                 <Cookie className="w-8 h-8 text-primary" />
               )}
-              {openModal && tf(openModal)}
+              {modalData?.title || ""}
             </DialogTitle>
           </DialogHeader>
 
-          <DialogDescription className="text-base leading-relaxed mt-6 space-y-4">
-            {openModal === "privacy" && <p>Your privacy policy content...</p>}
-            {openModal === "terms" && <p>Your terms of service content...</p>}
-            {openModal === "cookies" && (
-              <>
-                <p>
-                  We use cookies to enhance your experience, analyze site
-                  traffic, and deliver personalized content.
-                </p>
-                <p>
-                  By continuing to use this site, you agree to our use of
-                  cookies.
-                </p>
-              </>
+          <DialogDescription className="text-base leading-relaxed mt-6 space-y-5 prose prose-lg dark:prose-invert max-w-none">
+            {Array.isArray(modalData?.content) ? (
+              modalData.content.map((paragraph: string, index: number) => (
+                <p key={index}>{paragraph}</p>
+              ))
+            ) : (
+              <p>No content available.</p>
             )}
           </DialogDescription>
 
+          {/* Cookies — "Okay" button */}
           {openModal === "cookies" && (
             <DialogFooter className="mt-8">
               <Button
                 onClick={handleCookiesAccept}
                 className="w-full sm:w-auto"
               >
-                Okay
+                {t("iaccept")}
               </Button>
             </DialogFooter>
           )}
 
+          {/* Privacy & Terms — "Close" */}
           {(openModal === "privacy" || openModal === "terms") && (
             <DialogFooter className="mt-8">
-              <Button onClick={() => setOpenModal(null)}>Close</Button>
+              <Button onClick={() => setOpenModal(null)}>{t("close")}</Button>
             </DialogFooter>
           )}
         </DialogContent>

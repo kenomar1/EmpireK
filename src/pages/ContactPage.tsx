@@ -131,7 +131,7 @@ export default function ContactPage() {
   return (
     <>
       <div
-        className="min-h-screen  bg-gradient-to-br from-background via-muted/20 to-background py-20 px-6"
+        className="min-h-screen bg-transparent py-20 px-6"
         dir={isRTL ? "rtl" : "ltr"}
       >
         <div className="max-w-7xl mx-auto">
@@ -139,12 +139,12 @@ export default function ContactPage() {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-20"
+            className="text-center mb-24 glass-panel premium-border p-12 rounded-[2.5rem] border-white/10"
           >
-            <h1 className="text-5xl md:text-7xl  font-black tracking-tighter bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text py-4 text-transparent">
+            <h1 className="text-5xl md:text-8xl font-black tracking-tighter text-foreground py-4">
               {t("contact.heroTitle")}
             </h1>
-            <p className="mt-6 text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="mt-8 text-xl md:text-2xl text-foreground/80 max-w-3xl mx-auto font-medium leading-relaxed">
               {t("contact.heroSubtitle")}
             </p>
           </motion.div>
@@ -155,7 +155,7 @@ export default function ContactPage() {
               initial={{ opacity: 0, x: isRTL ? 50 : -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="bg-card/80 backdrop-blur-xl rounded-3xl p-8 lg:p-12 shadow-2xl border border-border/50"
+              className="glass-panel premium-border p-8 lg:p-12 shadow-2xl rounded-[2.5rem]"
             >
               <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
                 <Send className="w-8 h-8 text-primary" />
@@ -261,7 +261,7 @@ export default function ContactPage() {
                 initial={{ opacity: 0, x: isRTL ? -50 : 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="bg-gradient-to-br from-primary/10 via-primary/5 to-background rounded-3xl p-8 lg:p-12 shadow-2xl border border-primary/20"
+                className="glass-panel premium-border p-8 lg:p-12 shadow-2xl rounded-[2.5rem] border-primary/20 "
               >
                 <div className="flex items-center gap-4 mb-6">
                   <div className="p-4 bg-primary/20 rounded-2xl">
@@ -293,7 +293,7 @@ export default function ContactPage() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="bg-card/80 backdrop-blur-xl rounded-3xl p-8 shadow-xl border border-border/50"
+                className="glass-panel premium-border p-8 shadow-xl rounded-[2.5rem]"
               >
                 <h3 className="text-2xl font-bold mb-8">
                   {t("contact.detailsTitle")}
@@ -357,7 +357,7 @@ export default function ContactPage() {
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="relative w-full max-w-2xl bg-card rounded-3xl shadow-2xl p-8"
+            className="relative w-full max-w-2xl glass-panel premium-border rounded-[2.5rem] shadow-2xl p-10"
           >
             <button
               onClick={() => setIsBookCallOpen(false)}

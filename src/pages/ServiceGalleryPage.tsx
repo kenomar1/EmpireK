@@ -150,17 +150,16 @@ export default function GalleryPage() {
   return (
     <div dir={isRTL ? "rtl" : "ltr"} className="min-h-screen bg-background">
       {/* Hero */}
-      <section className="pt-24 pb-32 px-6 text-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-background" />
+      <section className="pt-32 pb-40 px-6 text-center relative overflow-hidden bg-transparent">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative max-w-5xl mx-auto"
+          className="relative max-w-5xl mx-auto glass-panel premium-border p-12 rounded-[3rem]"
         >
-          <h1 className="text-5xl md:text-7xl font-black mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+          <h1 className="text-5xl md:text-8xl font-black mb-6 text-foreground">
             {t("gallery.heroTitle", "Our Work Gallery")}
           </h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl text-foreground/80 max-w-3xl mx-auto font-medium">
             {t(
               "gallery.heroSubtitle",
               "Real projects delivered for real clients"
@@ -182,10 +181,10 @@ export default function GalleryPage() {
                   key={category._id}
                   onClick={() => setActiveCategoryId(category._id)}
                   whileHover={{ scale: 1.05 }}
-                  className={`flex flex-col items-center gap-4 px-28 py-8 rounded-3xl font-bold text-lg shadow-xl transition-all ${
+                  className={`flex flex-col items-center gap-4 px-20 py-8 rounded-[2rem] font-bold text-lg transition-all glass-panel premium-border shadow-2xl ${
                     isActive
-                      ? "bg-primary text-primary-foreground shadow-primary/40 ring-4 ring-primary/30"
-                      : "bg-card text-foreground shadow-foreground/20 hover:bg-primary/20 hover:shadow-2xl"
+                      ? "bg-primary text-primary-foreground border-primary/50"
+                      : "text-foreground hover:bg-white/10"
                   }`}
                 >
                   <div className="p-5 bg-white/20 rounded-2xl">
@@ -215,13 +214,14 @@ export default function GalleryPage() {
                   (project, i) => (
                     <motion.div
                       key={project._id}
-                      initial={{ opacity: 0, y: 40 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.1 }}
-                      className="group bg-card rounded-3xl overflow-hidden shadow-xl hover:shadow-foreground/60 shadow-foreground/30 transition-all duration-500 "
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      whileHover={{ scale: 1.02 }}
+                      transition={{ delay: i * 0.1, duration: 0.6 }}
+                      className="group glass-panel premium-border rounded-[2rem] overflow-hidden shadow-xl hover:shadow-primary/20 transition-all duration-500 p-2"
                     >
                       {project.mainImage?.asset?.url ? (
-                        <div className="aspect-video overflow-hidden">
+                        <div className="aspect-video overflow-hidden rounded-2xl">
                           <img
                             src={urlFor(project.mainImage)
                               .width(800)
@@ -312,7 +312,7 @@ export default function GalleryPage() {
 
       {/* Related Insights Section - Below Projects */}
       {highlightedPosts.length > 0 && (
-        <section className="px-6 py-32 bg-muted/30">
+        <section className="px-6 py-32 bg-transparent">
           <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
@@ -342,10 +342,10 @@ export default function GalleryPage() {
                 >
                   <Link
                     to={`/blog/${post.slug.current}`}
-                    className="group  bg-foreground text-background rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 h-full flex flex-col "
+                    className="group glass-panel premium-border rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 h-full flex flex-col p-2"
                   >
                     {post.mainImage?.asset?.url ? (
-                      <div className="aspect-video overflow-hidden">
+                      <div className="aspect-video overflow-hidden rounded-2xl">
                         <img
                           src={urlFor(post.mainImage)
                             .width(600)
