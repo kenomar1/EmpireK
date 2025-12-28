@@ -63,7 +63,7 @@ function App() {
         </div>,
         {
           duration: 15000,
-          position: "middle-left",
+          position: "top-center",
           style: {
             background: "var(--background)",
             color: "var(--foreground)",
@@ -105,7 +105,7 @@ function App() {
         </main>
 
         <Toaster
-          position={isRTL ? "bottom-left" : "bottom-right"}
+          position="top-center"
           toastOptions={{
             duration: 5000,
             style: {
