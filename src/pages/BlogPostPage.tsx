@@ -1,10 +1,10 @@
 "use client";
 
 import { useParams } from "react-router-dom";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useRef } from "react";
 import { PortableText } from "@portabletext/react";
 import { format } from "date-fns";
-import { User, MessageSquare, Reply, Loader2, Calendar } from "lucide-react";
+import { MessageSquare, Reply, ChevronDown, ChevronUp } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
@@ -14,13 +14,9 @@ import Footer from "../components/layout/Footer";
 const ptComponents = {
   types: {
     image: ({ value }: any) => (
-      <div
-        className="my-16 rounded-3xl overflow-hidden shadow-2xl"
-        role="img"
-        aria-label={value.alt || "Blog post image"}
-      >
+      <div className="my-16 rounded-3xl overflow-hidden shadow-2xl">
         <img
-          src={urlFor(value).width(1600).height(900).fit("crop").url()}
+          src={urlFor(value).width(1200).height(675).fit("crop").url()}
           alt={value.alt || "Blog post image"}
           className="w-full h-full object-cover"
           loading="lazy"
@@ -36,7 +32,6 @@ type Post = {
   body: any[];
   mainImage?: any;
   author?: { name?: string; role?: string; avatar?: any };
-  category?: { title?: string };
   publishedAt?: string;
   excerpt?: string;
 };
@@ -44,14 +39,10 @@ type Post = {
 type Comment = {
   _id: string;
   name: string;
-  email: string;
   message: string;
   createdAt: string;
-  parent?: {
-    _ref: string;
-    name?: string; // Now properly typed and fetched
-  } | null;
-  replies?: Comment[];
+  parent?: { _ref: string; name: string } | null;
+  replyCount?: number;
 };
 
 export default function BlogPostPage() {
@@ -61,153 +52,187 @@ export default function BlogPostPage() {
   const currentLang = i18n.language || "en";
 
   const [post, setPost] = useState<Post | null>(null);
-  const [comments, setComments] = useState<Comment[]>([]);
+  const [topLevelComments, setTopLevelComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const [newComment, setNewComment] = useState({
     name: "",
     email: "",
     message: "",
   });
-  const [submitting, setSubmitting] = useState(false);
   const [replyTo, setReplyTo] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
-  const commentsPerPage = 10;
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const fetchPostAndComments = useCallback(async () => {
+  const commentsPerPage = 15;
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+
+  const replyingToName = topLevelComments.find((c) => c._id === replyTo)?.name;
+
+  const fetchData = async () => {
     if (!slug) return;
-
     setLoading(true);
-    setError(null);
+    setTopLevelComments([]);
+    setPage(1);
 
     try {
-      // Fetch post in current language with same slug
-      const postQuery = `*[_type == "post" && slug.current == $slug && language == $lang][0]{
-        _id,
-        title,
-        excerpt,
-        mainImage,
-        publishedAt,
-        body,
-        author-> { name, role, avatar },
-        category-> { title }
-      }`;
-
-      const fetchedPost: Post | null = await client.fetch(postQuery, {
-        slug,
-        lang: currentLang,
-      });
+      const fetchedPost = await client.fetch<Post | null>(
+        `*[_type == "post" && slug.current == $slug && language == $lang][0]{
+          _id, title, excerpt, mainImage, publishedAt, body,
+          author-> { name, role, avatar }, category-> { title }
+        }`,
+        { slug, lang: currentLang }
+      );
 
       if (!fetchedPost) {
-        setError(t("blog.postNotFound"));
+        toast.error(t("blog.postNotFound"));
         setLoading(false);
         return;
       }
 
       setPost(fetchedPost);
 
-      // Fetch comments + parent name for replies
-      const commentsQuery = `*[_type == "comment" && post._ref == $postId ] | order(createdAt desc){
-        _id,
-        name,
-        message,
-        createdAt,
-        parent-> { _ref, name }
-      }`;
+      const firstComments = await client.fetch<Comment[]>(
+        `*[_type == "comment" && post._ref == $postId && !defined(parent)]
+        | order(createdAt desc) [0...${commentsPerPage}] {
+          _id, name, message, createdAt,
+          parent-> { _ref, name },
+          "replyCount": count(*[_type == "comment" && parent._ref == ^._id])
+        }`,
+        { postId: fetchedPost._id }
+      );
 
-      const rawComments: Comment[] = await client.fetch(commentsQuery, {
-        postId: fetchedPost._id,
-      });
-
-      // Build nested structure
-      const nested: Comment[] = [];
-      const map = new Map<string, Comment>();
-
-      rawComments.forEach((comment) => {
-        const mapped = { ...comment, replies: [] as Comment[] };
-        map.set(comment._id, mapped);
-      });
-
-      rawComments.forEach((comment) => {
-        if (comment.parent?._ref) {
-          const parentComment = map.get(comment.parent._ref);
-          if (parentComment) {
-            parentComment.replies!.push(map.get(comment._id)!);
-          }
-        } else {
-          nested.push(map.get(comment._id)!);
-        }
-      });
-
-      setComments(nested);
+      setTopLevelComments(firstComments);
+      setHasMore(firstComments.length === commentsPerPage);
+      setPage(2);
     } catch (err) {
       console.error(err);
-      setError(t("blog.errorFetching"));
+      toast.error(t("blog.errorFetching"));
     } finally {
       setLoading(false);
     }
-  }, [slug, currentLang, t]);
+  };
 
-  useEffect(() => {
-    fetchPostAndComments();
-  }, [fetchPostAndComments]);
+  const loadMoreComments = async () => {
+    if (!post || loadingMore || !hasMore) return;
+    setLoadingMore(true);
 
-  const handleCommentSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-      if (submitting || !post) return;
+    const start = (page - 1) * commentsPerPage;
+    const moreComments = await client.fetch<Comment[]>(
+      `*[_type == "comment" && post._ref == $postId && !defined(parent)]
+      | order(createdAt desc) [${start}...${start + commentsPerPage}] {
+        _id, name, message, createdAt,
+        parent-> { _ref, name },
+        "replyCount": count(*[_type == "comment" && parent._ref == ^._id])
+      }`,
+      { postId: post._id }
+    );
 
-      setSubmitting(true);
+    setTopLevelComments((prev) => [...prev, ...moreComments]);
+    setHasMore(moreComments.length === commentsPerPage);
+    setPage((prev) => prev + 1);
+    setLoadingMore(false);
+  };
 
-      try {
-        await client.create({
-          _type: "comment",
-          post: { _type: "reference", _ref: post._id },
-          name: newComment.name.trim(),
-          email: newComment.email.trim(),
-          message: newComment.message.trim(),
-          ...(replyTo && { parent: { _type: "reference", _ref: replyTo } }),
-        });
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (
+      !post ||
+      isSubmitting ||
+      !newComment.name.trim() ||
+      !newComment.message.trim()
+    )
+      return;
 
-        toast.success(t("blog.commentSubmitted"));
-        setNewComment({ name: "", email: "", message: "" });
-        setReplyTo(null);
-        fetchPostAndComments();
-      } catch (err) {
-        toast.error(t("blog.commentError"));
-      } finally {
-        setSubmitting(false);
+    const tempId = `temp-${Date.now()}`;
+    const now = new Date().toISOString();
+    const optimisticComment: Comment = {
+      _id: tempId,
+      name: newComment.name.trim(),
+      message: newComment.message.trim(),
+      createdAt: now,
+      parent: replyTo
+        ? { _ref: replyTo, name: replyingToName || "someone" }
+        : null,
+      replyCount: 0,
+    };
+
+    if (!replyTo) {
+      setTopLevelComments((prev) => [optimisticComment, ...prev]);
+    }
+
+    setIsSubmitting(true);
+    setNewComment({ name: "", email: "", message: "" });
+    setReplyTo(null);
+
+    try {
+      const created = await client.create({
+        _type: "comment",
+        post: { _type: "reference", _ref: post._id },
+        name: newComment.name.trim(),
+        email: newComment.email.trim(),
+        message: newComment.message.trim(),
+        createdAt: now, // Ensures accurate date
+        ...(replyTo && { parent: { _type: "reference", _ref: replyTo } }),
+      });
+
+      toast.success(t("blog.commentSubmitted"));
+
+      setTopLevelComments((prev) =>
+        prev.map((c) => (c._id === tempId ? { ...c, _id: created._id } : c))
+      );
+
+      // Refresh on reply to update counts and deep tree
+      if (replyTo) {
+        fetchData();
       }
-    },
-    [newComment, post, replyTo, submitting, t, fetchPostAndComments]
-  );
+    } catch (err) {
+      toast.error(t("blog.commentError"));
+      setTopLevelComments((prev) => prev.filter((c) => c._id !== tempId));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const handleReply = (commentId: string) => {
     setReplyTo(commentId);
-    setTimeout(() => document.querySelector("textarea")?.focus(), 100);
+    setTimeout(() => {
+      document.querySelector("textarea")?.focus();
+    }, 100);
   };
 
-  const paginatedComments = comments.slice(0, page * commentsPerPage);
+  useEffect(() => {
+    fetchData();
+  }, [slug, currentLang]);
 
-  if (loading) {
+  useEffect(() => {
+    if (!loadMoreRef.current || loadingMore || !hasMore) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          loadMoreComments();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(loadMoreRef.current);
+    return () => observer.disconnect();
+  }, [loadingMore, hasMore, post]);
+
+  if (loading) return <PostSkeleton />;
+  if (!post)
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+      <div className="py-20 text-center text-2xl text-red-500">
+        {t("blog.postNotFound")}
       </div>
     );
-  }
-
-  if (error || !post) {
-    return (
-      <div className="flex min-h-screen items-center justify-center text-2xl text-red-500">
-        {error || t("blog.postNotFound")}
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-background" dir={isRTL ? "rtl" : "ltr"}>
-      {/* Hero */}
+      {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-primary/10 to-background py-32">
         {post.mainImage && (
           <img
@@ -225,72 +250,38 @@ export default function BlogPostPage() {
             <h1 className="mb-8 text-5xl font-bold md:text-7xl">
               {post.title}
             </h1>
-            <div className="flex flex-wrap items-center gap-6 text-muted-foreground">
-              {post.author?.name && (
-                <div className="flex items-center gap-3">
-                  <User className="h-5 w-5" />
-                  <span>
-                    {post.author.name}{" "}
-                    {post.author.role && `• ${post.author.role}`}
-                  </span>
-                </div>
-              )}
-              {post.publishedAt && (
-                <div className="flex items-center gap-3">
-                  <Calendar className="h-5 w-5" />
-                  <time>
-                    {format(new Date(post.publishedAt), "MMMM d, yyyy")}
-                  </time>
-                </div>
-              )}
-            </div>
           </motion.div>
         </div>
       </section>
 
       {/* Article Body */}
-      {/* Article Body */}
       <article className="container mx-auto max-w-4xl px-6 py-20">
         {post.excerpt && (
           <p className="mb-12 text-xl text-foreground">{post.excerpt}</p>
         )}
-        <div
-          className="
-            prose prose-lg 
-            dark:prose-invert 
-            max-w-none 
-            text-foreground
-            prose-ul:list-disc 
-            prose-ol:list-decimal
-            prose-li:marker:text-primary 
-            prose-li:marker:font-bold
-            dark:prose-li:marker:text-primary
-          "
-        >
+        <div className="prose prose-lg dark:prose-invert max-w-none text-foreground">
           <PortableText value={post.body} components={ptComponents} />
         </div>
       </article>
 
-      {/* Comments */}
+      {/* Comments Section */}
       <section className="container mx-auto border-t border-border px-6 py-16">
         <h2 className="mb-12 flex items-center gap-3 text-4xl font-bold">
           <MessageSquare className="h-8 w-8 text-primary" />
-          {t("blog.comments")} ({comments.length})
+          {t("blog.comments")}
         </h2>
 
         {/* Comment Form */}
         <form
-          onSubmit={handleCommentSubmit}
+          onSubmit={handleSubmit}
           className="mb-16 rounded-2xl bg-card p-8 shadow-lg"
         >
           <h3 className="mb-6 text-2xl font-semibold">
             {replyTo ? t("blog.replyToComment") : t("blog.leaveComment")}
           </h3>
-
-          {replyTo && (
-            <div className="mb-4 text-sm text-primary">
-              {t("blog.replyTo")} @
-              {comments.find((c) => c._id === replyTo)?.name || "someone"}
+          {replyTo && replyingToName && (
+            <div className="mb-4 rounded-lg bg-primary/10 px-4 py-2 text-sm text-primary">
+              Replying to <strong>@{replyingToName}</strong>
             </div>
           )}
 
@@ -303,7 +294,8 @@ export default function BlogPostPage() {
                 setNewComment({ ...newComment, name: e.target.value })
               }
               required
-              className="rounded-lg border border-border bg-background p-4 focus:ring-2 focus:ring-primary"
+              disabled={isSubmitting}
+              className="rounded-lg border border-border bg-background p-4 focus:ring-2 focus:ring-primary disabled:opacity-50"
             />
             <input
               type="email"
@@ -313,7 +305,8 @@ export default function BlogPostPage() {
                 setNewComment({ ...newComment, email: e.target.value })
               }
               required
-              className="rounded-lg border border-border bg-background p-4 focus:ring-2 focus:ring-primary"
+              disabled={isSubmitting}
+              className="rounded-lg border border-border bg-background p-4 focus:ring-2 focus:ring-primary disabled:opacity-50"
             />
           </div>
 
@@ -325,29 +318,24 @@ export default function BlogPostPage() {
             }
             required
             rows={5}
-            className="mt-6 w-full rounded-lg border border-border bg-background p-4 focus:ring-2 focus:ring-primary"
+            disabled={isSubmitting}
+            className="mt-6 w-full rounded-lg border border-border bg-background p-4 focus:ring-2 focus:ring-primary disabled:opacity-50"
           />
 
           <div className="mt-6 flex items-center gap-4">
             <button
               type="submit"
-              disabled={submitting}
-              className="flex items-center gap-2 rounded-lg bg-primary px-8 py-4 font-bold text-primary-foreground disabled:opacity-50"
+              disabled={isSubmitting}
+              className="rounded-lg bg-primary px-8 py-4 font-bold text-primary-foreground disabled:opacity-50"
             >
-              {submitting ? (
-                <>
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                  {t("blog.submitting")}
-                </>
-              ) : (
-                t("blog.submit")
-              )}
+              {isSubmitting ? t("blog.submitting") : t("blog.submit")}
             </button>
             {replyTo && (
               <button
                 type="button"
                 onClick={() => setReplyTo(null)}
-                className="text-muted-foreground underline"
+                disabled={isSubmitting}
+                className="text-muted-foreground underline disabled:opacity-50"
               >
                 {t("blog.cancelReply")}
               </button>
@@ -357,30 +345,24 @@ export default function BlogPostPage() {
 
         {/* Comments List */}
         <div className="space-y-12">
-          {paginatedComments.length === 0 ? (
+          {topLevelComments.length === 0 && !loadingMore ? (
             <p className="text-center text-muted-foreground">
               {t("blog.noComments")}
             </p>
           ) : (
-            paginatedComments.map((comment) => (
+            topLevelComments.map((comment) => (
               <CommentItem
                 key={comment._id}
                 comment={comment}
                 onReply={handleReply}
                 t={t}
+                depth={0}
               />
             ))
           )}
+          {loadingMore && <CommentSkeleton count={3} />}
+          {hasMore && <div ref={loadMoreRef} className="h-10" />}
         </div>
-
-        {page * commentsPerPage < comments.length && (
-          <button
-            onClick={() => setPage((p) => p + 1)}
-            className="mx-auto mt-8 block rounded-lg bg-accent px-6 py-3 text-accent-foreground"
-          >
-            {t("blog.loadMore")}
-          </button>
-        )}
       </section>
 
       <Footer />
@@ -388,55 +370,137 @@ export default function BlogPostPage() {
   );
 }
 
-// Fixed t type using proper i18next return type
-type CommentItemProps = {
+// Fully fixed CommentItem — deep nesting works perfectly
+const CommentItem: React.FC<{
   comment: Comment;
   onReply: (id: string) => void;
-  t: ReturnType<typeof useTranslation>["t"];
+  t: any;
+  depth: number;
+}> = ({ comment, onReply, t, depth }) => {
+  const [expanded, setExpanded] = useState(false);
+  const [replies, setReplies] = useState<Comment[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const loadReplies = async () => {
+    if (replies.length > 0) return; // Prevent duplicate fetch
+    setLoading(true);
+    const data = await client.fetch<Comment[]>(
+      `*[_type == "comment" && parent._ref == $id] | order(createdAt asc) {
+        _id, name, message, createdAt, parent-> { name }, "replyCount": count(*[_type == "comment" && parent._ref == ^._id])
+      }`,
+      { id: comment._id }
+    );
+    setReplies(data);
+    setLoading(false);
+  };
+
+  const toggleReplies = () => {
+    setExpanded((prev) => {
+      if (!prev) loadReplies();
+      return !prev;
+    });
+  };
+
+  const hasReplies = (comment.replyCount ?? 0) > 0;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="rounded-2xl border border-border bg-card p-8 shadow-md"
+      style={{ marginLeft: depth > 0 ? `${depth * 40}px` : 0 }}
+    >
+      {comment.parent?.name && (
+        <p className="mb-2 text-sm text-primary">
+          {t("blog.replyTo")} @{comment.parent.name}
+        </p>
+      )}
+
+      <div className="mb-4 flex items-center gap-4">
+        <h4 className="text-lg font-bold">{comment.name}</h4>
+        <span className="text-sm text-muted-foreground">
+          {format(new Date(comment.createdAt), "MMM d, yyyy")}
+        </span>
+      </div>
+
+      <p className="mb-6 text-foreground/80">{comment.message}</p>
+
+      <button
+        onClick={() => onReply(comment._id)}
+        className="flex items-center gap-1 text-sm text-primary hover:underline"
+      >
+        <Reply className="h-4 w-4" />
+        {t("blog.reply")}
+      </button>
+
+      {hasReplies && (
+        <button
+          onClick={toggleReplies}
+          className="ml-6 mt-3 flex items-center gap-1 text-sm text-muted-foreground hover:underline"
+        >
+          {expanded ? (
+            <ChevronUp className="h-4 w-4" />
+          ) : (
+            <ChevronDown className="h-4 w-4" />
+          )}
+          {expanded ? t("blog.hideReplies") : t("blog.showReplies")} (
+          {comment.replyCount ?? 0})
+        </button>
+      )}
+
+      {expanded && (
+        <div className="mt-6 space-y-6">
+          {loading ? (
+            <CommentSkeleton count={2} indented />
+          ) : (
+            replies.map((reply) => (
+              <CommentItem
+                key={reply._id}
+                comment={reply}
+                onReply={onReply}
+                t={t}
+                depth={depth + 1}
+              />
+            ))
+          )}
+        </div>
+      )}
+    </motion.div>
+  );
 };
 
-const CommentItem: React.FC<CommentItemProps> = ({ comment, onReply, t }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    className="rounded-2xl border border-border bg-card p-8 shadow-md"
-  >
-    {/* Safe display of reply target */}
-    {comment.parent?._ref && comment.parent?.name && (
-      <p className="mb-2 text-sm text-primary">
-        {t("blog.replyTo")} @{comment.parent.name}
-      </p>
-    )}
-
-    <div className="mb-4 flex flex-wrap items-center gap-4">
-      <h4 className="text-lg font-bold">{comment.name}</h4>
-      <span className="text-sm text-muted-foreground">
-        {format(new Date(comment.createdAt), "MMM d, yyyy")}
-      </span>
-    </div>
-
-    <p className="mb-4 break-words text-foreground/80">{comment.message}</p>
-
-    <button
-      onClick={() => onReply(comment._id)}
-      className="flex items-center gap-1.5 text-sm text-primary hover:underline"
-    >
-      <Reply className="h-4 w-4" />
-      {t("blog.reply")}
-    </button>
-
-    {/* Nested replies */}
-    {comment.replies && comment.replies.length > 0 && (
-      <div className="mt-8 space-y-8 border-l-4 border-border pl-8">
-        {comment.replies.map((reply) => (
-          <CommentItem
-            key={reply._id}
-            comment={reply}
-            onReply={onReply}
-            t={t}
-          />
+const PostSkeleton = () => (
+  <div className="min-h-screen bg-background">
+    <div className="h-96 animate-pulse bg-muted" />
+    <div className="container mx-auto px-6 py-20">
+      <div className="mb-8 h-12 w-3/4 animate-pulse rounded bg-muted" />
+      <div className="space-y-4">
+        {Array.from({ length: 12 }).map((_, i) => (
+          <div key={i} className="h-4 animate-pulse rounded bg-muted" />
         ))}
       </div>
-    )}
-  </motion.div>
+    </div>
+  </div>
+);
+
+const CommentSkeleton = ({
+  count = 1,
+  indented = false,
+}: {
+  count?: number;
+  indented?: boolean;
+}) => (
+  <div className={indented ? "pl-10" : ""}>
+    {Array.from({ length: count }).map((_, i) => (
+      <div key={i} className="mb-8 animate-pulse rounded-2xl bg-card p-8">
+        <div className="mb-4 h-5 w-40 rounded bg-muted" />
+        <div className="mb-3 h-4 w-32 rounded bg-muted" />
+        <div className="space-y-2">
+          <div className="h-4 rounded bg-muted" />
+          <div className="h-4 w-11/12 rounded bg-muted" />
+          <div className="h-4 w-8/12 rounded bg-muted" />
+        </div>
+      </div>
+    ))}
+  </div>
 );

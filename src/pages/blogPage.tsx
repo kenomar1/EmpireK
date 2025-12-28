@@ -98,12 +98,7 @@ export default function Blog() {
 
   return (
     <>
-      <title>
-        {t(
-          "blog.pageTitle",
-          "Blog | Empire-K - Insights on Web Development & Design"
-        )}
-      </title>
+      <title>{t("Blog | Empire-K ")}</title>
       <meta
         name="description"
         content={t(

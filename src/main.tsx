@@ -10,6 +10,20 @@ import { ThemeProvider } from "./context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 
+// React Query imports
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+// Create a client
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // Data considered fresh for 5 minutes
+      gcTime: 1000 * 60 * 30, // Keep unused data in cache for 30 minutes
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
 // Component to sync <html lang> and dir with i18next language
 function LanguageSync() {
   const { i18n } = useTranslation();
@@ -17,29 +31,27 @@ function LanguageSync() {
   useEffect(() => {
     const html = document.documentElement;
 
-    // Update lang attribute (critical for :lang() CSS selectors)
+    // Update lang attribute
     const language = i18n.resolvedLanguage || "en";
     html.lang = language;
 
-    // Optional but recommended: handle RTL for Arabic, Hebrew, etc.
+    // Handle RTL languages
     const rtlLanguages = ["ar", "he", "fa", "ur"];
-    if (rtlLanguages.includes(language)) {
-      html.dir = "rtl";
-    } else {
-      html.dir = "ltr";
-    }
+    html.dir = rtlLanguages.includes(language) ? "rtl" : "ltr";
   }, [i18n.resolvedLanguage]);
 
-  return null; // This component renders nothing
+  return null;
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <I18nextProvider i18n={i18n}>
-      <ThemeProvider>
-        <LanguageSync /> {/* Add this line */}
-        <App />
-      </ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <LanguageSync />
+          <App />
+        </ThemeProvider>
+      </QueryClientProvider>
     </I18nextProvider>
   </React.StrictMode>
 );

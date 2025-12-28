@@ -17,6 +17,8 @@
       "defaultAuthor": "Empire-K Team",
       "cta": "Explore All Articles"
     },
+    "showReplies": "Show Replies",
+    "hideReplies": "hide Replies",
     "loadingArticle": "Loading article...",
     "postNotFound": "Article not found",
     "postTitleTemplate": "{{title}} | Empire-K",

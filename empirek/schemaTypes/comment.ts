@@ -45,6 +45,7 @@ export const comment = defineType({
       title: 'Created At',
       type: 'datetime',
       initialValue: () => new Date().toISOString(),
+      validation: (Rule) => Rule.required(),
     }),
 
     defineField({
@@ -52,7 +53,7 @@ export const comment = defineType({
       title: 'Reply To',
       type: 'reference',
       to: [{type: 'comment'}],
-      weak: true,
+      // Removed weak: true -- now resolves properly in GROQ
       description: 'Leave empty for top-level comments',
     }),
   ],
