@@ -408,7 +408,7 @@ export default function Services() {
                 {/* Product Image Holder */}
                 <div className="relative w-full md:w-2/5 aspect-[4/5] rounded-[2rem] overflow-hidden border border-white/5 bg-accent/20">
                   <img 
-                    src="file:///C:/Users/kendr/.gemini/antigravity/brain/c25d4434-ac93-4b5c-a01f-2a2899656964/ecommerce_mockup_premium_1766936056465.png" 
+                    src="/ecommerce_mockup.png" 
                     alt={product.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />

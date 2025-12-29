@@ -71,7 +71,7 @@ export default function CMSDemoSection() {
           >
             <div className="relative aspect-[16/10] overflow-hidden m-4 rounded-[1.5rem] border border-white/5">
               <img 
-                src="file:///C:/Users/kendr/.gemini/antigravity/brain/c25d4434-ac93-4b5c-a01f-2a2899656964/ecommerce_mockup_premium_1766936056465.png" 
+                src="/ecommerce_mockup.png" 
                 alt="E-commerce Showcase"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
