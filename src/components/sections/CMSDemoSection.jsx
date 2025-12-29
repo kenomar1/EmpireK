@@ -7,6 +7,7 @@ import { Badge } from "../ui/badge";
 import { Separator } from "../ui/separator";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 export default function CMSDemoSection() {
   const { i18n, t } = useTranslation();
@@ -88,7 +89,7 @@ export default function CMSDemoSection() {
                 className="text-lg px-10 h-14 font-Cairo font-playfair glass-panel premium-border hover:bg-primary hover:text-primary-foreground group-hover:shadow-[0_0_30px_rgba(var(--primary),0.3)]"
                 asChild
               >
-                <a href="/gallery">{cms("ecommerceCta")}</a>
+                <Link to="/services#templates">{cms("ecommerceCta")}</Link>
               </Button>
             </div>
           </motion.div>

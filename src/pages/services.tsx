@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { client, urlFor } from "../lib/sanityClient";
 import Footer from "../components/layout/Footer";
 
@@ -95,6 +95,18 @@ export default function Services() {
   const timelineValue = t("servicesPage.timeline");
 
   const products = (t("servicesPage.productsList", { returnObjects: true }) as Product[]) || [];
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash === "#templates") {
+      setTimeout(() => {
+        const element = document.getElementById("templates");
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 100);
+    }
+  }, [location]);
 
   useEffect(() => {
     const query = `
@@ -376,7 +388,7 @@ export default function Services() {
       </section>
 
       {/* Digital Products Section */}
-      <section className="px-6 mb-40 relative">
+      <section id="templates" className="px-6 mb-40 relative">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
