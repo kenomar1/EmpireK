@@ -53,7 +53,7 @@ export default {
       },
       // Added Playfair Display font family
       fontFamily: {
-        playfair: ["'Playfair Display'", "serif"],
+        playfair: ["'Roboto'", "serif"],
         Bebas: ["'Bebas Neue'", "sans-serif"],
         Cairo: ["'Cairo'", "sans-serif"],
         BBHBogle: ["'BBH Bogle'", "sans-serif"],

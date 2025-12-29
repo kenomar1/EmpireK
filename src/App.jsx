@@ -18,26 +18,9 @@ const Dashboard = lazy(() => import("./pages/Dashboard")); // Admin Dashboard
 
 import { FixedNavbar } from "./components/layout/NavBar";
 import { useTheme } from "./context/ThemeContext";
+import VantaBackground from "./components/common/VantaBackground";
 import { useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-
-// Lazy load heavy 3D components
-const ShaderGradientCanvas = lazy(() =>
-  import("@shadergradient/react").then((mod) => ({
-    default: mod.ShaderGradientCanvas,
-  }))
-);
-const ShaderGradient = lazy(() =>
-  import("@shadergradient/react").then((mod) => ({
-    default: mod.ShaderGradient,
-  }))
-);
-
-const darkUrl =
-  "https://shadergradient.co/customize?animate=on&axesHelper=off&brightness=1&cAzimuthAngle=180&cDistance=2.8&cPolarAngle=80&cameraZoom=9.1&color1=%231a002b&color2=%237e3ac2&color3=%235e5b42&destination=onCanvas&embedMode=off&envPreset=city&format=gif&fov=45&frameRate=10&gizmoHelper=hide&grain=off&lightType=3d&pixelDensity=1&positionX=0&positionY=0&positionZ=0&range=disabled&rangeEnd=40&rangeStart=0&reflection=0.1&rotationX=50&rotationY=0&rotationZ=-60&shader=defaults&type=waterPlane&uAmplitude=0&uDensity=1.5&uFrequency=0&uSpeed=0.3&uStrength=1.5&uTime=8&wireframe=false";
-
-const lightUrl =
-  "https://shadergradient.co/customize?animate=on&axesHelper=off&brightness=1&cAzimuthAngle=180&cDistance=2.8&cPolarAngle=80&cameraZoom=9.1&color1=%23fffcfc&color2=%238959cb&color3=%23ffffff&destination=onCanvas&embedMode=off&envPreset=city&format=gif&fov=45&frameRate=10&gizmoHelper=hide&grain=off&lightType=3d&pixelDensity=1&positionX=0&positionY=0&positionZ=0&range=disabled&rangeEnd=40&rangeStart=0&reflection=0.1&rotationX=50&rotationY=0&rotationZ=-60&shader=defaults&type=waterPlane&uAmplitude=0&uDensity=1.5&uFrequency=0&uSpeed=0.3&uStrength=1.5&uTime=8&wireframe=false";
 
 // Loading component for Suspense
 const PageLoader = () => (
@@ -59,21 +42,15 @@ function AppContent() {
     window.scrollTo(0, 0);
   }, [isRTL, i18n.language, location.pathname]);
 
-  const backgroundUrl = theme === "dark" ? darkUrl : lightUrl;
-
   return (
     <div className="min-h-screen flex flex-col relative">
       {/* Global Background */}
       <div className="fixed inset-0 -z-20 overflow-hidden pointer-events-none">
-        <Suspense fallback={<div className="absolute inset-0 bg-background" />}>
-          <ShaderGradientCanvas className="absolute inset-0">
-            <ShaderGradient control="query" urlString={backgroundUrl} key={theme} />
-          </ShaderGradientCanvas>
-        </Suspense>
+        <VantaBackground theme={theme} />
       </div>
 
       {/* Global Backdrop Blur & Tint Overlay */}
-      <div className="fixed inset-0 -z-10 backdrop-blur-sm bg-background/30 pointer-events-none" />
+      <div className={`fixed inset-0 -z-10 ${theme === 'dark' ? '' : 'backdrop-blur-sm bg-background/30'} pointer-events-none`} />
 
       <FixedNavbar />
 

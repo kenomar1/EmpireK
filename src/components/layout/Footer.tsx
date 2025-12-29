@@ -58,7 +58,7 @@ export default function Footer() {
                 <div className={isRTL ? "lg:col-start-3" : ""}>
                   <a
                     href="/"
-                    className="text-4xl tracking-widest font-thin font-bebas inline-block mb-6"
+                    className="text-4xl tracking-widest font-thin font-Bebas inline-block mb-6"
                   >
                     <span className="text-foreground">{t("common.brandNamePrefix")}</span>
                     <span className="text-primary">{t("common.brandNameSuffix")}</span>

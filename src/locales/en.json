@@ -315,9 +315,21 @@
     "sortNewest": "Newest",
     "digitalProductsTitle": "Ready-to-Launch Templates",
     "digitalProductsSubtitle": "Skip the build time and launch instantly with our high-fidelity, conversion-optimized site templates.",
-    "modelSale": "One-time Purchase",
-    "modelSubscription": "Monthly Subscription",
-    "buyNow": "Get Started"
+    "buyNow": "Get Started",
+    "shop": "Shop",
+    "howItWorksTitle": "How It Works",
+    "howItWorksSubtitle": "Get your project up and running in minutes with our ready-made templates",
+    "step1Title": "Choose Template",
+    "step1Desc": "Browse our collection and find the perfect starting point.",
+    "step2Title": "Purchase",
+    "step2Desc": "Securely purchase the license that fits your needs.",
+    "step3Title": "Launch",
+    "step3Desc": "Receive the code instantly and deploy your project.",
+    "price": "Price",
+    "livePreview": "Preview",
+    "fashion": "Fashion",
+    "food": "Food",
+    "portfolio": "Portfolio"
   },
   "textWithImage": {
     "heading": "Obsessed With Growth, Not Just Good Looks",
@@ -354,7 +366,21 @@
     "mobileApps": { "name": "Mobile Apps" },
     "seo": { "name": "SEO Optimization" },
     "maintenance": { "name": "Maintenance & Support" },
-    "noServices": "Refresh The Page - Slow Internet Connection"
+    "noServices": "Refresh The Page - Slow Internet Connection",
+    "categories": {
+      "Web Development": "Web Development",
+      "UI/UX Design": "UI/UX Design",
+      "Digital Marketing": "Digital Marketing",
+      "Mobile Apps": "Mobile Apps",
+      "SEO Optimization": "SEO Optimization",
+      "Branding": "Branding",
+      "IT Consulting": "IT Consulting",
+      "E-Commerce": "E-Commerce",
+      "Design": "Design",
+      "Development": "Development",
+      "web-development": "Web Development",
+      "ui-ux-design": "UI/UX Design"
+    }
   },
 
   "ui-ux": {

@@ -260,7 +260,7 @@ export default function Services() {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
           
           {/* Segmented Category Picker */}
-          <div className="relative p-2 glass-panel premium-border rounded-full flex items-center gap-1 overflow-x-auto no-scrollbar max-w-full">
+          <div className="relative p-2 glass-panel premium-border rounded-2xl md:rounded-full flex items-center flex-nowrap gap-1 overflow-x-auto no-scrollbar max-w-full lg:max-w-max">
             <button
               onClick={() => setActiveCategoryId("all")}
               className={`relative px-8 py-3 rounded-full text-sm font-bold transition-all duration-300 z-10 flex items-center gap-2 whitespace-nowrap ${
@@ -306,7 +306,7 @@ export default function Services() {
                   }`}
                 >
                   {Icon && <Icon className="w-4 h-4" />}
-                  {category.title}
+                  {t(`categories.${category.title}`, category.title)}
                   {activeCategoryId === category._id && (
                     <motion.div
                       layoutId="activeCategory"
@@ -423,7 +423,7 @@ export default function Services() {
                       : "bg-transparent text-muted-foreground border-border hover:border-foreground"
                   }`}
                 >
-                  {subCat === "all" ? t("servicesPage.all") : subCat.charAt(0).toUpperCase() + subCat.slice(1)}
+                  {subCat === "all" ? t("servicesPage.all") : t(`servicesPage.${subCat}`, subCat.charAt(0).toUpperCase() + subCat.slice(1))}
                 </button>
               ))}
             </div>
@@ -463,14 +463,19 @@ export default function Services() {
 
                     {/* Product Info */}
                     <div className="flex-1 py-4 px-2 flex flex-col justify-center">
-                      <div className="mb-2">
-                         <span className="inline-block px-3 py-1 bg-white/10 rounded-lg text-xs font-mono text-primary-foreground/70 mb-2">
+                      <div className="mb-2 flex items-center gap-2 flex-wrap">
+                         <span className="inline-block px-3 py-1 bg-white/10 rounded-lg text-xs font-mono text-primary-foreground/70">
                            {product.code}
                          </span>
-                         <h3 className="text-3xl font-bold mb-4 group-hover:text-primary transition-colors leading-tight">
-                            {product.title}
-                         </h3>
+                         <span className={`inline-block px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-widest ${
+                           product.type === "sale" ? "bg-primary/20 text-primary" : "bg-blue-500/20 text-blue-400"
+                         }`}>
+                           {product.type === "sale" ? t("servicesPage.modelSale") : t("servicesPage.modelSubscription")}
+                         </span>
                       </div>
+                      <h3 className="text-3xl font-bold mb-4 group-hover:text-primary transition-colors leading-tight">
+                         {product.title}
+                      </h3>
                       <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
                         {product.description}
                       </p>
@@ -478,7 +483,7 @@ export default function Services() {
                       <div className="mt-auto space-y-6">
                         <div className="flex flex-col">
                           <span className="text-muted-foreground text-sm uppercase tracking-widest font-bold">
-                            {t("services.price", "Price")}
+                            {t("servicesPage.price", "Price")}
                           </span>
                           <span className="text-3xl font-black text-foreground">
                             {productPrice}

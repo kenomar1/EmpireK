@@ -97,7 +97,7 @@ export function FixedNavbar() {
                   <a
                     href="/"
                     dir="ltr"
-                    className="text-2xl tracking-widest font-thin font-bebas flex items-center"
+                    className="text-2xl tracking-widest font-thin font-Bebas flex items-center"
                   >
                     <span className="text-foreground">{t("common.brandNamePrefix")}</span>
                     <span className="text-primary">{t("common.brandNameSuffix")}</span>
@@ -209,11 +209,11 @@ export function FixedNavbar() {
                           className="inline-block"
                           onClick={() => setOpen(false)}
                         >
-                          <h1 className="text-4xl tracking-widest font-bebas leading-none">
+                          <h1 className="text-4xl tracking-widest font-Bebas leading-none">
                             <span className="text-foreground">{t("common.brandNamePrefix")}</span>
                             <span className="text-primary">{t("common.brandNameSuffix")}</span>
                           </h1>
-                          <p className="text-sm text-foreground/60 mt-2 tracking-wide font-cairo">
+                          <p className="text-sm text-foreground/60 mt-2 tracking-wide font-Cairo">
                             {t("hero.heading")}
                           </p>
                         </a>
@@ -237,9 +237,7 @@ export function FixedNavbar() {
                   }
                 `}
                               >
-                                <span className="w-8 text-center opacity-70 group-hover:opacity-100">
-                                  {index + 1}.
-                                </span>
+
                                 <span>{item.name}</span>
                                 {location.pathname === item.href && (
                                   <motion.div

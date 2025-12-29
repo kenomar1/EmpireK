@@ -51,11 +51,11 @@ export function TextWithImageSection() {
               className={`hidden sm:block ${isRTL ? "md:order-1" : "md:order-2"}`}
             >
               <div className="relative group">
-                <div className="absolute -inset-4 bg-primary/20 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <div className="absolute -inset-4  opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                 <img
                   src={LOCAL_IMAGE_SRC}
                   alt={textWithImage("heading")}
-                  className="relative w-full h-auto object-cover aspect-square rounded-[2rem] shadow-2xl border border-white/10"
+                  className="relative w-full h-auto object-cover aspect-square rounded-[2rem] "
                 />
               </div>
             </div>
