@@ -271,7 +271,7 @@ export default function BlogPostPage() {
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            className="glass-panel premium-border p-14 md:p-20 rounded-[4rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] relative z-10 -mt-24 md:-mt-40 max-w-7xl mx-auto flex flex-col items-center gap-10 border-white/10"
+            className="glass-panel premium-border p-6 md:p-20 rounded-[2.5rem] md:rounded-[4rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] relative z-10 -mt-24 md:-mt-40 max-w-7xl mx-auto flex flex-col items-center gap-10 border-white/10"
           >
             {/* Meta Chips */}
             <div className="flex flex-wrap items-center justify-center gap-4 text-sm font-bold uppercase tracking-widest text-primary">
@@ -333,17 +333,17 @@ export default function BlogPostPage() {
       </section>
 
       {/* Article Body */}
-      <article className="container mx-auto max-w-5xl px-6 py-20">
+      <article className="container mx-auto max-w-5xl px-2 md:px-6 py-12 md:py-20">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="glass-panel premium-border p-10 md:p-16 rounded-[3rem] shadow-xl"
+          className="glass-panel premium-border p-4 md:p-16 rounded-[2rem] md:rounded-[3rem] shadow-xl"
         >
           {post.excerpt && (
-            <p className="mb-12 text-2xl text-foreground font-medium leading-relaxed italic opacity-90">{post.excerpt}</p>
+            <p className="mb-8 md:mb-12 text-xl md:text-2xl text-foreground font-medium leading-relaxed italic opacity-90">{post.excerpt}</p>
           )}
-          <div className="prose prose-lg md:prose-xl dark:prose-invert max-w-none text-foreground leading-loose [&_li::marker]:text-primary">
+          <div className="prose md:prose-lg md:prose-xl dark:prose-invert max-w-none text-foreground leading-loose [&_li::marker]:text-primary">
             <PortableText value={post.body} components={ptComponents} />
           </div>
         </motion.div>
