@@ -6,16 +6,13 @@ import LanguageDetector from "i18next-browser-languagedetector";
 // Import your JSON files directly
 import en from "../locales/en.json";
 import ar from "../locales/ar.json";
-import prices from "../locales/prices.json";
 
 const resources = {
   en: { 
-    translation: en,
-    prices: prices.en 
+    translation: en
   },
   ar: { 
-    translation: ar,
-    prices: prices.ar
+    translation: ar
   },
 };
 

@@ -141,7 +141,7 @@ export default function ContactPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-24 glass-panel premium-border p-12 rounded-[2.5rem] border-white/10"
           >
-            <h1 className="text-5xl md:text-8xl font-black tracking-tighter text-foreground py-4">
+            <h1 className="text-5xl md:text-8xl font-black tracking-tighter text-foreground py-4 font-BBHBogle">
               {t("contact.heroTitle")}
             </h1>
             <p className="mt-8 text-xl md:text-2xl text-foreground/80 max-w-3xl mx-auto font-medium leading-relaxed">

@@ -156,7 +156,7 @@ export default function GalleryPage() {
           animate={{ opacity: 1, y: 0 }}
           className="relative max-w-5xl mx-auto glass-panel premium-border p-12 rounded-[3rem]"
         >
-          <h1 className="text-5xl md:text-8xl font-black mb-6 text-foreground">
+          <h1 className="text-5xl md:text-8xl font-black mb-6 text-foreground font-BBHBogle">
             {t("gallery.heroTitle", "Our Work Gallery")}
           </h1>
           <p className="text-xl md:text-2xl text-foreground/80 max-w-3xl mx-auto font-medium">

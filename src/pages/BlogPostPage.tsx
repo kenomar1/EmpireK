@@ -292,7 +292,7 @@ export default function BlogPostPage() {
               </span>
             </div>
 
-            <h1 className="text-5xl font-black md:text-9xl tracking-tighter leading-[0.95] text-foreground">
+            <h1 className="text-5xl font-black md:text-9xl tracking-tighter leading-[0.95] text-foreground font-BBHBogle">
               {post.title}
             </h1>
 

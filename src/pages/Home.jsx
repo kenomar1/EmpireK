@@ -45,7 +45,7 @@ export default function Home() {
 
   return (
     <div dir={isRTL ? "rtl" : "ltr"}>
-      <main className="font-Cairo overflow-x-hidden">
+      <main className="font-cairo overflow-x-hidden">
         <Suspense fallback={<div className="h-screen bg-background" />}>
           <HeroPromo />
         </Suspense>

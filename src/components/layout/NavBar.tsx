@@ -97,7 +97,7 @@ export function FixedNavbar() {
                   <a
                     href="/"
                     dir="ltr"
-                    className="text-2xl tracking-widest font-thin font-Bebas flex items-center"
+                    className="text-2xl tracking-widest font-thin font-bebas flex items-center"
                   >
                     <span className="text-foreground">{t("common.brandNamePrefix")}</span>
                     <span className="text-primary">{t("common.brandNameSuffix")}</span>
@@ -180,7 +180,7 @@ export function FixedNavbar() {
 
                 <a
                   href="/"
-                  className="absolute left-1/2 -translate-x-1/2 text-2xl tracking-widest font-thin font-Bebas whitespace-nowrap"
+                  className="absolute left-1/2 -translate-x-1/2 text-2xl tracking-widest font-thin font-bebas whitespace-nowrap"
                 >
                   <span className="text-foreground">{t("common.brandNamePrefix")}</span>
                   <span className="text-primary">{t("common.brandNameSuffix")}</span>
@@ -209,11 +209,11 @@ export function FixedNavbar() {
                           className="inline-block"
                           onClick={() => setOpen(false)}
                         >
-                          <h1 className="text-4xl tracking-widest font-Bebas leading-none">
+                          <h1 className="text-4xl tracking-widest font-bebas leading-none">
                             <span className="text-foreground">{t("common.brandNamePrefix")}</span>
                             <span className="text-primary">{t("common.brandNameSuffix")}</span>
                           </h1>
-                          <p className="text-sm text-foreground/60 mt-2 tracking-wide font-Cairo">
+                          <p className="text-sm text-foreground/60 mt-2 tracking-wide font-cairo">
                             {t("hero.heading")}
                           </p>
                         </a>

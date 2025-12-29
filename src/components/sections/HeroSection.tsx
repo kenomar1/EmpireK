@@ -81,8 +81,7 @@ export function HeroPromo() {
               <h1
                 className={`
     text-4xl xs:text-5xl sm:text-6xl md:text-5xl lg:text-7xl 
-    font-bold tracking-tight drop-shadow-2xl leading-tight
-    ${i18n.language === "ar" ? "font-cairo" : "font-playfair"}
+    font-bold tracking-tight drop-shadow-2xl leading-tight font-BBHBogle
     ${theme === "dark" ? "text-white" : "text-gray-900"}
   `}
               >

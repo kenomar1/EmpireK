@@ -53,13 +53,14 @@ export default {
       },
       // Added Playfair Display font family
       fontFamily: {
-        playfair: ["'Roboto Slab'", "sans-serif"],
-        Bebas: ["'Bebas Neue'", "serif"],
+        playfair: ["'Playfair Display'", "serif"],
+        Bebas: ["'Bebas Neue'", "sans-serif"],
         Cairo: ["'Cairo'", "sans-serif"],
         BBHBogle: ["'BBH Bogle'", "sans-serif"],
 
-        // Optional: keep sans as fallback or for other uses
-        sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+        // Set Cairo as the primary sans font for the project
+        sans: ["'Cairo'", "Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+        serif: ["'Playfair Display'", "serif"],
       },
       keyframes: {
         "accordion-down": {

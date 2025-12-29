@@ -14,7 +14,10 @@ import {
   ChevronDown,
   LayoutGrid,
   Tag,
-  CreditCard
+  CreditCard,
+  ShoppingBag,
+  ExternalLink,
+  Laptop
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
@@ -60,6 +63,7 @@ type Service = {
   slug?: { current: string };
   name: string;
   title?: string;
+  price?: string;
   shortDesc?: string;
   features?: string[];
   galleryImages?: GalleryImage[];
@@ -67,34 +71,40 @@ type Service = {
 };
 
 type Product = {
-  id: string;
+  _id: string;
   title: string;
-  desc: string;
-  price: string;
+  slug?: { current: string };
+  code: string;
+  category: string;
+  description: string;
   type: "sale" | "subscription";
+  price: string;
+  mainImage?: { asset?: { url: string } };
+  previewUrl?: string;
 };
 
 export default function Services() {
   const [services, setServices] = useState<Service[]>([]);
+  const [templates, setTemplates] = useState<Product[]>([]); // Synced with Sanity
   const [categories, setCategories] = useState<Category[]>([]);
   const [activeCategoryId, setActiveCategoryId] = useState<string>("all");
-  const [sortBy, setSortBy] = useState<"name" | "newest">("name");
-  const [isSortOpen, setIsSortOpen] = useState(false);
+  const [activeProductCategory, setActiveProductCategory] = useState<string>("all");
+  /* Removed Sort state */
   const [highlightedPosts, setHighlightedPosts] = useState<BlogPost[]>([]);
   const [allGalleryImages, setAllGalleryImages] = useState<GalleryImage[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const { t, i18n } = useTranslation(["translation", "prices"]);
+  const { t, i18n } = useTranslation(["translation"]);
   const currentLang = i18n.language === "ar" ? "ar" : "en";
   const isRTL = i18n.language === "ar";
 
   const heroTitle = t("servicesPage.heroTitle");
   const heroSubtitle = t("servicesPage.heroSubtitle");
   const orderCta = t("servicesPage.orderCta");
-  const priceValue = t("servicesPage.price");
+  // const priceValue = t("servicesPage.price"); // Removed as per request
   const timelineValue = t("servicesPage.timeline");
 
-  const products = (t("servicesPage.productsList", { returnObjects: true }) as Product[]) || [];
+  // Removed mock products
   const location = useLocation();
 
   useEffect(() => {
@@ -117,6 +127,7 @@ export default function Services() {
           name,
           slug,
           title,
+          price,
           shortDesc,
           features,
           galleryImages[] {
@@ -156,6 +167,25 @@ export default function Services() {
         console.error("Error fetching services:", error);
         setLoading(false);
       });
+
+    // Fetch Templates from Sanity
+    const templatesQuery = `*[_type == "template"] {
+      _id,
+      title,
+      slug,
+      code,
+      category,
+      description,
+      type,
+      price,
+      "mainImage": mainImage.asset->{ url },
+      previewUrl
+    }`;
+
+    client.fetch<Product[]>(templatesQuery)
+      .then(setTemplates)
+      .catch(console.error);
+
   }, [currentLang]);
 
   useEffect(() => {
@@ -190,21 +220,13 @@ export default function Services() {
     }
   }, [activeCategoryId, currentLang, services]);
 
-  const sortedServices = [...services]
-    .filter(s => activeCategoryId === "all" || s.category?._id === activeCategoryId)
-    .sort((a, b) => {
-      if (sortBy === "name") return a.name.localeCompare(b.name);
-      if (sortBy === "newest") {
-        return new Date(b._createdAt || 0).getTime() - new Date(a._createdAt || 0).getTime();
-      }
-      return 0;
-    });
+  /* Removed generic sort logic as per request */
 
-  const getServicePrice = (slug?: string) => {
-    if (!slug) return t("prices:services.base");
-    const localizedPrice = t(`prices:services.${slug}`);
-    return localizedPrice && !localizedPrice.startsWith("prices:services") ? localizedPrice : t("prices:services.base");
+  const getServicePrice = (service: Service) => {
+    return service.price || "Contact for Quote";
   };
+
+  const filteredProducts = templates.filter(p => activeProductCategory === "all" || p.category === activeProductCategory);
 
   if (loading) {
     return (
@@ -224,7 +246,7 @@ export default function Services() {
           transition={{ duration: 1 }}
           className="relative max-w-5xl mx-auto text-center glass-panel premium-border p-12 rounded-[3.5rem] border-white/10"
         >
-          <h1 className="text-5xl sm:text-6xl md:text-8xl font-black tracking-tight mb-8 text-foreground">
+          <h1 className="text-5xl sm:text-6xl md:text-8xl font-black tracking-tight mb-8 text-foreground font-BBHBogle">
             {heroTitle}
           </h1>
           <p className="text-xl sm:text-2xl text-foreground/80 max-w-4xl mx-auto leading-relaxed font-medium">
@@ -248,6 +270,23 @@ export default function Services() {
               <LayoutGrid className="w-4 h-4" />
               {t("servicesPage.all")}
               {activeCategoryId === "all" && (
+                <motion.div
+                  layoutId="activeCategory"
+                  className="absolute inset-0 bg-primary rounded-full -z-10"
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                />
+              )}
+            </button>
+
+            <button
+              onClick={() => setActiveCategoryId("shop")}
+              className={`relative px-8 py-3 rounded-full text-sm font-bold transition-all duration-300 z-10 flex items-center gap-2 whitespace-nowrap ${
+                activeCategoryId === "shop" ? "text-primary-foreground" : "text-foreground/70 hover:text-foreground"
+              }`}
+            >
+              <ShoppingBag className="w-4 h-4" />
+              {t("servicesPage.shop", "Shop")}
+              {activeCategoryId === "shop" && (
                 <motion.div
                   layoutId="activeCategory"
                   className="absolute inset-0 bg-primary rounded-full -z-10"
@@ -280,193 +319,239 @@ export default function Services() {
             })}
           </div>
 
-          {/* Sort Dropdown */}
-          <div className="relative">
-            <button
-              onClick={() => setIsSortOpen(!isSortOpen)}
-              className="flex items-center gap-3 px-6 py-4 glass-panel premium-border rounded-2xl font-bold hover:bg-white/5 transition-all"
-            >
-              <span className="text-muted-foreground">{t("servicesPage.sortBy")}:</span>
-              <span className="text-foreground">{t(`servicesPage.sort${sortBy.charAt(0).toUpperCase() + sortBy.slice(1)}`)}</span>
-              <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isSortOpen ? "rotate-180" : ""}`} />
-            </button>
-
-            <AnimatePresence>
-              {isSortOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  className="absolute right-0 mt-3 w-48 glass-panel premium-border rounded-2xl overflow-hidden z-50 shadow-2xl"
-                >
-                  <button
-                    onClick={() => { setSortBy("name"); setIsSortOpen(false); }}
-                    className={`w-full text-left px-6 py-4 transition-colors hover:bg-primary/20 ${sortBy === "name" ? "text-primary font-bold" : "text-foreground"}`}
-                  >
-                    {t("servicesPage.sortName")}
-                  </button>
-                  <button
-                    onClick={() => { setSortBy("newest"); setIsSortOpen(false); }}
-                    className={`w-full text-left px-6 py-4 transition-colors hover:bg-primary/20 ${sortBy === "newest" ? "text-primary font-bold" : "text-foreground"}`}
-                  >
-                    {t("servicesPage.sortNewest")}
-                  </button>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+          {/* Sort Dropdown Removed */}
         </div>
       </section>
 
       {/* Services Grid */}
-      <section className="px-6 mb-32">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            layout
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
-          >
-            <AnimatePresence mode="popLayout">
-              {sortedServices.map((service, index) => {
-                const ServiceIcon = service.category?.icon
-                  ? icons[service.category.icon] || Globe
-                  : Globe;
-                const dynamicPrice = getServicePrice(service.slug?.current);
+      {activeCategoryId !== "shop" && (
+        <section className="px-6 mb-32">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              layout
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
+            >
+              <AnimatePresence mode="popLayout">
+                {services
+                  .filter(s => activeCategoryId === "all" || s.category?._id === activeCategoryId)
+                  .map((service, index) => {
+                  const ServiceIcon = service.category?.icon
+                    ? icons[service.category.icon] || Globe
+                    : Globe;
+                  const dynamicPrice = getServicePrice(service);
 
-                return (
-                  <motion.div
-                    key={service._id}
-                    layout
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ duration: 0.4 }}
-                    className="glass-panel premium-border rounded-[2.5rem] hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col group"
-                  >
-                    <div className="p-10 flex-1 flex flex-col">
-                      <div className="inline-flex p-6 bg-primary/10 rounded-[2rem] mb-8 w-fit text-primary">
-                        <ServiceIcon className="w-12 h-12" />
-                      </div>
-
-                      <h3 className="text-3xl font-bold mb-6 group-hover:text-primary transition-colors">
-                        {service.name}
-                      </h3>
-
-                      <p className="text-muted-foreground text-lg mb-10 flex-1 leading-relaxed">
-                        {service.shortDesc || "Professional service tailored to your needs."}
-                      </p>
-
-                      {service.features && service.features.length > 0 && (
-                        <div className="space-y-4 mb-10">
-                          {service.features.map((feature, i) => (
-                            <div key={i} className="flex items-center gap-4">
-                              <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0" />
-                              <span className="text-base text-foreground/80">{feature}</span>
-                            </div>
-                          ))}
+                  return (
+                    <motion.div
+                      key={service._id}
+                      layout
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      whileHover={{ scale: 1.02 }}
+                      transition={{ duration: 0.4 }}
+                      className="glass-panel premium-border rounded-[2.5rem] hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col group"
+                    >
+                      <div className="p-10 flex-1 flex flex-col">
+                        <div className="inline-flex p-6 bg-primary/10 rounded-[2rem] mb-8 w-fit text-primary">
+                          <ServiceIcon className="w-12 h-12" />
                         </div>
-                      )}
 
-                      <Link
-                        to="/contact"
-                        className="inline-flex items-center justify-center gap-3 px-8 py-5 bg-primary text-primary-foreground rounded-full font-bold text-lg shadow-lg hover:bg-primary/90 hover:scale-[1.03] transition-all"
-                      >
-                        {orderCta}
-                        <ArrowRight className="w-6 h-6" />
-                      </Link>
+                        <h3 className="text-3xl font-bold mb-6 group-hover:text-primary transition-colors">
+                          {service.name}
+                        </h3>
 
-                      <p className="text-center text-sm text-muted-foreground mt-4 italic font-medium">
-                        {t("servicesPage.orderMeta", { price: dynamicPrice, timeline: timelineValue })}
-                      </p>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
-          </motion.div>
-        </div>
-      </section>
+                        <p className="text-muted-foreground text-lg mb-10 flex-1 leading-relaxed">
+                          {service.shortDesc || "Professional service tailored to your needs."}
+                        </p>
 
-      {/* Digital Products Section */}
-      <section id="templates" className="px-6 mb-40 relative">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-20"
-          >
-            <h2 className="text-4xl md:text-6xl font-black mb-6 bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">
-              {t("servicesPage.digitalProductsTitle")}
-            </h2>
+                        {service.features && service.features.length > 0 && (
+                          <div className="space-y-4 mb-10">
+                            {service.features.map((feature, i) => (
+                              <div key={i} className="flex items-center gap-4">
+                                <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0" />
+                                <span className="text-base text-foreground/80">{feature}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        <Link
+                          to="/contact"
+                          className="inline-flex items-center justify-center gap-3 px-8 py-5 bg-primary text-primary-foreground rounded-full font-bold text-lg shadow-lg hover:bg-primary/90 hover:scale-[1.03] transition-all"
+                        >
+                          {orderCta}
+                          <ArrowRight className="w-6 h-6" />
+                        </Link>
+
+                        <p className="text-center text-sm text-muted-foreground mt-4 italic font-medium">
+                          {t("servicesPage.orderMeta", { price: dynamicPrice, timeline: timelineValue })}
+                        </p>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </AnimatePresence>
+            </motion.div>
+          </div>
+        </section>
+      )}
+
+      {/* Digital Products Section (Shop) */}
+      {activeCategoryId === "shop" && (
+        <>
+          <section id="templates" className="px-6 mb-20 relative">
+            <div className="max-w-7xl mx-auto">
+              <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-center mb-20"
+              >
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               {t("servicesPage.digitalProductsSubtitle")}
             </p>
+            
+            {/* Template Categories (Shop Filters) */}
+            <div className="mt-12 flex flex-wrap justify-center gap-4">
+              {["all", "fashion", "food", "portfolio"].map((subCat) => (
+                <button
+                  key={subCat}
+                  onClick={() => setActiveProductCategory(subCat)}
+                  className={`px-6 py-2 rounded-full text-sm font-bold transition-all border ${
+                    activeProductCategory === subCat
+                      ? "bg-foreground text-background border-foreground"
+                      : "bg-transparent text-muted-foreground border-border hover:border-foreground"
+                  }`}
+                >
+                  {subCat === "all" ? t("servicesPage.all") : subCat.charAt(0).toUpperCase() + subCat.slice(1)}
+                </button>
+              ))}
+            </div>
           </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {products.map((product, idx) => {
-              const productPrice = t(`prices:products.${product.id}`);
-              
-              return (
-              <motion.div
-                key={product.id}
-                initial={{ opacity: 0, x: idx % 2 === 0 ? -30 : 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -10 }}
-                className="group relative glass-panel premium-border rounded-[3rem] overflow-hidden flex flex-col md:flex-row gap-6 p-6"
-              >
-                {/* Product Image Holder */}
-                <div className="relative w-full md:w-2/5 aspect-[4/5] rounded-[2rem] overflow-hidden border border-white/5 bg-accent/20">
-                  <img 
-                    src="/ecommerce_mockup.png" 
-                    alt={product.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
+            {filteredProducts.map((product, idx) => {
+              // Retrieve price directly from Sanity or fallback
+              const productPrice = product.price || "$49"; 
                   
-                  {/* Badge */}
-                  <div className="absolute top-6 left-6 px-4 py-2 rounded-full glass-panel premium-border bg-primary/20 backdrop-blur-md flex items-center gap-2">
-                    {product.type === "sale" ? <Tag className="w-4 h-4 text-primary" /> : <CreditCard className="w-4 h-4 text-primary" />}
-                    <span className="text-xs font-bold text-white uppercase tracking-widest leading-none">
-                      {product.type === "sale" ? t("servicesPage.modelSale") : t("servicesPage.modelSubscription")}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Product Info */}
-                <div className="flex-1 py-4 px-2 flex flex-col justify-center">
-                  <h3 className="text-3xl font-bold mb-4 group-hover:text-primary transition-colors leading-tight">
-                    {product.title}
-                  </h3>
-                  <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
-                    {product.desc}
-                  </p>
-                  
-                  <div className="mt-auto flex items-center justify-between gap-6">
-                    <div className="flex flex-col">
-                      <span className="text-muted-foreground text-sm uppercase tracking-widest font-bold">
-                        {t("services.price", "Price")}
-                      </span>
-                      <span className="text-3xl font-black text-foreground">
-                        {productPrice}
-                      </span>
+                  return (
+                  <motion.div
+                    key={product._id}
+                    initial={{ opacity: 0, x: idx % 2 === 0 ? -30 : 30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    whileHover={{ y: -10 }}
+                    className="group relative glass-panel premium-border rounded-[3rem] overflow-hidden flex flex-col md:flex-row gap-6 p-6"
+                  >
+                    {/* Product Image Holder */}
+                    <div className="relative w-full md:w-2/5 aspect-[4/5] rounded-[2rem] overflow-hidden border border-white/5 bg-accent/20">
+                      <img 
+                        src={product.mainImage?.asset?.url || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop"} 
+                        alt={product.title}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
+                      
+                      {/* Badge */}
+                      <div className="absolute top-6 left-6 px-4 py-2 rounded-full glass-panel premium-border bg-primary/20 backdrop-blur-md flex items-center gap-2">
+                        {product.type === "sale" ? <Tag className="w-4 h-4 text-primary" /> : <CreditCard className="w-4 h-4 text-primary" />}
+                        <span className="text-xs font-bold text-white uppercase tracking-widest leading-none">
+                          {product.type === "sale" ? t("servicesPage.modelSale") : t("servicesPage.modelSubscription")}
+                        </span>
+                      </div>
                     </div>
-                    
-                    <Link
-                      to="/contact"
-                      className="px-8 py-4 bg-foreground text-background rounded-2xl font-bold hover:bg-primary hover:text-primary-foreground transition-all shadow-xl hover:shadow-primary/30"
-                    >
-                      {t("servicesPage.buyNow")}
-                    </Link>
+
+                    {/* Product Info */}
+                    <div className="flex-1 py-4 px-2 flex flex-col justify-center">
+                      <div className="mb-2">
+                         <span className="inline-block px-3 py-1 bg-white/10 rounded-lg text-xs font-mono text-primary-foreground/70 mb-2">
+                           {product.code}
+                         </span>
+                         <h3 className="text-3xl font-bold mb-4 group-hover:text-primary transition-colors leading-tight">
+                            {product.title}
+                         </h3>
+                      </div>
+                      <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
+                        {product.description}
+                      </p>
+                      
+                      <div className="mt-auto space-y-6">
+                        <div className="flex flex-col">
+                          <span className="text-muted-foreground text-sm uppercase tracking-widest font-bold">
+                            {t("services.price", "Price")}
+                          </span>
+                          <span className="text-3xl font-black text-foreground">
+                            {productPrice}
+                          </span>
+                        </div>
+                        
+                        <div className="flex gap-4">
+                          <button
+                            onClick={() => window.open(product.previewUrl || "#", "_blank")}
+                            className="flex-1 px-6 py-4 border border-foreground/20 text-foreground rounded-2xl font-bold hover:bg-foreground/5 transition-all text-center flex items-center justify-center gap-2"
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                            {t("servicesPage.livePreview", "Preview")}
+                          </button>
+                          
+                          <Link
+                            to="/contact"
+                            className="flex-1 px-6 py-4 bg-foreground text-background rounded-2xl font-bold hover:bg-primary hover:text-primary-foreground transition-all shadow-xl hover:shadow-primary/30 text-center flex items-center justify-center"
+                          >
+                            {t("servicesPage.buyNow")}
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )})}
+              </div>
+            </div>
+          </section>
+
+          {/* How It Works Section */}
+          <section className="px-6 mb-32">
+            <div className="max-w-7xl mx-auto glass-panel premium-border rounded-[3rem] p-12 border-primary/10">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl md:text-5xl font-black mb-6">
+                  {t("servicesPage.howItWorksTitle", "How It Works")}
+                </h2>
+                <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                  {t("servicesPage.howItWorksSubtitle", "Get your project up and running in minutes with our ready-made templates")}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {[
+                  {
+                    icon: LayoutGrid,
+                    title: t("servicesPage.step1Title", "Choose Template"),
+                    desc: t("servicesPage.step1Desc", "Browse our collection and find the perfect starting point.")
+                  },
+                  {
+                    icon: CreditCard,
+                    title: t("servicesPage.step2Title", "Purchase"),
+                    desc: t("servicesPage.step2Desc", "Securely purchase the license that fits your needs.")
+                  },
+                  {
+                    icon: Laptop,
+                    title: t("servicesPage.step3Title", "Launch"),
+                    desc: t("servicesPage.step3Desc", "Receive the code instantly and deploy your project.")
+                  }
+                ].map((step, i) => (
+                  <div key={i} className="text-center p-6 bg-background/30 rounded-3xl">
+                    <div className="w-16 h-16 mx-auto bg-primary/20 rounded-2xl flex items-center justify-center mb-6 text-primary">
+                      <step.icon className="w-8 h-8" />
+                    </div>
+                    <h3 className="text-xl font-bold mb-3">{step.title}</h3>
+                    <p className="text-muted-foreground">{step.desc}</p>
                   </div>
-                </div>
-              </motion.div>
-            )})}
-          </div>
-        </div>
-      </section>
+                ))}
+              </div>
+            </div>
+          </section>
+        </>
+      )}
 
       {/* Related Insights Section */}
       {highlightedPosts.length > 0 && (

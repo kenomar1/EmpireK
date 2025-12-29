@@ -61,11 +61,11 @@ export default function NotFound() {
 
       <div className="min-h-screen flex items-center justify-center px-6">
         <div className="max-w-2xl w-full backdrop-blur-2xl bg-white/5 border border-white/10 rounded-3xl shadow-2xl p-16 text-center hover:scale-[1.01] transition-all duration-700">
-          <h1 className="text-9xl md:text-[12rem] font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-400 leading-none mb-8 tracking-tighter">
+          <h1 className="text-9xl md:text-[12rem] font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-400 leading-none mb-8 tracking-tighter font-BBHBogle">
             404
           </h1>
 
-          <h2 className="text-5xl font-bold text-white mb-6">
+          <h2 className="text-5xl font-bold text-white mb-6 font-BBHBogle">
             {t("notFound.title")}
           </h2>
 

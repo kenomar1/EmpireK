@@ -2,10 +2,10 @@
   "languageName": "العربية",
   "language": "اللغة",
   "common": {
-    "brandName": "إمباير-K",
-    "brandNamePrefix": "إمباير",
+    "brandName": "Empire-k",
+    "brandNamePrefix": "Empire",
     "brandNameSuffix": "-K",
-    "copyright": "© {{year}} إمباير-K. جميع الحقوق محفوظة.",
+    "copyright": "© {{year}} Empire-K. جميع الحقوق محفوظة.",
     "loading": "جاري التحميل..."
   },
   "bottomNav": {
@@ -193,26 +193,22 @@
     "categories": [
       {
         "title": "تطوير المواقع",
-        "price": "ابتداءً من $4,500",
         "items": "تطوير متكامل",
         "bestseller": true,
         "placeholder": "مواقع"
       },
       {
         "title": "تصميم المنتجات",
-        "price": "ابتداءً من $3,200",
         "items": "أنظمة UX/UI",
         "placeholder": "تصميم"
       },
       {
         "title": "أنظمة CMS ومنصات",
-        "price": "ابتداءً من $2,800",
         "items": "رؤوس خفيفة أو مخصصة",
         "placeholder": "CMS"
       },
       {
         "title": "النمو والدعم",
-        "price": "ابتداءً من $1,200",
         "items": "SEO + دعم",
         "placeholder": "دعم"
       }
@@ -235,7 +231,7 @@
 
   "servicesPage": {
     "heroTitle": "خدمات وكالة رقمية احترافية",
-    "heroSubtitle": "تطوير مواقع • تصميم واجهات وتجربة مستخدم • CMS • تطبيقات جوال • SEO • صيانة",
+    "heroSubtitle": "حلول متكاملة لتنمية نشاطك التجاري — سريعة، جميلة، ومُدارة بالكامل.",
     "orderCta": "اطلب هذه الخدمة الآن",
     "orderMeta": "تبدأ من {{price}} • متوسط التسليم: {{timeline}}",
     "timeline": "٢–٦ أسابيع",
@@ -244,24 +240,10 @@
     "sortName": "الاسم",
     "sortNewest": "الأحدث",
     "digitalProductsTitle": "قوالب جاهزة للإطلاق",
-    "digitalProductsSubtitle": "وفر وقت البناء وانطلق فوراً مع قوالبنا المتطورة والمصممة لزيادة المبيعات.",
+    "digitalProductsSubtitle": "تجاوز وقت البناء وانطلق فورًا مع قوالبنا عالية الدقة والمحسنة لزيادة التحويلات.",
     "modelSale": "شراء لمرة واحدة",
     "modelSubscription": "اشتراك شهري",
-    "buyNow": "ابدأ الآن",
-    "productsList": [
-      {
-        "id": "ecom-elite",
-        "title": "حل التجارة الإلكترونية المتميز",
-        "desc": "قالب متكامل مع عربة تسوق، مدفوعات، ولوحة تحكم.",
-        "type": "sale"
-      },
-      {
-        "id": "saas-starter",
-        "title": "منصة SaaS سريعة",
-        "desc": "لوحة تحكم حديثة، نظام دخول، وصفحة هبوط للشركات الناشئة.",
-        "type": "subscription"
-      }
-    ]
+    "buyNow": "ابدأ الآن"
   },
 
   "textWithImage": {

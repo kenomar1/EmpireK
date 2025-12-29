@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../../components/ui/dialog";
-import { Cookie, Shield, FileText } from "lucide-react";
+import { Cookie, Shield, FileText, Mail, Phone, MapPin } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
@@ -58,7 +58,7 @@ export default function Footer() {
                 <div className={isRTL ? "lg:col-start-3" : ""}>
                   <a
                     href="/"
-                    className="text-4xl tracking-widest font-thin font-Bebas inline-block mb-6"
+                    className="text-4xl tracking-widest font-thin font-bebas inline-block mb-6"
                   >
                     <span className="text-foreground">{t("common.brandNamePrefix")}</span>
                     <span className="text-primary">{t("common.brandNameSuffix")}</span>
@@ -67,28 +67,28 @@ export default function Footer() {
                     {tf("brandDesc")}
                   </p>
                   <Button size="lg" className="group shadow-lg" asChild>
-                    <a href="/contact">{tf("startProject")}</a>
+                    <a href="/services">{tf("startProject")}</a>
                   </Button>
                 </div>
 
-                {/* Services Column */}
+                {/* Menu Column */}
                 <div>
                   <h4 className="font-semibold text-xl mb-8 text-foreground">
-                    {tf("servicesTitle")}
+                    Menu
                   </h4>
                   <ul className="space-y-5 text-muted-foreground text-lg">
-                    {(
-                      t("footer.services", { returnObjects: true }) as string[]
-                    ).map((service) => (
-                      <li key={service}>
-                        <a
-                          href="#"
-                          className="hover:text-primary transition inline-block"
-                        >
-                          {service}
-                        </a>
-                      </li>
-                    ))}
+                    <li>
+                      <a href="/" className="hover:text-primary transition inline-block">Home</a>
+                    </li>
+                    <li>
+                      <a href="/services" className="hover:text-primary transition inline-block">Services</a>
+                    </li>
+                    <li>
+                      <a href="/blog" className="hover:text-primary transition inline-block">Blog</a>
+                    </li>
+                    <li>
+                      <a href="/contact" className="hover:text-primary transition inline-block">Contact</a>
+                    </li>
                   </ul>
                 </div>
 
@@ -98,14 +98,31 @@ export default function Footer() {
                     {tf("contactTitle")}
                   </h4>
                   <div className="space-y-6 text-muted-foreground text-lg">
-                    <div className="flex items-center gap-4">
-                      <span>{tf("email")}</span>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <span dir="ltr">{tf("phone")}</span>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <span>{tf("location")}</span>
+                    <a 
+                      href={`mailto:${tf("email")}`} 
+                      className="flex items-center gap-4 group/item hover:text-primary transition-colors"
+                    >
+                      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center group-hover/item:bg-primary group-hover/item:text-primary-foreground transition-all duration-300">
+                        <Mail className="w-5 h-5" />
+                      </div>
+                      <span className="font-medium">{tf("email")}</span>
+                    </a>
+                    
+                    <a 
+                      href={`tel:${tf("phone")}`} 
+                      className="flex items-center gap-4 group/item hover:text-primary transition-colors"
+                    >
+                      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center group-hover/item:bg-primary group-hover/item:text-primary-foreground transition-all duration-300">
+                        <Phone className="w-5 h-5" />
+                      </div>
+                      <span dir="ltr" className="font-medium">{tf("phone")}</span>
+                    </a>
+
+                    <div className="flex items-center gap-4 group/item">
+                      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center transition-all duration-300">
+                        <MapPin className="w-5 h-5" />
+                      </div>
+                      <span className="font-medium">{tf("location")}</span>
                     </div>
                   </div>
                 </div>

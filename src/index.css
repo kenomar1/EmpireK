@@ -5,9 +5,13 @@
 /* Single @layer base with only en + ar fonts */
 @layer base {
   :root {
-    --font-primary: "Playfair Display", "Inter", serif;  /* Serif fallback for elegance */
+    /* Global Font Variables */
+    --font-body: "Cairo", sans-serif;
+    --font-heading: "Playfair Display", serif;
+    
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
+
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
@@ -31,12 +35,10 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
-
-    /* Default font = English */
-    --font-primary: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
 
   .dark {
+
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
     --card: 240 10% 3.9%;
@@ -63,14 +65,13 @@
     --chart-5: 340 75% 55%;
   }
 
-  /* Arabic override */
-/* Arabic override - Cairo is the best modern choice */
-*:lang(ar) {
-  --font-primary: "Amiri", "Cairo", system-ui, sans-serif;
-}
-  /* Apply font globally */
+  /* Universal Headings and Body fonts */
   html {
-    font-family: var(--font-primary);
+    font-family: var(--font-body);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
   }
 
   /* Global resets */

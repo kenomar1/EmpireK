@@ -215,7 +215,7 @@ export default function ProjectDetailPage() {
               transition={{ delay: 0.6 }}
               className="max-w-5xl mx-auto"
             >
-              <h1 className="text-5xl md:text-7xl font-black mb-6 drop-shadow-2xl">
+              <h1 className="text-5xl md:text-7xl font-black mb-6 drop-shadow-2xl font-BBHBogle">
                 {project.title}
               </h1>
               <div className="flex flex-wrap items-center gap-8 text-xl">

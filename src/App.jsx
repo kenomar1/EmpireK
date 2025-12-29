@@ -14,6 +14,7 @@ const Blog = lazy(() => import("./pages/blogPage"));
 const BlogPostPage = lazy(() => import("./pages/BlogPostPage"));
 const ProjectDetailPage = lazy(() => import("./pages/ProjectDetailPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const Dashboard = lazy(() => import("./pages/Dashboard")); // Admin Dashboard
 
 import { FixedNavbar } from "./components/layout/NavBar";
 import { useTheme } from "./context/ThemeContext";
@@ -61,12 +62,7 @@ function AppContent() {
   const backgroundUrl = theme === "dark" ? darkUrl : lightUrl;
 
   return (
-    <div
-      className={`
-        min-h-screen flex flex-col relative
-        ${isRTL ? "font-Cairo" : "font-playfair"}
-      `}
-    >
+    <div className="min-h-screen flex flex-col relative">
       {/* Global Background */}
       <div className="fixed inset-0 -z-20 overflow-hidden pointer-events-none">
         <Suspense fallback={<div className="absolute inset-0 bg-background" />}>
@@ -99,6 +95,7 @@ function AppContent() {
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/blog/:slug" element={<BlogPostPage />} />
                 <Route path="/project/:slug" element={<ProjectDetailPage />} />
+                <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </motion.div>

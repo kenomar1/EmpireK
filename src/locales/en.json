@@ -303,7 +303,7 @@
   },
 
   "servicesPage": {
-    "heroTitle": "Professional Digital Agency Services",
+    "heroTitle": "Digital Agency Services",
     "heroSubtitle": "End-to-end solutions that grow your business — fast, beautiful, and fully managed.",
     "orderCta": "Order This Service Now",
     "orderMeta": "Starting from {{price}} • Delivered in {{timeline}}",
@@ -317,21 +317,7 @@
     "digitalProductsSubtitle": "Skip the build time and launch instantly with our high-fidelity, conversion-optimized site templates.",
     "modelSale": "One-time Purchase",
     "modelSubscription": "Monthly Subscription",
-    "buyNow": "Get Started",
-    "productsList": [
-      {
-        "id": "ecom-elite",
-        "title": "Elite E-commerce Solution",
-        "desc": "Full-stack template with cart, payments, and admin dashboard.",
-        "type": "sale"
-      },
-      {
-        "id": "saas-starter",
-        "title": "SaaS Launchpad",
-        "desc": "Modern dashboard, auth flow, and landing page for startups.",
-        "type": "subscription"
-      }
-    ]
+    "buyNow": "Get Started"
   },
   "textWithImage": {
     "heading": "Obsessed With Growth, Not Just Good Looks",
@@ -472,7 +458,7 @@
       "Maintenance & Support"
     ],
     "contactTitle": "Get in Touch",
-    "email": "dev.empirek@hotmail.com.com",
+    "email": "dev.empirek@hotmail.com",
     "phone": "+20 1515912781",
     "location": "Cairo, Egypt",
     "copyright": "© 2025 Empire-K. All rights reserved.",
