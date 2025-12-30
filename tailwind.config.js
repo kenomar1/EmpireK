@@ -51,16 +51,14 @@ export default {
           5: "hsl(var(--chart-5))",
         },
       },
-      // Added Playfair Display font family
+      // Modernized Typography System
       fontFamily: {
-        playfair: ["'Roboto'", "serif"],
+        heading: ["'Playfair Display'", "serif"],
+        sans: ["'Inter'", "ui-sans-serif", "system-ui", "sans-serif"],
         Bebas: ["'Bebas Neue'", "sans-serif"],
         Cairo: ["'Cairo'", "sans-serif"],
         BBHBogle: ["'BBH Bogle'", "sans-serif"],
-
-        // Set Cairo as the primary sans font for the project
-        sans: ["'Cairo'", "Inter", "ui-sans-serif", "system-ui", "sans-serif"],
-        serif: ["'Playfair Display'", "serif"],
+        mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"],
       },
       keyframes: {
         "accordion-down": {

@@ -19,6 +19,11 @@ import { lazy, Suspense } from "react";
 const HeroPromo = lazy(() => import("../components/sections/HeroSection").then(m => ({ default: m.HeroPromo })));
 const ServicesShowcaseSection = lazy(() => import("../components/sections/ServicesShowcase"));
 const BlogShowcaseSection = lazy(() => import("../components/sections/BlogShowcaseSection"));
+const ClientLogos = lazy(() => import("../components/sections/ClientLogos"));
+const StatsCounter = lazy(() => import("../components/sections/StatsCounter"));
+const FAQSection = lazy(() => import("../components/sections/FAQSection"));
+
+import StickyCTA from "../components/common/StickyCTA";
 
 
 export default function Home() {
@@ -49,20 +54,57 @@ export default function Home() {
         <Suspense fallback={<div className="h-screen bg-background" />}>
           <HeroPromo />
         </Suspense>
-        <TextWithImageSection />
-        <FloatingBenefits />
-        <Suspense fallback={<div className="h-96 bg-background" />}>
-          <ServicesShowcaseSection />
+        
+        <div className="pb-16 md:pb-24">
+          <TextWithImageSection />
+        </div>
+        
+        <div className="py-8 md:py-12">
+          <FloatingBenefits />
+        </div>
+        
+        {/* Client Logos right after FloatingBenefits */}
+        <Suspense fallback={<div className="h-32 bg-background" />}>
+          <ClientLogos />
         </Suspense>
-        <HowWeWork />
-        <CMSDemoSection />
+        
+        {/* Stats Counter */}
+        <Suspense fallback={<div className="h-64 bg-background" />}>
+          <StatsCounter />
+        </Suspense>
+        
         <Suspense fallback={<div className="h-96 bg-background" />}>
-          <BlogShowcaseSection />
+          <div className="py-16 md:py-24">
+            <ServicesShowcaseSection />
+          </div>
+        </Suspense>
+        
+        <div className="py-8 md:py-12">
+          <HowWeWork />
+        </div>
+        
+        {/* FAQ Section */}
+        <Suspense fallback={<div className="h-96 bg-background" />}>
+          <FAQSection />
+        </Suspense>
+        
+        <div className="pt-16 pb-0 md:pt-24 md:pb-0">
+          <CMSDemoSection />
+        </div>
+        
+        <Suspense fallback={<div className="h-96 bg-background" />}>
+          <div className="pt-8 pb-16 md:pt-12 md:pb-24">
+            <BlogShowcaseSection />
+          </div>
         </Suspense>
       </main>
 
       <Footer />
 
+      
+      {/* Sticky CTA Bar */}
+      <StickyCTA />
+      
       {/* Premium Back-to-Top Button */}
       <AnimatePresence>
         {showBackToTop && (

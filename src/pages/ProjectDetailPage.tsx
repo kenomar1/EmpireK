@@ -111,22 +111,22 @@ export default function ProjectDetailPage() {
   const ptComponents = {
     block: {
       h1: ({ children }: any) => (
-        <h1 className="text-5xl md:text-6xl font-black mt-16 mb-8 text-foreground">
+        <h1 className="text-3xl sm:text-4xl md:text-6xl font-black mt-16 mb-8 text-foreground leading-[1.1]">
           {children}
         </h1>
       ),
       h2: ({ children }: any) => (
-        <h2 className="text-4xl md:text-5xl font-bold mt-14 mb-6 text-foreground">
+        <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold mt-14 mb-6 text-foreground leading-tight">
           {children}
         </h2>
       ),
       h3: ({ children }: any) => (
-        <h3 className="text-3xl font-semibold mt-12 mb-5 text-foreground">
+        <h3 className="text-xl sm:text-2xl md:text-4xl font-semibold mt-12 mb-5 text-foreground">
           {children}
         </h3>
       ),
       normal: ({ children }: any) => (
-        <p className="text-lg leading-relaxed mb-8 text-foreground/80">
+        <p className="text-base sm:text-lg leading-relaxed mb-8 text-foreground/80">
           {children}
         </p>
       ),
@@ -208,17 +208,17 @@ export default function ProjectDetailPage() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
 
           {/* Hero Content */}
-          <div className="absolute bottom-0 left-0 right-0 p-12 text-white">
+          <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12 text-white">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
               className="max-w-5xl mx-auto"
             >
-              <h1 className="text-5xl md:text-7xl font-black mb-6 drop-shadow-2xl font-BBHBogle">
+              <h1 className="text-4xl sm:text-5xl md:text-7xl font-black mb-4 md:mb-6 drop-shadow-2xl font-BBHBogle leading-[1.1]">
                 {project.title}
               </h1>
-              <div className="flex flex-wrap items-center gap-8 text-xl">
+              <div className="flex flex-wrap items-center gap-4 md:gap-8 text-lg md:text-xl">
                 {project.client && (
                   <span className="drop-shadow-lg">{project.client}</span>
                 )}
@@ -253,7 +253,7 @@ export default function ProjectDetailPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="max-w-4xl mx-auto bg-background/70 backdrop-blur-xl rounded-3xl shadow-2xl border border-border/30 p-12 lg:p-20"
+            className="max-w-4xl mx-auto bg-background/70 backdrop-blur-xl rounded-2xl md:rounded-3xl shadow-2xl border border-border/30 p-8 md:p-12 lg:p-20"
           >
             <PortableText value={project.body} components={ptComponents} />
           </motion.div>

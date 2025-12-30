@@ -149,6 +149,14 @@ export const project = defineType({
           allowRelative: false,
         }),
     }),
+
+    defineField({
+      name: 'teamMembers',
+      title: 'Team Members',
+      type: 'array',
+      of: [{type: 'reference', to: [{type: 'teamMember'}]}],
+      description: 'Team members who worked on this project',
+    }),
   ],
 
   preview: {

@@ -16,6 +16,59 @@ type BenefitCopy = {
   desc: string;
 };
 
+const SAMPLE_LOGOS = [
+  { name: "TechCorp", icon: Zap },
+  { name: "EcoLogic", icon: Leaf },
+  { name: "SecureMind", icon: Shield },
+  { name: "RocketDev", icon: Rocket },
+  { name: "FinFlow", icon: DollarSign },
+  { name: "NovaDesign", icon: Zap },
+  { name: "AstraSoft", icon: Rocket },
+  { name: "GlobalSafe", icon: Shield },
+];
+
+function LogoRow({ isRTL }: { isRTL: boolean }) {
+  return (
+    <div 
+      className="relative mt-8 mb-16 overflow-hidden py-10"
+      style={{
+        maskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
+        WebkitMaskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)'
+      }}
+    >
+      <motion.div
+        className="flex gap-12 md:gap-24 items-center whitespace-nowrap"
+        animate={{
+          x: isRTL ? ["-50%", "0%"] : ["0%", "-50%"],
+        }}
+        transition={{
+          duration: 30,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+      >
+        {/* Double the logos for infinite effect */}
+        {[...SAMPLE_LOGOS, ...SAMPLE_LOGOS].map((logo, i) => {
+          const isPrimary = i % 2 === 0;
+          return (
+            <div
+              key={i}
+              className={`flex items-center gap-4 transition-colors duration-300 group cursor-default ${
+                isPrimary ? "text-primary" : "text-foreground/40 hover:text-primary"
+              }`}
+            >
+              <logo.icon className={`w-8 h-8 md:w-10 md:h-10 ${isPrimary ? "opacity-100" : "opacity-50 group-hover:opacity-100"}`} />
+              <span className="text-xl md:text-3xl font-Bebas tracking-wider uppercase">
+                {logo.name}
+              </span>
+            </div>
+          );
+        })}
+      </motion.div>
+    </div>
+  );
+}
+
 export function FloatingBenefits() {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
@@ -37,9 +90,12 @@ export function FloatingBenefits() {
           </h2>
         </div>
 
+        {/* Animated Logo Row */}
+        <LogoRow isRTL={isRTL} />
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-stretch">
           {/* LEFT: Floating Icons */}
-          <div className="relative min-h-[400px] md:min-h-full overflow-hidden rounded-[3rem] glass-panel bg-white/5 border-white/5 premium-border">
+          <div className="relative min-h-[400px] md:min-h-full overflow-hidden rounded-[3rem]">
             {benefits.map((item, i) => {
               const Icon = iconMap[item.icon] || Zap;
               return (

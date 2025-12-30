@@ -44,7 +44,7 @@ export function HeroPromo() {
               <img
                 src="/Logo.avif"
                 alt="Logo"
-                className="h-16 w-16 md:h-20 md:w-20"
+                className="h-14 w-14 md:h-20 md:w-20 object-contain"
               />
             </div>
           </div>
@@ -69,8 +69,11 @@ export function HeroPromo() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
                 className={`
-                  inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-6
-                  ${theme === "dark" ? "bg-primary/10 text-primary" : "bg-primary/20 text-primary-foreground"}
+                  inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold mb-6 shadow-lg border
+                  ${theme === "dark" 
+                    ? "bg-primary/10 text-primary border-primary/20" 
+                    : "bg-gradient-to-r from-primary/90 to-primary text-white border-primary/30 shadow-primary/20"
+                  }
                 `}
               >
                 <Earth className="w-4 h-4" />
@@ -80,8 +83,8 @@ export function HeroPromo() {
               {/* Heading */}
               <h1
                 className={`
-    text-4xl xs:text-5xl sm:text-6xl md:text-5xl lg:text-7xl 
-    font-bold tracking-tight drop-shadow-2xl leading-tight font-BBHBogle
+    text-[2.5rem] xs:text-5xl sm:text-6xl md:text-5xl lg:text-7xl 
+    font-bold tracking-tight drop-shadow-2xl leading-[1.1] font-BBHBogle mb-4
     ${theme === "dark" ? "text-white" : "text-gray-900"}
   `}
               >
@@ -91,7 +94,7 @@ export function HeroPromo() {
               {/* Subheading */}
               <p
                 className={`
-                  mt-6 text-lg xs:text-xl sm:text-2xl md:text-3xl font-medium drop-shadow-lg leading-relaxed max-w-3xl mx-auto
+                  mt-4 text-base xs:text-lg sm:text-xl md:text-2xl lg:text-3xl font-medium drop-shadow-lg leading-relaxed max-w-3xl mx-auto
                   ${theme === "dark" ? "text-white/90" : "text-gray-800"}
                 `}
                 dangerouslySetInnerHTML={{ __html: heroCopy("subheading") }}

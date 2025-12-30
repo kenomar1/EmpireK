@@ -15,6 +15,8 @@ const BlogPostPage = lazy(() => import("./pages/BlogPostPage"));
 const ProjectDetailPage = lazy(() => import("./pages/ProjectDetailPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Dashboard = lazy(() => import("./pages/Dashboard")); // Admin Dashboard
+const AboutPage = lazy(() => import("./pages/AboutPage"));
+const FAQPage = lazy(() => import("./pages/FAQPage"));
 
 import { FixedNavbar } from "./components/layout/NavBar";
 import { useTheme } from "./context/ThemeContext";
@@ -43,14 +45,15 @@ function AppContent() {
   }, [isRTL, i18n.language, location.pathname]);
 
   return (
-    <div className="min-h-screen flex flex-col relative">
+    <div
+      className={`min-h-screen flex flex-col relative ${isRTL ? "font-Cairo" : ""}`}
+    >
       {/* Global Background */}
       <div className="fixed inset-0 -z-20 overflow-hidden pointer-events-none">
         <VantaBackground theme={theme} />
       </div>
 
-      {/* Global Backdrop Blur & Tint Overlay */}
-      <div className={`fixed inset-0 -z-10 ${theme === 'dark' ? '' : 'backdrop-blur-sm bg-background/30'} pointer-events-none`} />
+      {/* Global Background Overlay Removed for Clarity */}
 
       <FixedNavbar />
 
@@ -72,6 +75,8 @@ function AppContent() {
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/blog/:slug" element={<BlogPostPage />} />
                 <Route path="/project/:slug" element={<ProjectDetailPage />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/faq" element={<FAQPage />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
@@ -104,5 +109,4 @@ function App() {
     </BrowserRouter>
   );
 }
-
 export default App;

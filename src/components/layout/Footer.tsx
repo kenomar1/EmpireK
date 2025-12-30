@@ -15,6 +15,7 @@ import { Cookie, Shield, FileText, Mail, Phone, MapPin } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
+import Newsletter from "../sections/Newsletter";
 
 type ModalType = "privacy" | "terms" | "cookies" | null;
 
@@ -50,6 +51,9 @@ export default function Footer() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="mx-4 md:mx-8 lg:mx-auto max-w-7xl"
         >
+          {/* Newsletter Signup */}
+          <Newsletter />
+          
           <div className="glass-panel premium-border shadow-2xl overflow-hidden rounded-[2.5rem]">
             {/* Brand, Services, Contact — unchanged */}
             <div className="py-16 px-8 lg:px-16">
@@ -58,6 +62,7 @@ export default function Footer() {
                 <div className={isRTL ? "lg:col-start-3" : ""}>
                   <a
                     href="/"
+                    dir="ltr"
                     className="text-4xl tracking-widest font-thin font-Bebas inline-block mb-6"
                   >
                     <span className="text-foreground">{t("common.brandNamePrefix")}</span>
@@ -73,56 +78,62 @@ export default function Footer() {
 
                 {/* Menu Column */}
                 <div>
-                  <h4 className="font-semibold text-xl mb-8 text-foreground">
-                    Menu
-                  </h4>
-                  <ul className="space-y-5 text-muted-foreground text-lg">
-                    <li>
-                      <a href="/" className="hover:text-primary transition inline-block">Home</a>
-                    </li>
-                    <li>
-                      <a href="/services" className="hover:text-primary transition inline-block">Services</a>
-                    </li>
-                    <li>
-                      <a href="/blog" className="hover:text-primary transition inline-block">Blog</a>
-                    </li>
-                    <li>
-                      <a href="/contact" className="hover:text-primary transition inline-block">Contact</a>
-                    </li>
+                  <h3 className="text-xl font-bold text-foreground mb-6">{tf("quickLinks")}</h3>
+                  <ul className="space-y-4">
+                    {[
+                      { label: tf("home"), href: "/" },
+                      { label: tf("services"), href: "/services" },
+                      { label: tf("gallery"), href: "/gallery" },
+                      { label: tf("blog"), href: "/blog" },
+                      { label: tf("about"), href: "/about" },
+                      { label: tf("faq"), href: "/faq" },
+                      { label: tf("contact"), href: "/contact" },
+                    ].map((link) => (
+                      <li key={link.label}>
+                        <a
+                          href={link.href}
+                          className="text-muted-foreground hover:text-foreground transition-colors text-lg inline-block hover:translate-x-1 duration-200"
+                        >
+                          {link.label}
+                        </a>
+                      </li>
+                    ))}
                   </ul>
                 </div>
 
                 {/* Contact Column */}
-                <div className={isRTL ? "lg:col-start-1 lg:row-start-1" : ""}>
-                  <h4 className="font-semibold text-xl mb-8 text-foreground">
-                    {tf("contactTitle")}
-                  </h4>
-                  <div className="space-y-6 text-muted-foreground text-lg">
-                    <a 
-                      href={`mailto:${tf("email")}`} 
-                      className="flex items-center gap-4 group/item hover:text-primary transition-colors"
-                    >
-                      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center group-hover/item:bg-primary group-hover/item:text-primary-foreground transition-all duration-300">
-                        <Mail className="w-5 h-5" />
+                <div className={`${isRTL ? "lg:col-start-1 lg:row-start-1" : ""} space-y-8`}>
+                  <div>
+                    <h4 className="font-semibold text-xl mb-6 text-foreground">
+                      {tf("contactTitle")}
+                    </h4>
+                    <div className="space-y-6 text-muted-foreground text-lg">
+                      <a 
+                        href={`mailto:${tf("email")}`} 
+                        className="flex items-center gap-4 group/item hover:text-primary transition-colors"
+                      >
+                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-primary/10 flex items-center justify-center group-hover/item:bg-primary group-hover/item:text-primary-foreground transition-all duration-300">
+                          <Mail className="w-4 h-4 md:w-5 md:h-5" />
+                        </div>
+                        <span className="font-medium text-sm md:text-base">{tf("email")}</span>
+                      </a>
+                      
+                      <a 
+                        href={`tel:${tf("phone")}`} 
+                        className="flex items-center gap-4 group/item hover:text-primary transition-colors"
+                      >
+                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-primary/10 flex items-center justify-center group-hover/item:bg-primary group-hover/item:text-primary-foreground transition-all duration-300">
+                          <Phone className="w-4 h-4 md:w-5 md:h-5" />
+                        </div>
+                        <span dir="ltr" className="font-medium text-sm md:text-base">{tf("phone")}</span>
+                      </a>
+  
+                      <div className="flex items-center gap-4 group/item">
+                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-primary/10 flex items-center justify-center transition-all duration-300">
+                          <MapPin className="w-4 h-4 md:w-5 md:h-5" />
+                        </div>
+                        <span className="font-medium text-sm md:text-base">{tf("location")}</span>
                       </div>
-                      <span className="font-medium">{tf("email")}</span>
-                    </a>
-                    
-                    <a 
-                      href={`tel:${tf("phone")}`} 
-                      className="flex items-center gap-4 group/item hover:text-primary transition-colors"
-                    >
-                      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center group-hover/item:bg-primary group-hover/item:text-primary-foreground transition-all duration-300">
-                        <Phone className="w-5 h-5" />
-                      </div>
-                      <span dir="ltr" className="font-medium">{tf("phone")}</span>
-                    </a>
-
-                    <div className="flex items-center gap-4 group/item">
-                      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center transition-all duration-300">
-                        <MapPin className="w-5 h-5" />
-                      </div>
-                      <span className="font-medium">{tf("location")}</span>
                     </div>
                   </div>
                 </div>

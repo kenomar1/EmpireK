@@ -39,6 +39,26 @@ export const author = defineType({
       rows: 3,
       description: 'A few sentences about the author (shown on post)',
     }),
+    defineField({
+      name: 'linkedin',
+      title: 'LinkedIn URL',
+      type: 'url',
+    }),
+    defineField({
+      name: 'twitter',
+      title: 'Twitter/X URL',
+      type: 'url',
+    }),
+    defineField({
+      name: 'github',
+      title: 'GitHub URL',
+      type: 'url',
+    }),
+    defineField({
+      name: 'email',
+      title: 'Email',
+      type: 'string',
+    }),
   ],
 
   preview: {

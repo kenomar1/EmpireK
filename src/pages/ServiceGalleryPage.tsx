@@ -14,6 +14,7 @@ import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { client, urlFor } from "../lib/sanityClient";
+import TestimonialsSection from "../components/sections/TestimonialsSection";
 
 const icons = {
   globe: Globe,
@@ -156,10 +157,10 @@ export default function GalleryPage() {
           animate={{ opacity: 1, y: 0 }}
           className="relative max-w-5xl mx-auto glass-panel premium-border p-12 rounded-[3rem]"
         >
-          <h1 className="text-5xl md:text-8xl font-black mb-6 text-foreground font-BBHBogle">
+          <h1 className="text-4xl sm:text-5xl md:text-8xl font-black mb-6 text-foreground font-BBHBogle">
             {t("gallery.heroTitle", "Our Work Gallery")}
           </h1>
-          <p className="text-xl md:text-2xl text-foreground/80 max-w-3xl mx-auto font-medium">
+          <p className="text-lg sm:text-xl md:text-2xl text-foreground/80 max-w-3xl mx-auto font-medium">
             {t(
               "gallery.heroSubtitle",
               "Real projects delivered for real clients"
@@ -181,14 +182,14 @@ export default function GalleryPage() {
                   key={category._id}
                   onClick={() => setActiveCategoryId(category._id)}
                   whileHover={{ scale: 1.05 }}
-                  className={`flex flex-col items-center gap-4 px-20 py-8 rounded-[2rem] font-bold text-lg transition-all glass-panel premium-border shadow-2xl ${
+                  className={`flex flex-col items-center gap-3 md:gap-4 px-8 md:px-20 py-6 md:py-8 rounded-[1.5rem] md:rounded-[2rem] font-bold text-base md:text-lg transition-all glass-panel premium-border shadow-2xl ${
                     isActive
                       ? "bg-primary text-primary-foreground border-primary/50"
                       : "text-foreground hover:bg-white/10"
                   }`}
                 >
-                  <div className="p-5 bg-white/20 rounded-2xl">
-                    <Icon className="w-12 h-12" />
+                  <div className="p-3 md:p-5 bg-white/20 rounded-xl md:rounded-2xl">
+                    <Icon className="w-8 h-8 md:w-12 md:h-12" />
                   </div>
                   <span>{category.title}</span>
                 </motion.button>
@@ -309,6 +310,9 @@ export default function GalleryPage() {
           </AnimatePresence>
         </div>
       </section>
+
+      {/* Testimonials Section */}
+      <TestimonialsSection />
 
       {/* Related Insights Section - Below Projects */}
       {highlightedPosts.length > 0 && (

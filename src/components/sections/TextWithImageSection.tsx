@@ -18,8 +18,8 @@ export function TextWithImageSection() {
       className="w-full py-16 md:py-24 bg-transparent"
       dir={isRTL ? "rtl" : "ltr"}
     >
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="glass-panel p-8 md:p-16 rounded-[2.5rem] border-white/10">
+      <div className="px-4 md:px-8">
+        <div className="glass-panel p-8 md:p-16 rounded-[2.5rem] border-white/10 w-full">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-6xl font-playfair font-black tracking-tight text-foreground">
               {textWithImage("heading")}
@@ -36,13 +36,15 @@ export function TextWithImageSection() {
                 <p className="text-lg md:text-xl text-foreground/80 leading-relaxed whitespace-pre-line">
                   {textWithImage("text")}
                 </p>
-                <Button
-                  size="lg"
-                  variant="default"
-                  className="mt-8 px-10 py-7 text-lg font-bold shadow-2xl hover:shadow-primary/30 transition-all rounded-2xl"
-                >
-                  {textWithImage("buttonText")}
-                </Button>
+                <a href="/about" className="mt-8 inline-block">
+                  <Button
+                    size="lg"
+                    variant="default"
+                    className="px-10 py-7 text-lg font-bold shadow-2xl hover:shadow-primary/30 transition-all rounded-2xl"
+                  >
+                    {textWithImage("buttonText")}
+                  </Button>
+                </a>
               </div>
             </div>
 

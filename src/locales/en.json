@@ -316,6 +316,8 @@
     "digitalProductsTitle": "Ready-to-Launch Templates",
     "digitalProductsSubtitle": "Skip the build time and launch instantly with our high-fidelity, conversion-optimized site templates.",
     "buyNow": "Get Started",
+    "modelSale": "One-time Purchase",
+    "modelSubscription": "Monthly Subscription",
     "shop": "Shop",
     "howItWorksTitle": "How It Works",
     "howItWorksSubtitle": "Get your project up and running in minutes with our ready-made templates",
@@ -472,22 +474,22 @@
     "brandTitle": "Empire-K",
     "brandDesc": "Turn your idea into a live store in hours, not weeks",
     "startProject": "Start Your Project",
+    "quickLinks": "Quick Links",
+    "home": "Home",
+    "services": "Services",
+    "gallery": "Gallery",
+    "blog": "Blog",
+    "about": "About",
+    "faq": "FAQ",
+    "contact": "Contact",
     "servicesTitle": "Services",
     "cookiesAccepted": "Thanks for your Trust",
     "cookiesDeclined": "Cookies Declined",
-    "services": [
-      "Custom Website Design",
-      "E-commerce Development",
-      "Webapps Development ",
-      "Client Dashboard / CMS",
-      "SEO & Performance",
-      "Maintenance & Support"
-    ],
     "contactTitle": "Get in Touch",
     "email": "dev.empirek@hotmail.com",
     "phone": "+20 1515912781",
     "location": "Cairo, Egypt",
-    "copyright": "© 2025 Empire-K. All rights reserved.",
+    "copyright": "© {{year}} Empire-K. All rights reserved.",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
     "cookies": "Cookie Policy"
@@ -534,7 +536,155 @@
       "By continuing to use this site, you consent to our use of cookies as described in this policy.",
       "For more details, see our full Privacy Policy."
     ]
+  },
+  
+  "clientLogos": {
+    "title": "Trusted by Leading Brands",
+    "subtitle": "Join hundreds of satisfied clients who trust us with their digital presence"
+  },
+  
+  "stats": {
+    "projects": "Projects Completed",
+    "clients": "Happy Clients",
+    "years": "Years Experience",
+    "success": "Success Rate"
+  },
+  
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Find answers to common questions about our services",
+    "search": "Search questions...",
+    "noResults": "No questions found. Try a different search or category.",
+    "categories": {
+      "all": "All",
+      "general": "General",
+      "pricing": "Pricing",
+      "process": "Process",
+      "technical": "Technical"
+    }
+  },
+  
+  "newsletter": {
+    "title": "Stay Updated",
+    "subtitle": "Get the latest insights, tips, and exclusive offers delivered to your inbox",
+    "placeholder": "Enter your email",
+    "subscribe": "Subscribe",
+    "sending": "Sending...",
+    "success": "Subscribed!",
+    "error": "Something went wrong. Please try again.",
+    "privacy": "We respect your privacy. Unsubscribe at any time."
+  },
+  
+  "stickyCTA": {
+    "title": "Ready to Start Your Project?",
+    "subtitle": "Get a free consultation and quote today",
+    "cta": "Get Started"
+  },
+  
+  "pricing": {
+    "title": "Simple, Transparent Pricing",
+    "subtitle": "Choose the perfect plan for your business. No hidden fees, no surprises.",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "save": "Save 20%",
+    "mostPopular": "Most Popular",
+    "getStarted": "Get Started",
+    "contactUs": "Contact Us",
+    "customQuote": "Get Custom Quote",
+    
+    "starter": {
+      "name": "Starter",
+      "price": "$2,999",
+      "period": "one-time",
+      "description": "Perfect for small businesses and startups",
+      "features": [
+        "5-page responsive website",
+        "Mobile-optimized design",
+        "Basic SEO setup",
+        "Contact form integration",
+        "1 month support",
+        "Fast delivery (7-10 days)"
+      ]
+    },
+    
+    "pro": {
+      "name": "Pro",
+      "price": "$5,999",
+      "period": "one-time",
+      "description": "Ideal for growing businesses",
+      "features": [
+        "10-page custom website",
+        "Advanced UI/UX design",
+        "CMS integration (Sanity/Strapi)",
+        "SEO optimization",
+        "Blog functionality",
+        "E-commerce ready",
+        "3 months support",
+        "Priority delivery (10-14 days)"
+      ]
+    },
+    
+    "enterprise": {
+      "name": "Enterprise",
+      "price": "Custom",
+      "period": "contact us",
+      "description": "For large-scale projects and agencies",
+      "features": [
+        "Unlimited pages",
+        "Custom features & integrations",
+        "Advanced CMS & dashboards",
+        "Multi-language support",
+        "Performance optimization",
+        "Dedicated project manager",
+        "12 months support",
+        "White-label options"
+      ]
+    },
+    
+    "faqTitle": "Pricing Questions?",
+    "notFound": "Can't find what you're looking for?",
+    "notFoundCta": "Contact us for a custom quote"
+  },
+  
+  "team": {
+    "title": "Meet Our Team",
+    "subtitle": "The talented people behind your success",
+    "noTeam": "Team information coming soon"
+  },
+  
+  "about": {
+    "title": "About",
+    "subtitle": "Building digital experiences that matter",
+    "story": {
+      "title": "Our Story",
+      "content": "Founded with a passion for creating exceptional digital experiences, Empire-K has grown into a trusted partner for businesses seeking to establish a powerful online presence. We combine technical expertise with creative vision to deliver solutions that drive real results."
+    },
+    "mission": {
+      "title": "Our Mission",
+      "content": "To empower businesses with cutting-edge web solutions that are fast, beautiful, and built to convert."
+    },
+    "values": {
+      "title": "Our Values",
+      "items": [
+        {
+          "title": "Quality First",
+          "description": "We never compromise on code quality or design excellence"
+        },
+        {
+          "title": "Client Success",
+          "description": "Your growth is our success. We're invested in your results"
+        },
+        {
+          "title": "Innovation",
+          "description": "We stay ahead of trends to deliver modern solutions"
+        },
+        {
+          "title": "Transparency",
+          "description": "Clear communication, honest timelines, no hidden costs"
+        }
+      ]
+    },
+    "cta": "Ready to work together?",
+    "ctaButton": "Start Your Project"
   }
 }
-
- 

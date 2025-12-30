@@ -59,7 +59,7 @@ export default function BlogGridShowcase() {
   }
 
   return (
-    <section className="py-24 px-6 bg-transparent" dir={isRTL ? "rtl" : "ltr"}>
+    <section className="pt-8 pb-24 px-6 bg-transparent" dir={isRTL ? "rtl" : "ltr"}>
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -70,11 +70,11 @@ export default function BlogGridShowcase() {
         >
           {/* Header */}
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-black tracking-tight text-foreground">
+            <h2 className="text-3xl sm:text-4xl md:text-6xl font-black tracking-tight text-foreground">
               {t("blog.showcase.title")}
             </h2>
 
-            <p className="mt-6 text-xl text-foreground/80 max-w-3xl mx-auto leading-relaxed font-medium">
+            <p className="mt-4 sm:mt-6 text-base sm:text-lg md:text-xl text-foreground/80 max-w-3xl mx-auto leading-relaxed font-medium">
               {t("blog.showcase.subtitle")}
             </p>
           </div>

@@ -139,12 +139,12 @@ export default function ContactPage() {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-24 glass-panel premium-border p-12 rounded-[2.5rem] border-white/10"
+            className="text-center mb-16 md:mb-24 glass-panel premium-border p-8 md:p-12 rounded-[2.5rem] border-white/10"
           >
-            <h1 className="text-5xl md:text-8xl font-black tracking-tighter text-foreground py-4 font-BBHBogle">
+            <h1 className="text-[2.5rem] sm:text-5xl md:text-8xl font-black tracking-tighter text-foreground py-2 md:py-4 font-BBHBogle leading-[1.1]">
               {t("contact.heroTitle")}
             </h1>
-            <p className="mt-8 text-xl md:text-2xl text-foreground/80 max-w-3xl mx-auto font-medium leading-relaxed">
+            <p className="mt-6 md:mt-8 text-lg sm:text-xl md:text-2xl text-foreground/80 max-w-3xl mx-auto font-medium leading-relaxed">
               {t("contact.heroSubtitle")}
             </p>
           </motion.div>

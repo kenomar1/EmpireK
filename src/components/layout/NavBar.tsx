@@ -24,8 +24,9 @@ export function FixedNavbar() {
     { name: t("nav.home"), href: "/" },
     { name: t("nav.services"), href: "/services" },
     { name: t("nav.gallery"), href: "/gallery" },
-    { name: t("nav.contact"), href: "/contact" },
     { name: t("nav.blog"), href: "/blog" },
+    { name: t("about.title", "About"), href: "/about" },
+    { name: t("nav.contact"), href: "/contact" },
   ];
 
   const languages = [
@@ -180,7 +181,8 @@ export function FixedNavbar() {
 
                 <a
                   href="/"
-                  className="absolute left-1/2 -translate-x-1/2 text-2xl tracking-widest font-thin font-bebas whitespace-nowrap"
+                  dir="ltr"
+                  className="absolute left-1/2 -translate-x-1/2 text-2xl tracking-widest font-thin font-Bebas whitespace-nowrap px-4"
                 >
                   <span className="text-foreground">{t("common.brandNamePrefix")}</span>
                   <span className="text-primary">{t("common.brandNameSuffix")}</span>
@@ -199,7 +201,7 @@ export function FixedNavbar() {
 
                   <SheetContent
                     side={isRTL ? "left" : "right"}
-                    className="w-96 bg-background/30 rounded-l-3xl backdrop-blur-sm border-border/50 shadow-2xl"
+                    className="w-[85%] max-w-[400px] bg-background/30 rounded-l-3xl backdrop-blur-sm border-border/50 shadow-2xl"
                   >
                     <div className="flex flex-col h-full py-8 px-6">
                       {/* Logo */}

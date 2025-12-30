@@ -7,17 +7,17 @@
   :root {
     --font-primary: "Playfair Display", "Inter", serif;
     --background: 34 33% 96%;
-    --foreground: 24 15% 12%;
+    --foreground: 24 15% 5%;
     --card: 34 33% 98%;
-    --card-foreground: 24 15% 12%;
+    --card-foreground: 24 15% 5%;
     --popover: 34 33% 100%;
-    --popover-foreground: 24 15% 12%;
+    --popover-foreground: 24 15% 5%;
     --primary: 43 100% 42%;
     --primary-foreground: 34 33% 98%;
     --secondary: 34 20% 90%;
-    --secondary-foreground: 24 15% 12%;
+    --secondary-foreground: 24 15% 5%;
     --muted: 34 15% 88%;
-    --muted-foreground: 24 10% 45%;
+    --muted-foreground: 24 10% 25%;
     --accent: 43 100% 42%;
     --accent-foreground: 34 33% 98%;
     --destructive: 0 84.2% 60.2%;

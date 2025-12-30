@@ -23,7 +23,7 @@ export default function ServicesShowcaseSection() {
       className="py-24 px-6 overflow-hidden relative"
       dir={isRTL ? "rtl" : "ltr"}
     >
-      <div className="absolute inset-x-4 inset-y-12 glass-panel  rounded-[3.5rem] bg-background/5 border-white/5 pointer-events-none" />
+
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
         <div className="text-center font-playfair mb-20">
@@ -52,7 +52,7 @@ export default function ServicesShowcaseSection() {
         <div className="relative mb-20">
           {/* Row 1 - Fast */}
           <motion.div
-            className="flex gap-8"
+            className="flex gap-4 md:gap-8"
             animate={{
               x: ["0%", "-50%"],
             }}
@@ -60,22 +60,22 @@ export default function ServicesShowcaseSection() {
               x: {
                 repeat: Infinity,
                 repeatType: "loop",
-                duration: 40, // Slower for more premium feel
+                duration: 40,
                 ease: "linear",
               },
             }}
           >
             {items.map((src, i) => (
-              <div key={`row1-${i}`} className="flex-shrink-0 w-80">
+              <div key={`row1-${i}`} className="flex-shrink-0 w-64 md:w-80">
                 <motion.div 
                   whileHover={{ scale: 1.05 }}
-                  className="group relative rounded-[2rem] p-3 glass-panel premium-border shadow-2xl transition-all duration-500"
+                  className="group relative rounded-[1.5rem] md:rounded-[2rem] p-2 md:p-3 glass-panel premium-border shadow-2xl transition-all duration-500"
                 >
-                  <div className="relative rounded-[1.5rem] overflow-hidden">
+                  <div className="relative rounded-[1rem] md:rounded-[1.5rem] overflow-hidden">
                     <img
                       src={src}
                       alt={`Preview ${i + 1}`}
-                      className="w-full h-56 object-cover transition-transform duration-700 group-hover:scale-110"
+                      className="w-full h-48 md:h-56 object-cover transition-transform duration-700 group-hover:scale-110"
                       loading="lazy"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -87,7 +87,7 @@ export default function ServicesShowcaseSection() {
 
           {/* Row 2 - Slower, opposite direction */}
           <motion.div
-            className="flex gap-8 mt-12"
+            className="flex gap-4 md:gap-8 mt-8 md:mt-12"
             animate={{
               x: ["-50%", "0%"],
             }}
@@ -95,22 +95,22 @@ export default function ServicesShowcaseSection() {
               x: {
                 repeat: Infinity,
                 repeatType: "loop",
-                duration: 45, // Slower
+                duration: 45,
                 ease: "linear",
               },
             }}
           >
             {items.map((src, i) => (
-              <div key={`row2-${i}`} className="flex-shrink-0 w-80">
+              <div key={`row2-${i}`} className="flex-shrink-0 w-64 md:w-80">
                 <motion.div 
                    whileHover={{ scale: 1.05 }}
-                   className="group relative rounded-[2rem] p-3 glass-panel premium-border shadow-2xl transition-all duration-500"
+                   className="group relative rounded-[1.5rem] md:rounded-[2rem] p-2 md:p-3 glass-panel premium-border shadow-2xl transition-all duration-500"
                 >
-                  <div className="relative rounded-[1.5rem] overflow-hidden">
+                  <div className="relative rounded-[1rem] md:rounded-[1.5rem] overflow-hidden">
                     <img
                       src={src}
                       alt={`Preview ${i + 1}`}
-                      className="w-full h-56 object-cover transition-transform duration-700 group-hover:scale-110"
+                      className="w-full h-48 md:h-56 object-cover transition-transform duration-700 group-hover:scale-110"
                       loading="lazy"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -122,14 +122,12 @@ export default function ServicesShowcaseSection() {
         </div>
 
         {/* CTA */}
-        <div className="flex font-playfair justify-center items-center gap-6 mt-20">
-          {" "}
-          {/* Adjust gap-6 as needed: gap-4 for closer, gap-8 for more space */}
+        <div className="flex flex-col sm:flex-row font-playfair justify-center items-center gap-4 md:gap-6 mt-12 md:mt-20">
           <motion.a
             href="/services"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-3 px-10 py-6 bg-primary text-primary-foreground rounded-full text-xl font-bold shadow-2xl hover:shadow-primary/25 transition-all duration-300"
+            className="w-full sm:w-auto text-center inline-flex justify-center items-center gap-3 px-8 md:px-10 py-4 md:py-6 bg-primary text-primary-foreground rounded-full text-lg md:text-xl font-bold shadow-2xl hover:shadow-primary/25 transition-all duration-300"
           >
             {t("shopPreview.cta1", "Start Building Now")}
           </motion.a>
@@ -137,10 +135,9 @@ export default function ServicesShowcaseSection() {
             href="/gallery"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-3 px-10 py-6 bg-white  text-black rounded-full text-xl font-bold shadow-2xl hover:shadow-primary/25 transition-all duration-300"
+            className="w-full sm:w-auto text-center inline-flex justify-center items-center gap-3 px-8 md:px-10 py-4 md:py-6 bg-white text-black rounded-full text-lg md:text-xl font-bold shadow-2xl hover:shadow-primary/25 transition-all duration-300"
           >
-            {t("shopPreview.cta2", "Explore Services")}{" "}
-            {/* Update text as needed */}
+            {t("shopPreview.cta2", "Explore Services")}
           </motion.a>
         </div>
       </div>

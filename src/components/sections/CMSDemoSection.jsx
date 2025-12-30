@@ -18,8 +18,8 @@ export default function CMSDemoSection() {
   return (
     <div className="relative" dir={isRTL ? "rtl" : "ltr"}>
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-transparent pt-32 pb-32">
-        <div className="relative max-w-7xl mx-auto px-6 text-center z-10 p-12 rounded-3xl glass-panel">
+      <section className="relative overflow-hidden bg-transparent pt-32 pb-12">
+        <div className="relative max-w-7xl mx-auto px-6 text-center z-10 p-16 md:p-20 lg:p-24 rounded-3xl glass-panel">
           <Badge className="mb-6" variant="secondary">
             {cms("badge")}
           </Badge>
@@ -36,57 +36,37 @@ export default function CMSDemoSection() {
               className="text-lg px-10 font-Cairo font-playfair shadow-xl"
               asChild
             >
-              <a href="#dashboard">{cms("ctaPrimary")}</a>
+              <a href="#" target="_blank" rel="noopener noreferrer">{cms("ctaPrimary")}</a>
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Final Dual-CTA Showcase */}
-      <section className="py-24 px-6 bg-transparent relative z-10">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-          {/* Card 1: Revisions CTA */}
+      {/* Final E-commerce Showcase */}
+      <section className="pt-12 pb-8 px-6 bg-transparent relative z-10">
+        <div className="max-w-4xl mx-auto">
+          {/* E-commerce Showcase Card */}
           <motion.div 
-            whileHover={{ scale: 1.02 }}
-            className="flex flex-col justify-center text-center p-12 md:p-16 rounded-[2.5rem] glass-panel border-primary/20 premium-border"
-          >
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 text-foreground leading-[1.1]">
-              {cms("finalHeading")}
-            </h2>
-            <div>
-              <Button
-                size="lg"
-                variant="default"
-                className="text-lg px-12 h-14 font-Cairo font-playfair shadow-2xl"
-                asChild
-              >
-                <a href="/contact">{cms("finalCta")}</a>
-              </Button>
-            </div>
-          </motion.div>
-
-          {/* Card 2: E-commerce Showcase */}
-          <motion.div 
-            whileHover={{ scale: 1.02 }}
+            whileHover={{ scale: 1.01 }}
             className="group relative overflow-hidden rounded-[2.5rem] glass-panel border-white/10 premium-border flex flex-col"
           >
-            <div className="relative aspect-[16/10] overflow-hidden m-4 rounded-[1.5rem] border border-white/5">
+            <div className="relative aspect-[21/9] overflow-hidden m-4 rounded-[1.5rem] border border-white/5">
               <img 
                 src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop" 
                 alt="E-commerce Showcase"
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </div>
             
-            <div className="p-8 pt-2 text-center">
-              <h2 className="text-3xl md:text-4xl font-bold mb-6 text-foreground">
+            <div className="p-12 text-center">
+              <h2 className="text-4xl md:text-5xl font-bold mb-8 text-foreground">
                 {cms("ecommerceHeading")}
               </h2>
               <Button
                 size="lg"
                 variant="outline"
-                className="text-lg px-10 h-14 font-Cairo font-playfair glass-panel premium-border hover:bg-primary hover:text-primary-foreground group-hover:shadow-[0_0_30px_rgba(var(--primary),0.3)]"
+                className="text-xl px-12 h-16 font-Cairo font-playfair glass-panel premium-border hover:bg-primary hover:text-primary-foreground group-hover:shadow-[0_0_40px_rgba(var(--primary),0.3)]"
                 asChild
               >
                 <Link to="/services#templates">{cms("ecommerceCta")}</Link>
