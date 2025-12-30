@@ -18,6 +18,7 @@ interface TeamMember {
   twitter?: string;
   github?: string;
   email?: string;
+  isVisibleInFront?: boolean;
 }
 
 export default function AboutPage() {
@@ -27,8 +28,8 @@ export default function AboutPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Now fetching from 'author' schema as per user request
-    const query = `*[_type == "author"] | order(_createdAt asc) {
+    // Fetch only authors that are marked as visible
+    const query = `*[_type == "author" && isVisibleInFront != false] | order(_createdAt asc) {
       _id,
       name,
       role,
@@ -37,7 +38,8 @@ export default function AboutPage() {
       linkedin,
       twitter,
       github,
-      email
+      email,
+      isVisibleInFront
     }`;
 
     client

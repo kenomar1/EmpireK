@@ -37,6 +37,7 @@ type Author = {
   twitter?: string;
   github?: string;
   email?: string;
+  isVisibleInFront?: boolean;
 };
 
 type SanityCategory = {
@@ -232,7 +233,7 @@ export default function Dashboard() {
   useEffect(() => {
     if (activeTab === 'team') {
        const query = `*[_type == "author"] | order(_createdAt desc) {
-         _id, name, role, bio, avatar { asset-> { url } }, linkedin, twitter, github, email
+         _id, name, role, bio, avatar { asset-> { url } }, linkedin, twitter, github, email, isVisibleInFront
        }`;
        client.fetch(query).then(setAuthors).catch(console.error);
     }
@@ -459,6 +460,18 @@ export default function Dashboard() {
         setSuccess("Team member removed.");
     } catch (err) {
         setError("Failed to delete team member.");
+    }
+  };
+
+  const toggleAuthorVisibility = async (authorId: string, currentStatus: boolean | undefined) => {
+    // currentStatus might be undefined in old records, treat as true if so
+    const newStatus = currentStatus === false ? true : false;
+    try {
+      await client.patch(authorId).set({ isVisibleInFront: newStatus }).commit();
+      setAuthors(authors.map(a => a._id === authorId ? {...a, isVisibleInFront: newStatus} : a));
+      setSuccess(`Author visibility ${newStatus ? 'set to visible' : 'hidden'}.`);
+    } catch (err) {
+      setError("Failed to update author visibility.");
     }
   };
 
@@ -952,19 +965,34 @@ export default function Dashboard() {
                               {member.bio || "No bio information."}
                             </p>
                             
-                            <div className="flex items-center justify-between">
-                              <div className="flex gap-2">
-                                {member.email && <div className="w-2 h-2 rounded-full bg-green-500" title="Email Available" />}
-                                {member.linkedin && <div className="w-2 h-2 rounded-full bg-blue-500" title="LinkedIn Available" />}
-                                {member.twitter && <div className="w-2 h-2 rounded-full bg-sky-400" title="Twitter Available" />}
-                              </div>
-                              <button 
-                                onClick={() => deleteAuthor(member._id)}
-                                className="p-2 rounded-lg bg-red-500/10 text-red-400 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500 hover:text-white"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </div>
+                             <div className="flex items-center justify-between">
+                               <div className="flex items-center gap-4">
+                                  <button
+                                    onClick={() => toggleAuthorVisibility(member._id, member.isVisibleInFront)}
+                                    className={`flex items-center gap-2 text-xs font-bold px-3 py-1.5 rounded-full transition-all ${
+                                      member.isVisibleInFront !== false 
+                                        ? "bg-green-500/20 text-green-400 hover:bg-green-500/30" 
+                                        : "bg-white/10 text-white/40 hover:bg-white/20"
+                                    }`}
+                                    title={member.isVisibleInFront !== false ? "Click to hide from front" : "Click to show on front"}
+                                  >
+                                    {member.isVisibleInFront !== false ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
+                                    {member.isVisibleInFront !== false ? "Visible" : "Hidden"}
+                                  </button>
+
+                                  <div className="flex gap-2">
+                                    {member.email && <div className="w-2 h-2 rounded-full bg-green-500" title="Email Available" />}
+                                    {member.linkedin && <div className="w-2 h-2 rounded-full bg-blue-500" title="LinkedIn Available" />}
+                                    {member.twitter && <div className="w-2 h-2 rounded-full bg-sky-400" title="Twitter Available" />}
+                                  </div>
+                               </div>
+                               <button 
+                                 onClick={() => deleteAuthor(member._id)}
+                                 className="p-2 rounded-lg bg-red-500/10 text-red-400 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500 hover:text-white"
+                               >
+                                 <Trash2 className="w-4 h-4" />
+                               </button>
+                             </div>
                           </div>
                         </div>
                       </div>

@@ -17,62 +17,84 @@ export default function CMSDemoSection() {
 
   return (
     <div className="relative" dir={isRTL ? "rtl" : "ltr"}>
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-transparent pt-32 pb-12">
-        <div className="relative max-w-7xl mx-auto px-6 text-center z-10 p-16 md:p-20 lg:p-24 rounded-3xl glass-panel">
-          <Badge className="mb-6" variant="secondary">
-            {cms("badge")}
-          </Badge>
-          <h1 className="text-5xl font-Cairo font-playfair md:text-7xl font-bold mb-8 text-foreground">
-            {cms("heading")}
-          </h1>
-          <p
-            className="text-xl md:text-2xl text-foreground/90 max-w-4xl font-semibold mx-auto leading-relaxed mb-12"
-            dangerouslySetInnerHTML={{ __html: cms("subheading") }}
-          />
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <Button
-              size="lg"
-              className="text-lg px-10 font-Cairo font-playfair shadow-xl"
-              asChild
-            >
-              <a href="#" target="_blank" rel="noopener noreferrer">{cms("ctaPrimary")}</a>
-            </Button>
+      <section className="relative overflow-hidden bg-transparent py-16 md:py-24 px-6 z-10">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          
+          {/* Column 1: CMS Text content */}
+          <div className="text-center lg:text-start space-y-8 glass-panel p-10 md:p-16 rounded-[2.5rem] border-white/5">
+            <Badge className="mb-2" variant="secondary">
+              {cms("badge")}
+            </Badge>
+            <h2 className="text-5xl md:text-6xl font-Cairo font-black tracking-tight text-foreground leading-[1.1]">
+              {cms("heading")}
+            </h2>
+            <p
+              className="text-lg md:text-xl text-foreground/80 font-medium leading-relaxed max-w-2xl mx-auto lg:mx-0"
+              dangerouslySetInnerHTML={{ __html: cms("subheading") }}
+            />
+            <div className="pt-4 flex justify-center lg:justify-start">
+              <Button
+                size="lg"
+                className="text-lg px-10 h-14 font-Cairo font-bold shadow-xl rounded-2xl"
+                asChild
+              >
+                <a href="#" target="_blank" rel="noopener noreferrer">{cms("ctaPrimary")}</a>
+              </Button>
+            </div>
           </div>
-        </div>
-      </section>
 
-      {/* Final E-commerce Showcase */}
-      <section className="pt-12 pb-8 px-6 bg-transparent relative z-10">
-        <div className="max-w-4xl mx-auto">
-          {/* E-commerce Showcase Card */}
+          {/* Column 2: E-commerce Showcase Card */}
           <motion.div 
-            whileHover={{ scale: 1.01 }}
-            className="group relative overflow-hidden rounded-[2.5rem] glass-panel border-white/10 premium-border flex flex-col"
+            whileHover={{ scale: 1.02 }}
+            className="group relative overflow-hidden rounded-[2.5rem] glass-panel border-white/10 premium-border flex flex-col shadow-2xl"
           >
-            <div className="relative aspect-[21/9] overflow-hidden m-4 rounded-[1.5rem] border border-white/5">
+            <div className="relative aspect-[16/10] lg:aspect-square xl:aspect-[16/10] overflow-hidden m-4 rounded-[1.5rem] border border-white/5">
               <img 
                 src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop" 
                 alt="E-commerce Showcase"
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              
+              {/* Overlay Content on Hover */}
+              <div className="absolute inset-x-0 bottom-0 p-8 translate-y-full group-hover:translate-y-0 transition-transform duration-500 z-20 hidden md:block">
+                 <p className="text-white/80 font-medium mb-4">{cms("ecommerceHeading")}</p>
+                 <Button variant="secondary" className="w-full h-12 rounded-xl font-bold" asChild>
+                    <Link to="/services#templates">{cms("ecommerceCta")}</Link>
+                 </Button>
+              </div>
             </div>
             
-            <div className="p-12 text-center">
-              <h2 className="text-4xl md:text-5xl font-bold mb-8 text-foreground">
+            <div className="p-8 pt-2 text-center md:hidden lg:block xl:hidden">
+              <h2 className="text-2xl md:text-3xl font-bold mb-6 text-foreground">
                 {cms("ecommerceHeading")}
               </h2>
               <Button
                 size="lg"
                 variant="outline"
-                className="text-xl px-12 h-16 font-Cairo font-playfair glass-panel premium-border hover:bg-primary hover:text-primary-foreground group-hover:shadow-[0_0_40px_rgba(var(--primary),0.3)]"
+                className="w-full h-14 font-Cairo font-bold glass-panel premium-border hover:bg-primary hover:text-primary-foreground transition-all"
+                asChild
+              >
+                <Link to="/services#templates">{cms("ecommerceCta")}</Link>
+              </Button>
+            </div>
+
+            {/* Default visible content for tablet/desktop where hover might not be intuitive or enough */}
+            <div className="hidden md:flex lg:hidden xl:flex flex-col p-8 pt-2 text-center">
+              <h2 className="text-2xl md:text-3xl font-bold mb-6 text-foreground">
+                {cms("ecommerceHeading")}
+              </h2>
+              <Button
+                size="lg"
+                variant="outline"
+                className="w-full h-14 font-Cairo font-bold glass-panel premium-border hover:bg-primary hover:text-primary-foreground transition-all"
                 asChild
               >
                 <Link to="/services#templates">{cms("ecommerceCta")}</Link>
               </Button>
             </div>
           </motion.div>
+
         </div>
       </section>
     </div>

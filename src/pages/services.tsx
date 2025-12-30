@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Globe,
   Palette,
@@ -11,11 +11,9 @@ import {
   ArrowRight,
   CheckCircle2,
   Calendar,
-  ChevronDown,
   LayoutGrid,
   Tag,
   CreditCard,
-  ShoppingBag,
   ExternalLink,
   Laptop
 } from "lucide-react";
@@ -108,13 +106,24 @@ export default function Services() {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.hash === "#templates") {
+    const hash = location.hash;
+    if (hash === "#templates" || hash === "#shop") {
       setTimeout(() => {
-        const element = document.getElementById("templates");
+        const id = hash === "#shop" ? "shop" : "templates";
+        const element = document.getElementById(id);
         if (element) {
-          element.scrollIntoView({ behavior: "smooth" });
+          const offset = 100; // Account for fixed navbar
+          const bodyRect = document.body.getBoundingClientRect().top;
+          const elementRect = element.getBoundingClientRect().top;
+          const elementPosition = elementRect - bodyRect;
+          const offsetPosition = elementPosition - offset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
+          });
         }
-      }, 100);
+      }, 150);
     }
   }, [location]);
 
@@ -161,6 +170,12 @@ export default function Services() {
 
         setServices(fetchedServices);
         setCategories(uniqueCategories);
+        
+        // Default to first category if none selected or if it was "all"
+        if (uniqueCategories.length > 0 && (activeCategoryId === "all")) {
+          setActiveCategoryId(uniqueCategories[0]._id);
+        }
+        
         setLoading(false);
       })
       .catch((error) => {
@@ -189,6 +204,7 @@ export default function Services() {
   }, [currentLang]);
 
   useEffect(() => {
+    // Gallery and filtering logic remains for categories other than "shop"
     const filtered = activeCategoryId === "all" 
       ? services 
       : services.filter(s => s.category?._id === activeCategoryId);
@@ -198,7 +214,7 @@ export default function Services() {
       .filter((img): img is GalleryImage => !!img);
     setAllGalleryImages(gallery);
 
-    if (activeCategoryId !== "all") {
+    if (activeCategoryId !== "all" && activeCategoryId !== "shop") {
       const postsQuery = `*[_type == "post" && isHighlighted == true && language == $lang && category._ref == $categoryId] | order(publishedAt desc) [0...8] {
         _id,
         title,
@@ -257,43 +273,10 @@ export default function Services() {
 
       {/* Controls: Segmented Picker & Sorting */}
       <section className="px-6 mb-20">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-center gap-8">
           
           {/* Segmented Category Picker */}
           <div className="relative p-2 glass-panel premium-border rounded-2xl md:rounded-full flex items-center flex-nowrap gap-1 overflow-x-auto no-scrollbar max-w-full lg:max-w-max">
-            <button
-              onClick={() => setActiveCategoryId("all")}
-              className={`relative px-8 py-3 rounded-full text-sm font-bold transition-all duration-300 z-10 flex items-center gap-2 whitespace-nowrap ${
-                activeCategoryId === "all" ? "text-primary-foreground" : "text-foreground/70 hover:text-foreground"
-              }`}
-            >
-              <LayoutGrid className="w-4 h-4" />
-              {t("servicesPage.all")}
-              {activeCategoryId === "all" && (
-                <motion.div
-                  layoutId="activeCategory"
-                  className="absolute inset-0 bg-primary rounded-full -z-10"
-                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                />
-              )}
-            </button>
-
-            <button
-              onClick={() => setActiveCategoryId("shop")}
-              className={`relative px-8 py-3 rounded-full text-sm font-bold transition-all duration-300 z-10 flex items-center gap-2 whitespace-nowrap ${
-                activeCategoryId === "shop" ? "text-primary-foreground" : "text-foreground/70 hover:text-foreground"
-              }`}
-            >
-              <ShoppingBag className="w-4 h-4" />
-              {t("servicesPage.shop", "Shop")}
-              {activeCategoryId === "shop" && (
-                <motion.div
-                  layoutId="activeCategory"
-                  className="absolute inset-0 bg-primary rounded-full -z-10"
-                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                />
-              )}
-            </button>
 
             {categories.map((category) => {
               const Icon = icons[category.icon];
@@ -318,95 +301,92 @@ export default function Services() {
               );
             })}
           </div>
-
-          {/* Sort Dropdown Removed */}
         </div>
       </section>
 
       {/* Services Grid */}
-      {activeCategoryId !== "shop" && (
-        <section className="px-6 mb-32">
-          <div className="max-w-7xl mx-auto">
-            <motion.div
-              layout
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
-            >
-              <AnimatePresence mode="popLayout">
-                {services
-                  .filter(s => activeCategoryId === "all" || s.category?._id === activeCategoryId)
-                  .map((service, index) => {
-                  const ServiceIcon = service.category?.icon
-                    ? icons[service.category.icon] || Globe
-                    : Globe;
-                  const dynamicPrice = getServicePrice(service);
+      <section className="px-6 mb-32">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            layout
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
+          >
+            <AnimatePresence mode="popLayout">
+              {services
+                .filter(s => activeCategoryId === "all" || s.category?._id === activeCategoryId)
+                .map((service) => {
+                const ServiceIcon = service.category?.icon
+                  ? icons[service.category.icon] || Globe
+                  : Globe;
+                const dynamicPrice = getServicePrice(service);
 
-                  return (
-                    <motion.div
-                      key={service._id}
-                      layout
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                      whileHover={{ scale: 1.02 }}
-                      transition={{ duration: 0.4 }}
-                      className="glass-panel premium-border rounded-[2.5rem] hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col group"
-                    >
-                      <div className="p-10 flex-1 flex flex-col">
-                        <div className="inline-flex p-6 bg-primary/10 rounded-[2rem] mb-8 w-fit text-primary">
-                          <ServiceIcon className="w-12 h-12" />
-                        </div>
-
-                        <h3 className="text-3xl font-bold mb-6 group-hover:text-primary transition-colors">
-                          {service.name}
-                        </h3>
-
-                        <p className="text-muted-foreground text-lg mb-10 flex-1 leading-relaxed">
-                          {service.shortDesc || "Professional service tailored to your needs."}
-                        </p>
-
-                        {service.features && service.features.length > 0 && (
-                          <div className="space-y-4 mb-10">
-                            {service.features.map((feature, i) => (
-                              <div key={i} className="flex items-center gap-4">
-                                <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0" />
-                                <span className="text-base text-foreground/80">{feature}</span>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-
-                        <Link
-                          to="/contact"
-                          className="inline-flex items-center justify-center gap-3 px-8 py-5 bg-primary text-primary-foreground rounded-full font-bold text-lg shadow-lg hover:bg-primary/90 hover:scale-[1.03] transition-all"
-                        >
-                          {orderCta}
-                          <ArrowRight className="w-6 h-6" />
-                        </Link>
-
-                        <p className="text-center text-sm text-muted-foreground mt-4 italic font-medium">
-                          {t("servicesPage.orderMeta", { price: dynamicPrice, timeline: timelineValue })}
-                        </p>
+                return (
+                  <motion.div
+                    key={service._id}
+                    layout
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ duration: 0.4 }}
+                    className="glass-panel premium-border rounded-[2.5rem] hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col group"
+                  >
+                    <div className="p-10 flex-1 flex flex-col">
+                      <div className="inline-flex p-6 bg-primary/10 rounded-[2rem] mb-8 w-fit text-primary">
+                        <ServiceIcon className="w-12 h-12" />
                       </div>
-                    </motion.div>
-                  );
-                })}
-              </AnimatePresence>
-            </motion.div>
-          </div>
-        </section>
-      )}
+
+                      <h3 className="text-3xl font-bold mb-6 group-hover:text-primary transition-colors">
+                        {service.name}
+                      </h3>
+
+                      <p className="text-muted-foreground text-lg mb-10 flex-1 leading-relaxed">
+                        {service.shortDesc || "Professional service tailored to your needs."}
+                      </p>
+
+                      {service.features && service.features.length > 0 && (
+                        <div className="space-y-4 mb-10">
+                          {service.features.map((feature, i) => (
+                            <div key={i} className="flex items-center gap-4">
+                              <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0" />
+                              <span className="text-base text-foreground/80">{feature}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      <Link
+                        to="/contact"
+                        className="inline-flex items-center justify-center gap-3 px-8 py-5 bg-primary text-primary-foreground rounded-full font-bold text-lg shadow-lg hover:bg-primary/90 hover:scale-[1.03] transition-all"
+                      >
+                        {orderCta}
+                        <ArrowRight className="w-6 h-6" />
+                      </Link>
+
+                      <p className="text-center text-sm text-muted-foreground mt-4 italic font-medium">
+                        {t("servicesPage.orderMeta", { price: dynamicPrice, timeline: timelineValue })}
+                      </p>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </motion.div>
+        </div>
+      </section>
 
       {/* Digital Products Section (Shop) */}
-      {activeCategoryId === "shop" && (
-        <>
-          <section id="templates" className="px-6 mb-20 relative">
-            <div className="max-w-7xl mx-auto">
-              <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="text-center mb-20"
-              >
+      <section id="shop" className="px-6 py-32 relative bg-primary/5">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-20"
+          >
+            <h2 className="text-5xl md:text-7xl font-black mb-6">
+              {t("servicesPage.digitalProductsTitle")}
+            </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               {t("servicesPage.digitalProductsSubtitle")}
             </p>
@@ -510,53 +490,51 @@ export default function Services() {
                     </div>
                   </motion.div>
                 )})}
-              </div>
-            </div>
-          </section>
+          </div>
+        </div>
+      </section>
 
-          {/* How It Works Section */}
-          <section className="px-6 mb-32">
-            <div className="max-w-7xl mx-auto glass-panel premium-border rounded-[3rem] p-12 border-primary/10">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-5xl font-black mb-6">
-                  {t("servicesPage.howItWorksTitle", "How It Works")}
-                </h2>
-                <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                  {t("servicesPage.howItWorksSubtitle", "Get your project up and running in minutes with our ready-made templates")}
-                </p>
-              </div>
+      {/* How It Works Section */}
+      <section className="px-6 mb-32">
+        <div className="max-w-7xl mx-auto glass-panel premium-border rounded-[3rem] p-12 border-primary/10">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-5xl font-black mb-6">
+              {t("servicesPage.howItWorksTitle", "How It Works")}
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              {t("servicesPage.howItWorksSubtitle", "Get your project up and running in minutes with our ready-made templates")}
+            </p>
+          </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {[
-                  {
-                    icon: LayoutGrid,
-                    title: t("servicesPage.step1Title", "Choose Template"),
-                    desc: t("servicesPage.step1Desc", "Browse our collection and find the perfect starting point.")
-                  },
-                  {
-                    icon: CreditCard,
-                    title: t("servicesPage.step2Title", "Purchase"),
-                    desc: t("servicesPage.step2Desc", "Securely purchase the license that fits your needs.")
-                  },
-                  {
-                    icon: Laptop,
-                    title: t("servicesPage.step3Title", "Launch"),
-                    desc: t("servicesPage.step3Desc", "Receive the code instantly and deploy your project.")
-                  }
-                ].map((step, i) => (
-                  <div key={i} className="text-center p-6 bg-background/30 rounded-3xl">
-                    <div className="w-16 h-16 mx-auto bg-primary/20 rounded-2xl flex items-center justify-center mb-6 text-primary">
-                      <step.icon className="w-8 h-8" />
-                    </div>
-                    <h3 className="text-xl font-bold mb-3">{step.title}</h3>
-                    <p className="text-muted-foreground">{step.desc}</p>
-                  </div>
-                ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                icon: LayoutGrid,
+                title: t("servicesPage.step1Title", "Choose Template"),
+                desc: t("servicesPage.step1Desc", "Browse our collection and find the perfect starting point.")
+              },
+              {
+                icon: CreditCard,
+                title: t("servicesPage.step2Title", "Purchase"),
+                desc: t("servicesPage.step2Desc", "Securely purchase the license that fits your needs.")
+              },
+              {
+                icon: Laptop,
+                title: t("servicesPage.step3Title", "Launch"),
+                desc: t("servicesPage.step3Desc", "Receive the code instantly and deploy your project.")
+              }
+            ].map((step, i) => (
+              <div key={i} className="text-center p-6 bg-background/30 rounded-3xl">
+                <div className="w-16 h-16 mx-auto bg-primary/20 rounded-2xl flex items-center justify-center mb-6 text-primary">
+                  <step.icon className="w-8 h-8" />
+                </div>
+                <h3 className="text-xl font-bold mb-3">{step.title}</h3>
+                <p className="text-muted-foreground">{step.desc}</p>
               </div>
-            </div>
-          </section>
-        </>
-      )}
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Related Insights Section */}
       {highlightedPosts.length > 0 && (

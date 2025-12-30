@@ -83,6 +83,7 @@ export default function Footer() {
                     {[
                       { label: tf("home"), href: "/" },
                       { label: tf("services"), href: "/services" },
+                      { label: tf("shop"), href: "/services#shop" },
                       { label: tf("gallery"), href: "/gallery" },
                       { label: tf("blog"), href: "/blog" },
                       { label: tf("about"), href: "/about" },

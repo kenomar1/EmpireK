@@ -59,6 +59,13 @@ export const author = defineType({
       title: 'Email',
       type: 'string',
     }),
+    defineField({
+      name: 'isVisibleInFront',
+      title: 'Visible on Frontpage',
+      type: 'boolean',
+      initialValue: true,
+      description: 'Whether this author should be shown in the About Us team section',
+    }),
   ],
 
   preview: {
